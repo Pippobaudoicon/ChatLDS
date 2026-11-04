@@ -1,6 +1,6 @@
 # ChatLDS Project Knowledge Base
 
-Last updated: 2026-10-03
+Last updated: 2026-11-04
 
 This document is the single source of truth for project context.
 Read this first before deep code exploration.
@@ -522,7 +522,11 @@ Notes:
   - no unsupported claims,
   - no fabricated citations,
   - citation mapping to tool-returned chunks only,
-  - include canonical links only when present in chunk metadata.
+  - inline `[N]` markers plus markdown links on named scripture references, talk
+    titles, books, manuals, and articles, only with the url in chunk metadata,
+  - no closing list of sources unless the user explicitly asks, because the source
+    cards already show them (0.12.85; the rules are written for the literal
+    instruction following of Claude Haiku 5.5, set through `CHAT_MODEL`),
   - careful source-grounded explanations, with length and depth matched to the
     requested style and user instructions.
 - The system prompt is composed from a constant CORE (identity + the retrieval,
