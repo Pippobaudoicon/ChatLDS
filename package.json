@@ -1,6 +1,6 @@
 {
   "name": "rag-chat",
-  "version": "0.12.84",
+  "version": "0.12.85",
   "license": "Apache-2.0",
   "private": true,
   "packageManager": "pnpm@10.34.5",
@@ -10,7 +10,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "pnpm run test:routing && pnpm run test:language-policy && pnpm run test:onboarding && pnpm run test:cross-language && pnpm run test:chat-lifecycle && pnpm run test:chat-turn && pnpm run test:guest && pnpm run test:follow-ups",
+    "test": "pnpm run test:routing && pnpm run test:language-policy && pnpm run test:onboarding && pnpm run test:cross-language && pnpm run test:chat-lifecycle && pnpm run test:chat-turn && pnpm run test:guest && pnpm run test:follow-ups && pnpm run test:system-prompt",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run test",
     "prepare": "git config core.hooksPath .githooks || true",
     "db:generate": "dotenv -o -e .env -e .env.local -- drizzle-kit generate",
@@ -24,7 +24,8 @@
     "test:chat-lifecycle": "tsx scripts/test/chat-lifecycle.test.ts",
     "test:chat-turn": "tsx scripts/test/chat-turn.test.ts",
     "test:guest": "tsx scripts/test/guest-access.test.ts",
-    "test:follow-ups": "tsx scripts/test/follow-ups.test.ts"
+    "test:follow-ups": "tsx scripts/test/follow-ups.test.ts",
+    "test:system-prompt": "tsx scripts/test/system-prompt.test.ts"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.143",

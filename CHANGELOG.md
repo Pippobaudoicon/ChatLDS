@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.85
+
+- Rewrite the chat system prompt for Claude Haiku 5.5, which follows instructions
+  literally. Answers no longer end with a list of sources, since the source cards
+  already show them (only an explicit user request produces one). Scripture
+  references, talk titles, books, manuals, and articles are written as markdown
+  links when the chunk has a url, alongside the inline `[N]` markers. Rules are
+  shorter, with duplicates removed and reasons stated; retrieval, grounding,
+  language, and memory behavior and the response styles are unchanged.
+
 ## 0.12.84
 
 - Clicking a follow-up suggestion chip sends the question immediately instead of
