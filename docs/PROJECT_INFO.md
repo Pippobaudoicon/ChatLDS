@@ -105,7 +105,8 @@ Read this first before deep code exploration.
 - **Remember-me** (`src/lib/auth/remember.ts`): Clerk's free plan caps sessions
   at 7 days, so the proxy gives signed-in browsers a 1-year httpOnly
   `chatlds_remember` cookie (`<userId>:<secret>`; Redis key
-  `remember:<sha256(secret)>` → userId). On a signed-out full page load
+  `remember:<sha256(secret)>` → userId; not issued to requests with an
+  `Authorization` header, i.e. native bearer clients). On a signed-out full page load
   (`sec-fetch-mode: navigate`, not `/sign-in*`/`/sign-up*`) with that cookie,
   the proxy GETDELs the key, mints a Clerk sign-in token and redirects to
   `/sign-in?__clerk_ticket=…&redirect_url=<original>`; `<SignIn/>` redeems it
@@ -329,6 +330,16 @@ Read this first before deep code exploration.
 - `PUT /api/settings`
   - Auth required. Updates whichever preferences are present (default response
     style and/or onboarding tour state); at least one field is required.
+- `DELETE /api/account`
+  - Real Clerk user only (`auth()`, cookie or bearer; guests get `401`).
+    Deletes the user's rows in every `clerk_user_id` table (conversations,
+    which cascade to messages; feedback; settings; memory profile, periods and
+    conversation memory) in one `db.batch`, then deletes the Clerk user. Paid
+    Clerk Billing subscription items (active/upcoming/past_due, non-default
+    plan) are cancelled immediately first, with no proration/refund handling, so
+    a billing failure leaves nothing deleted. `204` on success, `502 { error }`
+    if a step fails; retry-safe (Clerk 404/403 on lookup, 404 on delete count
+    as done). Required by App Store / Play for the native apps.
 
 ## 6) Data model summary
 
@@ -667,6 +678,7 @@ Reference template: `.env.example`.
   - `src/app/api/conversations/route.ts`
   - `src/app/api/conversations/[id]/route.ts`
   - `src/app/api/settings/route.ts` (per-user prefs: response style + onboarding state)
+  - `src/app/api/account/route.ts` + `src/lib/auth/delete-account.ts` (account deletion)
 - User settings:
   - `src/lib/db/user-settings.ts` (read/write `rag_user_settings`)
 - Chat generation lifecycle:

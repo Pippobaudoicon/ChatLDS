@@ -59,7 +59,8 @@ export default clerkMiddleware(async (auth, req) => {
       if (guestId) await claimGuestConversations(guestId, userId);
       res.cookies.delete(GUEST_COOKIE);
     }
-    if (!remembered) {
+    // Native bearer clients have no cookie jar: skip, or each call mints a key.
+    if (!remembered && !req.headers.has("authorization")) {
       // ponytail: parallel first requests may each mint a cookie; the losers'
       // Redis keys just expire unused after a year.
       try {
