@@ -224,6 +224,8 @@ Read this first before deep code exploration.
    `resumable-stream/generic` publishes the SSE stream and a returning client uses
    `GET /api/chat/[id]/stream` to resume it. The producer continues after the
    original browser disconnects.
+   Upstash REST subscribe is SSE split on newlines, so the publisher in
+   `src/lib/chat/resumable-stream.ts` JSON-encodes every payload.
 13. Without Redis stream resume, the server consumes the stream in a Next.js
    `after()` task so generation can continue while that function remains alive.
    Clients poll `GET /api/conversations/[id]?status=1` and reload persisted messages
