@@ -41,6 +41,14 @@ Architecture and plan: `docs/MOBILE_APP_PLAN.md` (written for the old Expo app) 
   resumable streams, logs) expire on their own TTL. On `204` the app must drop
   its token and cancel in-flight requests. Consumed by the native apps in
   `../chatlds-app`, not the old Expo app.
+- **POST `/api/billing/handoff`** (0.12.90) — Bearer auth, no body, `401 { error }`
+  if not signed in, else `200 { url }`: a `/sign-in?__clerk_ticket=…&redirect_url=/billing`
+  link on the server's own origin (dev.chatlds.it -> dev.chatlds.it). The ticket is
+  single-use and expires in 60s, so open it in the system browser immediately. If
+  that browser is already signed in as the same user (`uid` in the URL), the server
+  skips the ticket and sends it straight to `/billing`; if it is signed in as a
+  different user, it stays on that account's home (no purchase on the wrong
+  account). Consumed by `../chatlds-app`.
 - On the M2 radar: `/api/feedback`, `/api/memory`, `/api/settings`, `/api/search`.
 
 ## Copied types

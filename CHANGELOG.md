@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.12.90
+
+- **`POST /api/billing/handoff`** for the native apps (they can't take payments
+  in-app). Signed-in users only (`401 { error }` otherwise; bearer works).
+  Returns `{ url }` = `<request origin>/sign-in?__clerk_ticket=<single-use
+  Clerk sign-in token, 60s>&redirect_url=/billing`, to open in the system
+  browser (same ticket flow as the remember-me redirect). The URL also carries
+  `uid`; when the browser is already signed in as that user, the proxy skips
+  `/sign-in` (Clerk wouldn't redeem the ticket) and redirects to `redirect_url`
+  (same-origin paths only, else `/`). Mobile contract in
+  `docs/MOBILE.md`.
+
 ## 0.12.89
 
 - **Account deletion review fixes.** `DELETE /api/account` now cancels paid
