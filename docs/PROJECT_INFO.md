@@ -340,6 +340,11 @@ Read this first before deep code exploration.
     a billing failure leaves nothing deleted. `204` on success, `502 { error }`
     if a step fails; retry-safe (Clerk 404/403 on lookup, 404 on delete count
     as done). Required by App Store / Play for the native apps.
+- `POST /api/billing/handoff`
+  - Real Clerk user only (cookie or bearer; `401 { error }` otherwise). Mints a
+    60s single-use Clerk sign-in token and returns `{ url }` =
+    `<request origin>/sign-in?__clerk_ticket=…&redirect_url=/billing` for the
+    native apps to open in the system browser (`src/lib/auth/billing-handoff.ts`).
 
 ## 6) Data model summary
 
@@ -679,6 +684,7 @@ Reference template: `.env.example`.
   - `src/app/api/conversations/[id]/route.ts`
   - `src/app/api/settings/route.ts` (per-user prefs: response style + onboarding state)
   - `src/app/api/account/route.ts` + `src/lib/auth/delete-account.ts` (account deletion)
+  - `src/app/api/billing/handoff/route.ts` + `src/lib/auth/billing-handoff.ts` (native billing handoff)
 - User settings:
   - `src/lib/db/user-settings.ts` (read/write `rag_user_settings`)
 - Chat generation lifecycle:

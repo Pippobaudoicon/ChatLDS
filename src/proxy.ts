@@ -13,6 +13,7 @@ import {
   rememberUser,
   rememberedUserId,
 } from "@/lib/auth/remember";
+import { handoffRedirect } from "@/lib/auth/billing-handoff";
 
 // Auth is checked where the data is (each page and route calls getViewer() or
 // auth()), not here. The proxy only hands signed-out visitors of the
@@ -50,6 +51,10 @@ export default clerkMiddleware(async (auth, req) => {
   const remember = req.cookies.get(REMEMBER_COOKIE)?.value;
 
   if (userId) {
+    if (req.method === "GET" && req.nextUrl.pathname.startsWith("/sign-in")) {
+      const to = handoffRedirect(req.nextUrl, userId);
+      if (to) return NextResponse.redirect(new URL(to, req.url));
+    }
     const remembered = rememberedUserId(remember) === userId;
     if (!guestCookie && remembered) return;
     const res = NextResponse.next();
