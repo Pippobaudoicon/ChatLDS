@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.88
+
+- **`DELETE /api/account`** for in-app account deletion (App Store / Play
+  requirement). Signed-in users only (`401` for guests/anonymous; bearer works).
+  Deletes the user's conversations (cascading messages), feedback, settings and
+  memory rows in one batch, then the Clerk user; `204`, or `502 { error }` if
+  Clerk fails (retry-safe). A paid Clerk Billing subscription is not cancelled.
+  Consumed by the new native apps (`../chatlds-app`); `docs/MOBILE.md` updated.
+
 ## 0.12.87
 
 - **Stay signed in on the web past Clerk's 7-day session cap.** Signed-in

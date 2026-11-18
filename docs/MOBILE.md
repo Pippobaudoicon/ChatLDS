@@ -33,6 +33,11 @@ Why Expo, architecture, and the roadmap: `docs/MOBILE_APP_PLAN.md` and
   latest answer), also stored as `details.followUps` on that message in
   GET `/api/conversations/[id]`. Both are additive; ignoring them is fine.
 - Realtime voice (`/api/realtime/*`, 0.12.86) is web-only for now; the app does not use it.
+- **DELETE `/api/account`** (0.12.88) — in-app account deletion required by App
+  Store / Play. Bearer auth, no body, `204` on success, `502 { error }` on failure
+  (safe to retry). Erases all the user's server data and the Clerk user. Consumed
+  by the new native apps in `../chatlds-app`, not the old Expo app
+  (`../chatlds-mobile`). It does not cancel a paid subscription.
 - On the M2 radar: `/api/feedback`, `/api/memory`, `/api/settings`, `/api/search`.
 
 ## Copied types

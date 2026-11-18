@@ -329,6 +329,14 @@ Read this first before deep code exploration.
 - `PUT /api/settings`
   - Auth required. Updates whichever preferences are present (default response
     style and/or onboarding tour state); at least one field is required.
+- `DELETE /api/account`
+  - Real Clerk user only (`auth()`, cookie or bearer; guests get `401`).
+    Deletes the user's rows in every `clerk_user_id` table (conversations,
+    which cascade to messages; feedback; settings; memory profile, periods and
+    conversation memory) in one `db.batch`, clears the entitlement cache, then
+    deletes the Clerk user. `204` on success, `502 { error }` if either step
+    fails; retry-safe (a Clerk 404 counts as done). Does not cancel a paid
+    Clerk Billing subscription. Required by App Store / Play for the native apps.
 
 ## 6) Data model summary
 
@@ -667,6 +675,7 @@ Reference template: `.env.example`.
   - `src/app/api/conversations/route.ts`
   - `src/app/api/conversations/[id]/route.ts`
   - `src/app/api/settings/route.ts` (per-user prefs: response style + onboarding state)
+  - `src/app/api/account/route.ts` + `src/lib/auth/delete-account.ts` (account deletion)
 - User settings:
   - `src/lib/db/user-settings.ts` (read/write `rag_user_settings`)
 - Chat generation lifecycle:
