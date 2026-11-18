@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.91
+
+- **Fix: stream resume (`GET /api/chat/[id]/stream`) hung with no events until
+  the 180s timeout** (web reload mid-answer and native Stop→resume). Upstash
+  REST subscribe is SSE split on newlines, so every published SSE chunk, the
+  replay, and the DONE marker arrived truncated: the client got newline-less
+  bytes it couldn't parse and the stream never closed. The Upstash publisher now
+  JSON-encodes payloads (the subscriber's auto-deserialize decodes them).
+  Test: `pnpm run test:resumable-stream`.
+
 ## 0.12.90
 
 - **`POST /api/billing/handoff`** for the native apps (they can't take payments
