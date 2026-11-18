@@ -1,12 +1,12 @@
 # ChatLDS Mobile — Backend Sync Contract
 
-The native app (`../chatlds-mobile`, Expo / React Native) is a **thin client over
-THIS API**. The backend stays unchanged for the happy path. When you change any
+The native apps (`../chatlds-app`, SwiftUI on iOS and Compose on Android) are
+**thin clients over THIS API**. The backend stays unchanged for the happy path. When you change any
 of the surfaces below, update the mobile app **in the same change** and add a
 `CHANGELOG.md` entry.
 
-Why Expo, architecture, and the roadmap: `docs/MOBILE_APP_PLAN.md` and
-`../chatlds-mobile/ROADMAP.md`.
+Architecture and plan: `docs/MOBILE_APP_PLAN.md` (written for the old Expo app) and
+`../chatlds-app/SPEC.md`.
 
 ## What the app consumes
 
@@ -35,14 +35,17 @@ Why Expo, architecture, and the roadmap: `docs/MOBILE_APP_PLAN.md` and
 - Realtime voice (`/api/realtime/*`, 0.12.86) is web-only for now; the app does not use it.
 - **DELETE `/api/account`** (0.12.88) — in-app account deletion required by App
   Store / Play. Bearer auth, no body, `204` on success, `502 { error }` on failure
-  (safe to retry). Erases all the user's server data and the Clerk user. Consumed
-  by the new native apps in `../chatlds-app`, not the old Expo app
-  (`../chatlds-mobile`). It does not cancel a paid subscription.
+  (safe to retry). First cancels any paid Clerk Billing subscription items
+  immediately (no proration/refund handling), then erases all stored user data
+  and the Clerk user; transient caches (Redis usage counters, remember keys,
+  resumable streams, logs) expire on their own TTL. On `204` the app must drop
+  its token and cancel in-flight requests. Consumed by the native apps in
+  `../chatlds-app`, not the old Expo app.
 - On the M2 radar: `/api/feedback`, `/api/memory`, `/api/settings`, `/api/search`.
 
 ## Copied types
 
-`chatlds-mobile/src/lib/types.ts` is a hand-copied subset of `src/lib/types.ts` +
+The native apps' hand-copied models (`../chatlds-app`) are a subset of `src/lib/types.ts` +
 `src/lib/api/validation.ts` (`SourceType`, `UiLanguage`, `DEFAULT_SOURCES`, the
 create-conversation response). **If you change those shapes, update the copy.**
 

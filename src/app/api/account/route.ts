@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 // guests have no account, so no getViewer().
 export async function DELETE() {
   const { userId } = await auth();
-  if (!userId) return new Response("Unauthorized", { status: 401 });
+  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     await deleteAccount(userId);

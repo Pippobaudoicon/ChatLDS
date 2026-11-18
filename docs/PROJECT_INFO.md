@@ -105,7 +105,8 @@ Read this first before deep code exploration.
 - **Remember-me** (`src/lib/auth/remember.ts`): Clerk's free plan caps sessions
   at 7 days, so the proxy gives signed-in browsers a 1-year httpOnly
   `chatlds_remember` cookie (`<userId>:<secret>`; Redis key
-  `remember:<sha256(secret)>` → userId). On a signed-out full page load
+  `remember:<sha256(secret)>` → userId; not issued to requests with an
+  `Authorization` header, i.e. native bearer clients). On a signed-out full page load
   (`sec-fetch-mode: navigate`, not `/sign-in*`/`/sign-up*`) with that cookie,
   the proxy GETDELs the key, mints a Clerk sign-in token and redirects to
   `/sign-in?__clerk_ticket=…&redirect_url=<original>`; `<SignIn/>` redeems it
@@ -333,10 +334,12 @@ Read this first before deep code exploration.
   - Real Clerk user only (`auth()`, cookie or bearer; guests get `401`).
     Deletes the user's rows in every `clerk_user_id` table (conversations,
     which cascade to messages; feedback; settings; memory profile, periods and
-    conversation memory) in one `db.batch`, clears the entitlement cache, then
-    deletes the Clerk user. `204` on success, `502 { error }` if either step
-    fails; retry-safe (a Clerk 404 counts as done). Does not cancel a paid
-    Clerk Billing subscription. Required by App Store / Play for the native apps.
+    conversation memory) in one `db.batch`, then deletes the Clerk user. Paid
+    Clerk Billing subscription items (active/upcoming/past_due, non-default
+    plan) are cancelled immediately first, with no proration/refund handling, so
+    a billing failure leaves nothing deleted. `204` on success, `502 { error }`
+    if a step fails; retry-safe (Clerk 404/403 on lookup, 404 on delete count
+    as done). Required by App Store / Play for the native apps.
 
 ## 6) Data model summary
 

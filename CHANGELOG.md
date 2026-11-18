@@ -1,12 +1,24 @@
 # Changelog
 
+## 0.12.89
+
+- **Account deletion review fixes.** `DELETE /api/account` now cancels paid
+  Clerk Billing subscription items immediately (no proration/refund handling)
+  before deleting anything, so a billing failure leaves the account intact and
+  a deleted user is never left being charged; the 401 is JSON `{ error }`. The
+  test checks the generated SQL of each delete and the cancel, batch, Clerk
+  order. Proxy: requests carrying an `Authorization` header (native bearer
+  clients, which have no cookie jar) no longer mint a `chatlds_remember` Redis
+  key + cookie on every call. Docs: `MOBILE.md`/`AGENTS.md` now point at
+  `../chatlds-app`.
+
 ## 0.12.88
 
 - **`DELETE /api/account`** for in-app account deletion (App Store / Play
   requirement). Signed-in users only (`401` for guests/anonymous; bearer works).
   Deletes the user's conversations (cascading messages), feedback, settings and
   memory rows in one batch, then the Clerk user; `204`, or `502 { error }` if
-  Clerk fails (retry-safe). A paid Clerk Billing subscription is not cancelled.
+  Clerk fails (retry-safe). (0.12.89 adds cancelling paid subscriptions first.)
   Consumed by the new native apps (`../chatlds-app`); `docs/MOBILE.md` updated.
 
 ## 0.12.87
