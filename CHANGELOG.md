@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.12.87
+
+- **Stay signed in on the web past Clerk's 7-day session cap.** Signed-in
+  browsers get a 1-year httpOnly `chatlds_remember` cookie
+  (`<userId>:<secret>`, Redis stores only `sha256(secret)` → userId). When the
+  Clerk session has expired, a full page load trades the cookie (single use,
+  rotated) for a Clerk sign-in token and redirects through
+  `/sign-in?__clerk_ticket=…&redirect_url=…`, which `<SignIn/>` redeems. The
+  user sees a short loading state on the sign-in page and then the app.
+  `afterSignOutUrl` is now `/sign-in?signed_out=1`, which deletes the token.
+  Redis/Clerk failures are logged and fall back to the old behaviour (signed
+  out). Web only; mobile bearer auth is unaffected.
+
 ## 0.12.86
 
 - **Web realtime voice prototype (flag `NEXT_PUBLIC_REALTIME_VOICE=1`, off by

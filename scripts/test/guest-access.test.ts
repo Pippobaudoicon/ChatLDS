@@ -4,6 +4,7 @@
  * Run: `pnpm run test:guest`
  */
 import { guestIdFromCookie, isGuestId } from "@/lib/auth/guest";
+import { redeem, rememberedUserId } from "@/lib/auth/remember";
 import { getBillingEntitlements } from "@/lib/billing/entitlements";
 
 let failures = 0;
@@ -20,7 +21,15 @@ check("injected cookie → null", guestIdFromCookie(`${uuid}' OR 1=1`) === null)
 check("guest id detected", isGuestId(`guest:${uuid}`));
 check("clerk id is not a guest", !isGuestId("user_2abcDEF"));
 
+// Remember-me cookie `<userId>:<secret>` (src/lib/auth/remember.ts).
+check("remember cookie → user id", rememberedUserId(`user_2abc:${uuid}`) === "user_2abc");
+check("missing remember cookie → null", rememberedUserId(undefined) === null);
+check("remember cookie without secret → null", rememberedUserId(uuid) === null);
+check("remember cookie without user → null", rememberedUserId(`:${uuid}`) === null);
+
 void (async () => {
+  check("malformed remember cookie is not redeemed", (await redeem("garbage")) === null);
+
   const entitlements = await getBillingEntitlements(`guest:${uuid}`);
   check("guest plan", entitlements.plan === "guest" && !entitlements.isPro);
   check("guest quota is small", entitlements.limits.chatRequests === 5);
