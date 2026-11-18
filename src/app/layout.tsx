@@ -70,7 +70,7 @@ export default async function RootLayout({
   return (
     <ClerkProvider
       appearance={{ cssLayerName: "clerk" }}
-      afterSignOutUrl="/sign-in"
+      afterSignOutUrl="/sign-in?signed_out=1"
       localization={authLocalization(lang)}
     >
       <html

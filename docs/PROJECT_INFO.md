@@ -102,6 +102,15 @@ Read this first before deep code exploration.
   user data must add its own check. In the sidebar, guests get locked
   Search/Memory/Billing buttons (`FeatureGate`, `src/components/ui/feature-gate.tsx`, reusable for Pro-only buttons) that open a sign-up card instead
   of navigating.
+- **Remember-me** (`src/lib/auth/remember.ts`): Clerk's free plan caps sessions
+  at 7 days, so the proxy gives signed-in browsers a 1-year httpOnly
+  `chatlds_remember` cookie (`<userId>:<secret>`; Redis key
+  `remember:<sha256(secret)>` → userId). On a signed-out full page load
+  (`sec-fetch-mode: navigate`, not `/sign-in*`/`/sign-up*`) with that cookie,
+  the proxy GETDELs the key, mints a Clerk sign-in token and redirects to
+  `/sign-in?__clerk_ticket=…&redirect_url=<original>`; `<SignIn/>` redeems it
+  and the cookie is rotated. `afterSignOutUrl="/sign-in?signed_out=1"` makes the
+  proxy delete the token. Web only (mobile uses bearer tokens).
 - Auth pages (`/sign-in`, `/sign-up`) render `src/components/auth/AuthShell.tsx`:
   a ChatLDS split layout around Clerk's `<SignIn/>`/`<SignUp/>` components.
   There are no custom auth hooks: styling is `appearance.elements` Tailwind
