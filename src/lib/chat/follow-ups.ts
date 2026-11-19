@@ -2,12 +2,14 @@
 // by a small separate model call once the answer is saved, so they never delay
 // the answer itself; see POST /api/conversations/[id]/follow-ups.
 
-import { generateText, gateway, Output } from "ai";
-import { z } from "zod";
+import { generateText, gateway } from "ai";
 
-// A small, fast, non-reasoning multilingual model: three short questions need
-// no more. Pinned here rather than read from CHAT_MODEL, so a pricier chat
-// model doesn't raise this cost.
+// A small, fast multilingual model: three short questions need no more.
+// Pinned here rather than read from CHAT_MODEL, so a pricier chat model
+// doesn't raise this cost. The deployed alias (nvidia/nemotron-3.5 via
+// `vmc/chatlds-followup-model`) is a reasoning model, so reasoning is
+// disabled below — at the default it spent the whole token budget thinking
+// and returned no text.
 const DEFAULT_FOLLOW_UP_MODEL = "google/gemini-2.5-flash-lite";
 const FOLLOW_UP_MODEL = process.env.FOLLOW_UP_MODEL?.trim() || DEFAULT_FOLLOW_UP_MODEL;
 // Suggestions arriving later than this are no longer useful; give up instead.
@@ -17,10 +19,6 @@ export const MAX_FOLLOW_UPS = 3;
 export const MAX_FOLLOW_UP_LENGTH = 120;
 // Only the answer's opening matters for picking next questions; keeps the call cheap.
 const MAX_ANSWER_CHARS = 2500;
-
-const followUpsSchema = z.object({
-  questions: z.array(z.string()).max(6),
-});
 
 /**
  * Clean model output into at most {@link MAX_FOLLOW_UPS} short, distinct
@@ -47,27 +45,55 @@ export function normalizeFollowUps(raw: unknown, question = ""): string[] {
   return result;
 }
 
+/**
+ * Parse the model's plain-text reply: one question per line. (The gateway
+ * model doesn't enforce structured output, so no JSON schema is requested.)
+ */
+export function parseFollowUpText(text: string, question = ""): string[] {
+  // Only lines that actually end as a question count — this drops stray
+  // echoes of the prompt's role labels or framing the model may repeat.
+  const lines = text.split(/\r?\n/).filter((line) => line.trim().endsWith("?"));
+  return normalizeFollowUps(lines, question);
+}
+
 /** Suggest next questions for a finished turn. Returns `[]` on any error. */
 export async function generateFollowUps(
+  question: string,
+  answer: string
+): Promise<string[]> {
+  // The free deployed model is inconsistent (it occasionally echoes the
+  // instructions or rambles instead of answering), so one empty parse is
+  // retried once before giving up.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const followUps = await generateOnce(question, answer);
+    if (followUps.length > 0) return followUps;
+  }
+  return [];
+}
+
+async function generateOnce(
   question: string,
   answer: string
 ): Promise<string[]> {
   try {
     const result = await generateText({
       model: gateway(FOLLOW_UP_MODEL),
+      // This task needs no reasoning; the deployed model reasons by default
+      // and would spend the whole budget before writing anything.
+      reasoning: "none",
       instructions: [
         "You suggest what a user might ask next in a chat about the teachings of The Church of Jesus Christ of Latter-day Saints.",
         `Write ${MAX_FOLLOW_UPS} short follow-up questions (under 80 characters each) the USER could send next, in the user's voice.`,
         "Write them in the same language as the user's question.",
         "Make them distinct: e.g. go deeper on one point, ask for a scripture or talk, ask how to apply it.",
         "Do not repeat the user's question and do not answer anything.",
+        "Write exactly one question per line, with no numbering, bullets, quotes, or extra text.",
       ].join("\n"),
       prompt: `User question:\n${question.trim()}\n\nAssistant answer:\n${answer.trim().slice(0, MAX_ANSWER_CHARS)}`,
       maxOutputTokens: 300,
       abortSignal: AbortSignal.timeout(FOLLOW_UP_TIMEOUT_MS),
-      output: Output.object({ schema: followUpsSchema }),
     });
-    return normalizeFollowUps(result.output.questions, question);
+    return parseFollowUpText(result.text, question);
   } catch (error) {
     console.error("Follow-up suggestion generation failed", error);
     return [];

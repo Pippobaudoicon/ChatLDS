@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.92
+
+- **Fix suggested follow-up questions returning empty.** The deployed
+  `FOLLOW_UP_MODEL` (`vmc/chatlds-followup-model`, a reasoning model)
+  spent the whole 300-token budget on reasoning and returned no text,
+  so `POST /api/conversations/[id]/follow-ups` always answered
+  `{ followUps: [] }` and web/mobile showed no suggestions. Generation
+  now runs with `reasoning: "none"` and asks for one question per line
+  in plain text (the gateway model doesn't enforce structured output,
+  so the previous `Output.object` schema also failed most calls);
+  lines are cleaned by the existing `normalizeFollowUps`, non-question
+  lines are dropped, and one empty result is retried once (the free
+  model is inconsistent). No API contract change.
+
 ## 0.12.91
 
 - **Fix: stream resume (`GET /api/chat/[id]/stream`) hung with no events until
