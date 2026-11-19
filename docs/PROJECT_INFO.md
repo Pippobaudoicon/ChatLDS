@@ -575,6 +575,8 @@ Notes:
   `system-prompt.ts` exports `RESPONSE_STYLES` (`balanced` | `scholar` | `simple`
   | `concise`), `DEFAULT_RESPONSE_STYLE` (`balanced`), and
   `buildSystemPrompt(styleId)`. `SYSTEM_PROMPT` = `buildSystemPrompt(default)`.
+  Answers name sources inline and never end with a sources/bibliography list
+  (the UI shows sources; 0.12.93).
   The default "Balanced" style targets 80–150 words in one or two short
   paragraphs for ordinary questions, with essential supporting points and
   citations (0.12.74). Simple questions can be shorter; requested coverage and

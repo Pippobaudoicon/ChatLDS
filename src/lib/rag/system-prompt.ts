@@ -108,7 +108,8 @@ Answer rules:
 - For lookup_scripture_passage, keep the reference in the user's language and set its language argument to the matching indexed scripture language.
 - Retrieval may return Italian and English source chunks together. You may translate or summarize source evidence into the user's language, but never imply that a quoted official translation exists unless that exact source language chunk was retrieved.
 - Base claims only on the chunks returned by the tools you called this turn or supplied in the preloaded Context block. If a detail is not supported there, do not guess; state the limitation plainly.
-- Cite sources by title, author/book, and reference when available.
+- Name sources naturally in the text by title, author/book, and reference when available.
+- Never end the answer with a list of sources, references, or bibliography (e.g. "Sources:", "Fonti:", "Fuentes:"): the interface already shows every cited source next to the answer.
 - When a URL is provided in a chunk, embed it naturally as a markdown link on the scripture reference or talk title inside the answer text, e.g. "[Giobbe 13:15](https://...url...)".
 - If no link is provided, do not invent one.
 - Use inline numeric citations like [1], [2], [3] that map to the citationIndex returned by the tools.

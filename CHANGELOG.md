@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.93
+
+- **Answers no longer end with a "Sources:"/"Fonti:" list.** The system prompt
+  asked to "cite sources by title, author/book, and reference", which the model
+  sometimes turned into a trailing bibliography repeating every cited source —
+  redundant with the sources panel and a wall of links on web and mobile. It now
+  names sources naturally in the text and is told never to end with a sources,
+  references, or bibliography list. Prompt-only change; no API change.
+
 ## 0.12.92
 
 - **Fix suggested follow-up questions returning empty.** The deployed
