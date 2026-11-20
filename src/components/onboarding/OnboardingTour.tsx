@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Popover } from "@base-ui/react/popover";
 import { track } from "@vercel/analytics";
 import { useLanguage } from "@/components/chat/language-context";
@@ -102,6 +103,11 @@ export function OnboardingTour() {
   const pathname = usePathname();
   const { language } = useLanguage();
   const text = uiText(language).onboarding;
+  // Guests never auto-start the tour, and a guest replay never marks it seen.
+  const { isLoaded: authLoaded, isSignedIn } = useUser();
+  const signedIn = authLoaded && !!isSignedIn;
+  const signedInRef = useRef(signedIn);
+  signedInRef.current = signedIn;
 
   const [running, setRunning] = useState(false);
   const [open, setOpen] = useState(false);
@@ -137,7 +143,7 @@ export function OnboardingTour() {
     (stepIndex: number) => {
       // Resume point only matters while still pending; never persist during a
       // replay of an already-terminal user.
-      if (persistedStatus.current !== "pending") return;
+      if (!signedInRef.current || persistedStatus.current !== "pending") return;
       cancelStepSave();
       stepTimer.current = setTimeout(() => {
         void putSettings({ onboardingStep: stepIndex }).catch(() => {});
@@ -231,12 +237,14 @@ export function OnboardingTour() {
   const finalize = useCallback(
     async (status: OnboardingStatus) => {
       cancelStepSave();
-      try {
-        localStorage.setItem(DISMISSED_KEY, "1");
-      } catch {}
+      if (signedInRef.current) {
+        try {
+          localStorage.setItem(DISMISSED_KEY, "1");
+        } catch {}
+      }
       // Genuine first run (still pending): persist terminal state and keep the
       // callout open if the write fails, so we never silently claim success.
-      if (persistedStatus.current === "pending") {
+      if (signedInRef.current && persistedStatus.current === "pending") {
         setSaving(true);
         setSaveError(false);
         try {
@@ -277,6 +285,7 @@ export function OnboardingTour() {
 
   // Load persisted prefs once.
   useEffect(() => {
+    if (!signedIn) return;
     let cancelled = false;
     fetch("/api/settings", { headers: { "Cache-Control": "no-store" } })
       .then((res) => (res.ok ? res.json() : null))
@@ -290,7 +299,7 @@ export function OnboardingTour() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [signedIn]);
 
   // Auto-start: only a pending user, only on /chat, only once.
   useEffect(() => {
