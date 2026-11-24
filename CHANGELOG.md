@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.101
+
+- **Fix: `truncated` never fired for reference + topic.** `pinnedLimit: 30` already capped
+  `retrieve()` at 30, so the tool's found count never exceeded 30. The tool now passes an
+  unbounded `pinnedLimit` and cuts at 30 itself. Probe: `Isaiah 1-20` with and without a
+  topic (eng + ita) returns 30 passage chunks plus the `truncated` sentence (3/3).
+
 ## 0.12.100
 
 - **`lookup_scripture_passage`: a structured passage is cut at 30 chunks (the schema's topK

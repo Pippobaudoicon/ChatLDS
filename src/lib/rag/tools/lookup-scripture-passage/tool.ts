@@ -98,7 +98,8 @@ export function createLookupScripturePassageTool({
         const chunks = await retrieve(reference, ["scriptures"], language, topK, {
           scriptureLanguage: language,
           // "Alma 32 e la fede": the whole passage first, semantic results only fill what is left.
-          pinnedLimit: MAX_PASSAGE_CHUNKS,
+          // (not MAX_PASSAGE_CHUNKS: the slice below cuts at 30 and sets `truncated`, which needs the real count)
+          pinnedLimit: Number.POSITIVE_INFINITY,
         });
         const selection = parseScriptureSelection(reference, language);
 

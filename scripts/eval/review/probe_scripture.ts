@@ -65,7 +65,7 @@ async function main() {
   const newLookup = () =>
     createRagTools({ language: "eng", sources: ALL_SOURCES, topK: 20, initialChunks: [], maxChunks: 50, maxRetrievalCalls: 2, onSources: () => {} })
       .lookup_scripture_passage as unknown as {
-      execute: (i: { reference: string; language: string; topK: number }, o: unknown) => Promise<{ chunks: { id: string }[] }>;
+      execute: (i: { reference: string; language: string; topK: number }, o: unknown) => Promise<{ chunks: { id: string }[]; truncated?: string }>;
     };
   const topical: [string, "eng" | "ita", string, string?][] = [
     ["Alma 32 e la fede nelle difficoltà quotidiane", "ita", "alma:32"],
@@ -102,6 +102,22 @@ async function main() {
     topicalOut.push(rec);
     console.log(JSON.stringify(rec));
   }
+  // Ranges with more than 30 chunks, with a topic: the first 30 come back in order and the result says it was cut.
+  const wide: [string, "eng" | "ita", string][] = [
+    ["Isaiah 1-20 and the invitation to repent and be cleansed", "eng", "isa"],
+    ["Isaia 1-20 l'invito a pentirsi e a essere purificati", "ita", "isa"],
+    ["Isaiah 1-20", "eng", "isa"],
+  ];
+  const wideOut: Record<string, unknown>[] = [];
+  for (const [reference, lang, slug] of wide) {
+    const res = await newLookup().execute({ reference, language: lang, topK: 16 }, { toolCallId: "probe", messages: [] });
+    const passage = res.chunks.filter((c) => c.id.split(":")[2] === slug && Number(c.id.split(":")[3]) <= 20);
+    const rec = { reference, lang, passageChunks: passage.length, truncatedShown: !!res.truncated, ok: passage.length >= 30 && !!res.truncated };
+    wideOut.push(rec);
+    console.log(JSON.stringify(rec));
+  }
+  console.log({ wideRangeTruncatedShown: `${wideOut.filter((x) => x.ok).length}/${wideOut.length}` });
+
   console.log({ topicalChapterComplete: `${topicalOut.filter((x) => x.complete).length}/${topicalOut.filter((x) => x.complete !== undefined).length}`, topicalVerseFirst: `${topicalOut.filter((x) => x.verseFirstOk).length}/${topicalOut.filter((x) => x.verseFirstOk !== undefined).length}` });
 
   const agg = (lang?: string) => {
@@ -113,6 +129,6 @@ async function main() {
   console.log(summary);
   const file = process.argv[2] ?? join(here, "out", "probe_scripture.json");
   mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, JSON.stringify({ summary, out, topicalOut }, null, 1));
+  writeFileSync(file, JSON.stringify({ summary, out, topicalOut, wideOut }, null, 1));
 }
 main().then(() => process.exit(0), (e) => { console.error(e); process.exit(1); });
