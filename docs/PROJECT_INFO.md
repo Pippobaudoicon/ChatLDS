@@ -443,7 +443,9 @@ Notes:
 ## 7) Retrieval and prompting behavior
 
 - Uses Pinecone index `lds-rag-v1` (override via `PINECONE_INDEX`) and per-source
-  namespaces. v1 namespaces: scriptures, conference, handbook, study_helps,
+  namespaces. All index reads go through `src/lib/rag/vector-store.ts`;
+  `VECTOR_BACKEND=qdrant` (temporary bridge, Nov 2026) reads a Qdrant collection with
+  the same ids, vectors and metadata instead (namespace = `namespace` payload field). v1 namespaces: scriptures, conference, handbook, study_helps,
   gospel_topics, gospel_selfreliance, gospel_teachings, gospel_other, gospel_study,
   gospel_history, gospel_youth (plus gospel_music kept as a planned-but-empty
   namespace). Legacy namespaces liahona / gospel_family / gospel_videos /
@@ -635,6 +637,7 @@ Notes:
 - `VOYAGE_API_KEY`
 - `PINECONE_API_KEY`
 - `PINECONE_INDEX` (optional; defaults to `lds-rag-v1`; set to `lds-rag` for the legacy index)
+- `VECTOR_BACKEND` (optional; `qdrant` reads the index from Qdrant instead of Pinecone — temporary bridge) with `QDRANT_URL`, `QDRANT_API_KEY`, `QDRANT_COLLECTION` (optional; defaults to `PINECONE_INDEX`)
 - `RAG_INDEX_LANGUAGE` (optional; defaults to `eng` for `lds-rag-v1`; set to `ita` for the legacy index)
 - `CHAT_MODEL` (optional; defaults to `deepseek/deepseek-v4.1-flash`)
 - `RAG_ROUTING_MODEL` (optional; defaults to `openai/gpt-oss-120b`) — dedicated `/api/search` query routing/translation model (used only when `RAG_LANGUAGE_ROUTING=true`), independent from `CHAT_MODEL` (`reasoningEffort: low`, 600-token ceiling)

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.103
+
+- **Temporary Qdrant bridge for the vector index.** Pinecone's free-plan monthly read
+  quota ran out (429 on every read until 1 December). `VECTOR_BACKEND=qdrant` sends the
+  retriever's three reads (filtered query, fetch by id, prefix listing) to a Qdrant
+  collection loaded from the same chunks and cached embeddings
+  (`lds-scraper/scripts/qdrant_bridge_load.py`); unset it to go back to Pinecone.
+  The reads moved from `retriever.ts` to `vector-store.ts`; retrieval behavior is unchanged.
+
 ## 0.12.102
 
 - **Teachings of Presidents of the Church are now in Standard search.**
