@@ -22,6 +22,7 @@ const cases: [string, "ita" | "eng", string, number[], number?][] = [
   ["Marco 13", "ita", "mark", [13]],
   ["Moroni 7:30", "ita", "moro", [7], 30],
   ["Giacobbe 4:9", "ita", "jacob", [4], 9],
+  ["Eter 12:6", "ita", "ether", [12], 6],
   ["Geremia 25", "ita", "jer", [25]],
   ["Giudici 21", "ita", "judg", [21]],
   // Numbered books are not their unnumbered namesakes
