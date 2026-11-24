@@ -3,7 +3,8 @@
  * Run: `pnpm run test:scripture-reference` — pure and deterministic, no network.
  */
 import { SCRIPTURE_BOOKS, bookMetadataName, parseScriptureSelection } from "@/lib/rag/scripture-reference";
-import { isRequestedScriptureChunk } from "@/lib/rag/retriever";
+import { byVerse, isRequestedScriptureChunk } from "@/lib/rag/retriever";
+import { cleanSpeakerName } from "@/lib/rag/tools/search-conference-talks/tool";
 import type { SourceChunk } from "@/lib/types";
 
 let failures = 0;
@@ -82,6 +83,16 @@ check("slug match", isRequestedScriptureChunk(chunk("scriptures:eng:mark:2:1-12:
 check("Malachi is not Mark", !isRequestedScriptureChunk(chunk("scriptures:eng:mal:2:11-17:v1", "Malachi"), "nt", "mark", 2));
 check("Moses is not Mosiah", !isRequestedScriptureChunk(chunk("scriptures:eng:moses:8:14-21:v1", "Moses"), "bofm", "mosiah", 8));
 check("James is not Jacob", !isRequestedScriptureChunk(chunk("scriptures:ita:james:4:1-13:v1", "Giacomo"), "bofm", "jacob", 4));
+
+// Step 2 metadata: per-verse notes/talks parsing and the speaker form used by the Pinecone filter.
+const notes = byVerse(["4: Moro. 7:16; TG Prayer", "5: John 14:26"], ": ", "; ");
+check("verse_notes split per verse", JSON.stringify(notes) === JSON.stringify({ "4": ["Moro. 7:16", "TG Prayer"], "5": ["John 14:26"] }));
+const talks = byVerse(["11 | None Were with Him | Jeffrey R. Holland | 2009-04"], " | ");
+check("cited_in_talks keeps title | speaker | date", talks?.["11"]?.[0] === "None Were with Him | Jeffrey R. Holland | 2009-04");
+check("no metadata -> undefined", byVerse(undefined, ": ") === undefined);
+for (const [raw, want] of [["Presidente Russell M. Nelson", "Russell M. Nelson"], ["Elder  Dieter F. Uchtdorf", "Dieter F. Uchtdorf"], ["Anziano Holland", "Holland"], ["Thomas S. Monson", "Thomas S. Monson"]]) {
+  check(`cleanSpeakerName(${raw})`, cleanSpeakerName(raw) === want, cleanSpeakerName(raw));
+}
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

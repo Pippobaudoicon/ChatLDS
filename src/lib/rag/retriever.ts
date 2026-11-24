@@ -14,7 +14,7 @@ import {
   isDiversityEnabled,
   isMultiQueryEnabled,
 } from "./flags";
-import { queryVectors, fetchVectors, fetchVectorsByPrefix } from "./vector-store";
+import { queryVectors, fetchVectors, fetchVectorsByPrefix, type EqFilter } from "./vector-store";
 
 function enrichScriptureUrl(
   url: string | undefined,
@@ -57,7 +57,24 @@ function toChunk(
     topics: (match.metadata?.topics as string[] | undefined) ?? undefined,
     entities: toEntities(match.metadata),
     references: (match.metadata?.references as string[] | undefined) ?? undefined,
+    authority: (match.metadata?.authority_level as string | undefined) ?? undefined,
+    verseNotes: byVerse(match.metadata?.verse_notes, ": ", "; "),
+    citedInTalks: byVerse(match.metadata?.cited_in_talks, " | "),
   };
+}
+
+// Pinecone metadata is flat: per-verse lists are stored as strings "4: James 1:5; Moroni 7:9" (verse_notes,
+// one per verse) or "11 | Title | Speaker | 2015-10" (cited_in_talks, one per talk). Back to { verse: [...] }.
+export function byVerse(lines: unknown, sep: string, itemSep?: string): Record<string, string[]> | undefined {
+  if (!Array.isArray(lines) || lines.length === 0) return undefined;
+  const out: Record<string, string[]> = {};
+  for (const line of lines as string[]) {
+    const at = line.indexOf(sep);
+    if (at < 0) continue;
+    const rest = line.slice(at + sep.length);
+    (out[line.slice(0, at)] ??= []).push(...(itemSep ? rest.split(itemSep) : [rest]));
+  }
+  return out;
 }
 
 function toEntities(
@@ -467,7 +484,9 @@ export async function retrieve(
 export async function retrieveConferenceCandidates(
   queries: string[],
   language: Language,
-  topK = 20
+  topK = 20,
+  /** Extra metadata filter, e.g. { speaker_name: { $eq: "Thomas S. Monson" }, year: { $eq: 2016 } }. */
+  filter: EqFilter = {}
 ): Promise<SourceChunk[]> {
   const candidates = queries.filter((query) => query.trim().length > 0);
   if (candidates.length === 0) return [];
@@ -477,7 +496,7 @@ export async function retrieveConferenceCandidates(
   // The conference namespace is English-only: one query per candidate, in the index language.
   const candidateResults = await Promise.all(
     vectors.map((vector) =>
-      queryVectors("conference", vector, topK, { language: { $eq: language } }).then((matches) =>
+      queryVectors("conference", vector, topK, { language: { $eq: language }, ...filter }).then((matches) =>
         matches.map((match): SourceChunk => toChunk("conference", language, match))
       )
     )
