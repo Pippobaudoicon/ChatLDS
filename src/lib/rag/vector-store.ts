@@ -19,7 +19,8 @@ export type EqFilter = Record<string, { $eq: string | number }>;
 const INDEX_NAME = process.env.PINECONE_INDEX ?? "lds-rag-v1";
 
 function isQdrant(): boolean {
-  return process.env.VECTOR_BACKEND === "qdrant";
+  // trim: a trailing newline pasted into the Vercel value must not silently fall back to Pinecone.
+  return process.env.VECTOR_BACKEND?.trim() === "qdrant";
 }
 
 // ── Pinecone ────────────────────────────────────────────────────────────────
@@ -41,11 +42,13 @@ async function pineconeFetch(namespace: string, ids: string[]): Promise<VectorMa
 type QdrantPoint = { id: string; score?: number; payload?: Record<string, unknown> };
 
 async function qdrant<T>(path: string, body: unknown): Promise<T> {
-  const collection = process.env.QDRANT_COLLECTION ?? INDEX_NAME;
-  const res = await fetch(`${process.env.QDRANT_URL}/collections/${collection}${path}`, {
+  const url = (process.env.QDRANT_URL ?? "").trim().replace(/\/$/, "");
+  const collection = process.env.QDRANT_COLLECTION?.trim() || INDEX_NAME;
+  const res = await fetch(`${url}/collections/${collection}${path}`, {
     method: "POST",
-    headers: { "content-type": "application/json", "api-key": process.env.QDRANT_API_KEY ?? "" },
+    headers: { "content-type": "application/json", "api-key": (process.env.QDRANT_API_KEY ?? "").trim() },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) throw new Error(`Qdrant ${path} ${res.status}: ${await res.text()}`);
   return ((await res.json()) as { result: T }).result;
