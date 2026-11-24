@@ -3,7 +3,7 @@
  *
  * Run: `pnpm run test:follow-ups`
  */
-import { MAX_FOLLOW_UP_LENGTH, normalizeFollowUps } from "@/lib/chat/follow-ups";
+import { MAX_FOLLOW_UP_LENGTH, normalizeFollowUps, parseFollowUpText } from "@/lib/chat/follow-ups";
 
 let failures = 0;
 let total = 0;
@@ -39,6 +39,18 @@ check(
 check(
   "at most three suggestions",
   normalizeFollowUps(["A?", "B?", "C?", "D?"]).length === 3
+);
+check(
+  "plain-text reply: one question per line is parsed and cleaned",
+  same(parseFollowUpText("1. What is faith?\r\n- Where is it taught?\n\nCome applicarlo?", "What is faith?"), [
+    "Where is it taught?",
+    "Come applicarlo?",
+  ])
+);
+check("empty reply gives no suggestions", same(parseFollowUpText("  \n\n"), []));
+check(
+  "non-question lines (prompt echoes, framing) are dropped",
+  same(parseFollowUpText("user\nHere are some questions\nWhat is faith?\nTell me more"), ["What is faith?"])
 );
 
 console.log(`\n${total - failures}/${total} passed`);

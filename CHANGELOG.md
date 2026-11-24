@@ -1,14 +1,260 @@
 # Changelog
 
+## 0.12.104
+
+- **Release: development merged with main.** Brings main's 0.12.85 (#23, the system prompt
+  rewritten for Claude Haiku 5.5: shorter rules with reasons, scripture references and
+  titles written as markdown links next to the inline `[N]` markers, no closing list of
+  sources, plus `test:system-prompt`) into the development line. The prompt is #23's text
+  with one rule from development added to its semantic_search line (#32: "what did
+  President X teach about Y" goes to `semantic_search`, which alone reaches the Teachings
+  manuals). #29's "no closing sources list" rule is covered by #23's stricter wording.
+  (main's 0.12.85 and development's 0.12.85, AI SDK 7, are different changes.)
+
+## 0.12.103
+
+- **Temporary Qdrant bridge for the vector index.** Pinecone's free-plan monthly read
+  quota ran out (429 on every read until 1 December). `VECTOR_BACKEND=qdrant` sends the
+  retriever's three reads (filtered query, fetch by id, prefix listing) to a Qdrant
+  collection loaded from the same chunks and cached embeddings
+  (`lds-scraper/scripts/qdrant_bridge_load.py`); unset it to go back to Pinecone.
+  The reads moved from `retriever.ts` to `vector-store.ts`; retrieval behavior is unchanged.
+
+## 0.12.102
+
+- **Teachings of Presidents of the Church are now in Standard search.**
+  `gospel_teachings` joins `ALL_SOURCES`, so Standard scope = scriptures,
+  conference, handbook, study_helps, topics, teachings (Super is unchanged).
+  The Family Proclamation and The Living Christ are indexed in `gospel_topics`
+  (no new namespace), and Official Declarations 1 and 2 in `scriptures`
+  (`od`, with "Dichiarazione ufficiale" and "Official Declaration" aliases
+  in the reference parser). `gospel_topics`/`gospel_teachings` now also carry
+  the official Italian text; for a non-English turn the retriever queries both
+  languages and keeps only the Italian copy of a document that exists in both.
+  The system prompt now sends "what did President X teach about Y" to
+  `semantic_search` (it used `search_conference_talks`, which never sees the
+  manuals): eval leader questions judged correct 17/38 → 27/38.
+  The eval set gains 7 `cov-*` coverage questions (Proclamation, Living Christ,
+  Official Declarations, Italian Teachings); `od` has its English book name for the
+  structured lookup filter, and `od` is no longer a free-text alias (too short).
+  New public `GET /api/sources` returns `{ standard, super }` (ids only, from
+  `ALL_SOURCES`/`SUPER_SOURCES`) so the native apps stop hardcoding the lists.
+
+## 0.12.101
+
+- **Fix: `truncated` never fired for reference + topic.** `pinnedLimit: 30` already capped
+  `retrieve()` at 30, so the tool's found count never exceeded 30. The tool now passes an
+  unbounded `pinnedLimit` and cuts at 30 itself. Probe: `Isaiah 1-20` with and without a
+  topic (eng + ita) returns 30 passage chunks plus the `truncated` sentence (3/3).
+
+## 0.12.100
+
+- **`lookup_scripture_passage`: a structured passage is cut at 30 chunks (the schema's topK
+  maximum), not at topK.** With a topic ("Doctrine and Covenants 124 templi…", "Joseph
+  Smith—History 1 la prima visione…") the passage came back with 16–18 of its 20–29 chunks:
+  the tool cut it at topK 16 and `retrieve()` cut the final list at topK. The tool now passes
+  `pinnedLimit: 30`, `retrieve()` keeps every pinned chunk, and a multi-chapter range with
+  more than 30 chunks says so in the result (`truncated`: "at least N chunks; only the first
+  30 are returned…") instead of cutting silently. Cache key `v: 7` (it now stores the found count).
+- Probe: bare and with-topic lookups of Doctrine and Covenants 124 (20 chunks) and Joseph
+  Smith—History 1 (28 eng / 29 ita) must come back whole (15/15 topical cases pass).
+- Live check (read-only, Pinecone): the `book` filter names match the index metadata for
+  all 87 books in eng and ita plus both Joseph Smith em-dash books.
+
+## 0.12.99
+
+- **Fix: `lookup_scripture_passage` with reference + topic returned half a chapter.**
+  "Alma 32 e la fede nelle difficoltà" (topK 16) pinned only topK/2 structured chunks and
+  the tool's book/chapter filter dropped every semantic result, so the model saw ~8 of the
+  chapter's chunks. The tool now passes `pinnedLimit: topK` to `retrieve()`; the cache key
+  is bumped (`v: 6`).
+- **Structured chapter/verse query filters by book name instead of topK 300.** A chapter
+  number alone matches ~280 chunks (all books), so topK 300 returned 320 KB per query and
+  ~7.3 MB / 2.5 s for a 20-chapter range (topK 80: 160 KB, 4 MB, 2.1 s). The query now also
+  filters on the `book` metadata (`bookMetadataName`, 87 English names, Italian =
+  `canonicalBook`; `Joseph Smith—Storia/Matteo` fixed to the corpus' em dash) with topK 40:
+  ~16 KB per query, 0.15 s for the 20-chapter range, read units unchanged (1/query).
+- `residualWords` is counted around the matched alias position, not the first occurrence
+  of its text ("almanacco alma 32").
+- Eval tooling: `probe_scripture.ts` also calls the tool with reference + topic; new
+  `measure_chapter_topk.ts`.
+
+## 0.12.98
+
+- **Reverted the 2000-char tool chunk preview (0.12.96) to 1200**: no measured quality
+  gain on the review eval, +9% input tokens / +10% cost per turn.
+
+## 0.12.97
+
+- Review eval tooling fixes (no runtime change): `report.py` crashed on the `n` row;
+  `score.py` no longer flags a scripture reference as mismatching its `[N]` when
+  that cited chunk itself lists the reference in its `references` metadata
+  (answers like "the study of Ether 12:1-7 also lists Alma 32:21 [1]").
+
+## 0.12.96
+
+- **Tool chunk text preview 1200 → 2000 characters** (`TEXT_PREVIEW_LIMIT` in
+  `tools/shared/chunk-formatting.ts`). Long Conference/Handbook chunks were cut
+  mid-passage with "...", so the model sometimes cited text it had not seen. Measured
+  on the 104-question review eval (same config, only this change): see the RAG review
+  step 0/1 results report for the token/cost delta.
+- `lookup_scripture_passage` tool description now says it covers the Bible (Old and
+  New Testament) too; the alias table and the corpus already did.
+- Removed the dead `RAG_CLAIM_SUPPORT_AUDIT` flag from the local `.env` (nothing
+  reads it since 0.12.7x; `.env` is untracked, so no code change).
+
+## 0.12.95
+
+- **Fix scripture reference lookup** (RAG review step 1, audit §2.1/§5).
+  - "Book of Mormon" / "Libro di Mormon" is no longer parsed as the whole book of
+    Mormon (chapters 1–9, which also pulled Mosiah/Moses/Moroni via the prefix
+    fallback and returned before searching Conference/Gospel Topics). Whole book
+    only on an explicit "intero / whole / entire / tutto il libro".
+  - Book matching in the retriever is exact on the slug: the 2-letter display-name
+    fallback is gone ("Marco 2:14" used to return Malachi 2, "Geremia 25" Genesis 25,
+    "Giacobbe 4" James 4…).
+  - Aliases are matched longest-first ("1 John 3" no longer becomes John 3) and
+    more tolerant ("Abraamo", "Abramo", "DeA", "1Nefi", "3 Ne", "Morm"). The bare
+    alias "da" (Italian "from") is gone: it turned "da 5 anni" into D&C 5.
+  - A reference with its own topic ("Alma 32 e la fede nelle difficoltà") now ADDS the
+    structured chapter/verse chunks (up to topK/2, pinned on top) to the semantic
+    search over the selected sources instead of returning only the passage.
+  - The chapter query asks Pinecone for 300 candidates (was 80): a chapter number
+    alone matches ~280 chunks across all books, so e.g. Giacobbe 4 lost a chunk.
+  - Unit tests: `pnpm run test:scripture-reference` (in `pnpm test`).
+
+## 0.12.94
+
+- **RAG review eval harness** (`scripts/eval/review/`, tooling only — no runtime change).
+  104 questions (65 Italian, many answered by English Conference / Handbook /
+  Gospel Topics sources), each with a gold source verified against the local
+  chunk files (`pnpm eval:review:validate`), the expected behaviour (answer /
+  not found / no official position) and reference facts. `pnpm eval:review
+  <label> [standard] [super]` runs the real chat turn (same prompt, tools and loop
+  policy as `route.ts`; Upstash off, Pinecone read-only), scores retrieval and
+  `[N]` citations deterministically and judges claim support / reference fidelity
+  through the `codex` / `muse` subscription CLIs (no paid judge API). `pnpm
+  eval:review:probe` is a retrieval-only probe of the structured scripture
+  lookup. The older `scripts/eval/{run,answers}.ts` evals are untouched.
+
+## 0.12.93
+
+- **Answers no longer end with a "Sources:"/"Fonti:" list.** The system prompt
+  asked to "cite sources by title, author/book, and reference", which the model
+  sometimes turned into a trailing bibliography repeating every cited source —
+  redundant with the sources panel and a wall of links on web and mobile. It now
+  names sources naturally in the text and is told never to end with a sources,
+  references, or bibliography list. Prompt-only change; no API change.
+
+## 0.12.92
+
+- **Fix suggested follow-up questions returning empty.** The deployed
+  `FOLLOW_UP_MODEL` (`vmc/chatlds-followup-model`, a reasoning model)
+  spent the whole 300-token budget on reasoning and returned no text,
+  so `POST /api/conversations/[id]/follow-ups` always answered
+  `{ followUps: [] }` and web/mobile showed no suggestions. Generation
+  now runs with `reasoning: "none"` and asks for one question per line
+  in plain text (the gateway model doesn't enforce structured output,
+  so the previous `Output.object` schema also failed most calls);
+  lines are cleaned by the existing `normalizeFollowUps`, non-question
+  lines are dropped, and one empty result is retried once (the free
+  model is inconsistent). No API contract change.
+
+## 0.12.91
+
+- **Fix: stream resume (`GET /api/chat/[id]/stream`) hung with no events until
+  the 180s timeout** (web reload mid-answer and native Stop→resume). Upstash
+  REST subscribe is SSE split on newlines, so every published SSE chunk, the
+  replay, and the DONE marker arrived truncated: the client got newline-less
+  bytes it couldn't parse and the stream never closed. The Upstash publisher now
+  JSON-encodes payloads (the subscriber's auto-deserialize decodes them).
+  Test: `pnpm run test:resumable-stream`.
+
+## 0.12.90
+
+- **`POST /api/billing/handoff`** for the native apps (they can't take payments
+  in-app). Signed-in users only (`401 { error }` otherwise; bearer works).
+  Returns `{ url }` = `<request origin>/sign-in?__clerk_ticket=<single-use
+  Clerk sign-in token, 60s>&redirect_url=/billing`, to open in the system
+  browser (same ticket flow as the remember-me redirect). The URL also carries
+  `uid`; when the browser is already signed in as that user, the proxy skips
+  `/sign-in` (Clerk wouldn't redeem the ticket) and redirects to `redirect_url`
+  (same-origin paths only, else `/`). Mobile contract in
+  `docs/MOBILE.md`.
+
+## 0.12.89
+
+- **Account deletion review fixes.** `DELETE /api/account` now cancels paid
+  Clerk Billing subscription items immediately (no proration/refund handling)
+  before deleting anything, so a billing failure leaves the account intact and
+  a deleted user is never left being charged; the 401 is JSON `{ error }`. The
+  test checks the generated SQL of each delete and the cancel, batch, Clerk
+  order. Proxy: requests carrying an `Authorization` header (native bearer
+  clients, which have no cookie jar) no longer mint a `chatlds_remember` Redis
+  key + cookie on every call. Docs: `MOBILE.md`/`AGENTS.md` now point at
+  `../chatlds-app`.
+
+## 0.12.88
+
+- **`DELETE /api/account`** for in-app account deletion (App Store / Play
+  requirement). Signed-in users only (`401` for guests/anonymous; bearer works).
+  Deletes the user's conversations (cascading messages), feedback, settings and
+  memory rows in one batch, then the Clerk user; `204`, or `502 { error }` if
+  Clerk fails (retry-safe). (0.12.89 adds cancelling paid subscriptions first.)
+  Consumed by the new native apps (`../chatlds-app`); `docs/MOBILE.md` updated.
+
+## 0.12.87
+
+- **Stay signed in on the web past Clerk's 7-day session cap.** Signed-in
+  browsers get a 1-year httpOnly `chatlds_remember` cookie
+  (`<userId>:<secret>`, Redis stores only `sha256(secret)` → userId). When the
+  Clerk session has expired, a full page load trades the cookie (single use,
+  rotated) for a Clerk sign-in token and redirects through
+  `/sign-in?__clerk_ticket=…&redirect_url=…`, which `<SignIn/>` redeems. The
+  user sees a short loading state on the sign-in page and then the app.
+  `afterSignOutUrl` is now `/sign-in?signed_out=1`, which deletes the token.
+  Redis/Clerk failures are logged and fall back to the old behaviour (signed
+  out). Web only; mobile bearer auth is unaffected.
+
+## 0.12.86
+
+- **Web realtime voice prototype (flag `NEXT_PUBLIC_REALTIME_VOICE=1`, off by
+  default).** Signed-in users get a mic button in the chat composer; a compact
+  panel shows status, a live transcript and a stop button. Built on AI SDK 7
+  `experimental_useRealtime` + AI Gateway (`REALTIME_MODEL`, default
+  `openai/gpt-realtime-mini`). New routes `POST /api/realtime/token` (auth, `403`
+  for guests, one chat rate-limit hit per session start) and
+  `POST /api/realtime/tool` (runs `semantic_search` server-side via
+  `runSemanticRetrieval`, topK 6). **Voice transcripts are not persisted to the
+  conversation.** Web only; mobile is unaffected. `pnpm run realtime:smoke` runs
+  a Node end-to-end check. Realtime requires `REALTIME_GATEWAY_API_KEY` (Gateway rejects
+  OIDC when minting client secrets). It is a separate variable, passed only to the
+  realtime token minting via `createGateway`, so text chat keeps using OIDC.
+  Review fixes: the tool route shares `/api/search`'s per-plan limiter bucket;
+  voice searches `ALL_SOURCES` in the index language (the tool's `language` only
+  picks the scripture language); mic start is single-flight and stale
+  `getUserMedia` streams are released; blank `REALTIME_MODEL` falls back to the
+  default; the smoke script waits for the tool output and a final answer.
+
 ## 0.12.85
 
-- Rewrite the chat system prompt for Claude Haiku 5.5, which follows instructions
-  literally. Answers no longer end with a list of sources, since the source cards
-  already show them (only an explicit user request produces one). Scripture
-  references, talk titles, books, manuals, and articles are written as markdown
-  links when the chunk has a url, alongside the inline `[N]` markers. Rules are
-  shorter, with duplicates removed and reasons stated; retrieval, grounding,
-  language, and memory behavior and the response styles are unchanged.
+- **AI SDK 7.** Bump `ai` 6 → 7.0.142 and `@ai-sdk/react` 3 → 4.0.146, and add
+  `@ai-sdk/gateway` 4.0.115 as an explicit dependency (pinned to the version `ai`
+  depends on; it exposes `gateway.experimental_realtime`). No behavior change.
+  Migration: `system` → `instructions` (including the `prepareStep` final-answer
+  override), `stepCountIs` → `isStepCount`, `onStepFinish` → `onStepEnd`,
+  `onFinish` → `onEnd` with `usage` (v7's `usage` is the all-steps total that v6
+  called `totalUsage`), and `result.toUIMessageStream()` → the standalone
+  `toUIMessageStream({ stream: result.stream, tools })`. v7's `onChunk` also
+  receives boundary parts (`start`, `start-step`, `finish`, …), so the latency
+  `firstModelChunkMs` milestone is limited to the v6 content-chunk types. The eval
+  script gets the same renames plus `fullStream` → `stream`.
+- Mobile wire contract unchanged: the server still emits UI Message Stream
+  protocol `v1` with the same chunk types and headers, and the mobile app's ai@6
+  `DefaultChatTransport` + `readUIMessageStream` parse a v7 tool-loop stream with
+  no errors. Persisted messages need no migration: the DB stores plain `content`
+  and JSON columns, and saved chats rebuild `{ type: "text" }` parts, whose
+  shape is the same in v7.
 
 ## 0.12.84
 

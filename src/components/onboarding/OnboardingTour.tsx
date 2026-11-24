@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Popover } from "@base-ui/react/popover";
 import { track } from "@vercel/analytics";
 import { useLanguage } from "@/components/chat/language-context";
@@ -23,7 +24,7 @@ const SPOTLIGHT_PADDING = 8;
 const MEMORY_SPOTLIGHT_PADDING = 14;
 // Client-side "closed once" flag so the tour never re-pops on this device even
 // if the server-side status write was lost or expired.
-const DISMISSED_KEY = "onboarding:dismissed";
+const dismissedKey = (userId: string) => `onboarding:dismissed:${userId}`;
 const REPLAY_READY_MAX_FRAMES = 180; // ~3s at 60fps for route/client hydration
 const REPLAY_READY_SELECTORS = [
   '[data-tour="composer"]',
@@ -102,6 +103,14 @@ export function OnboardingTour() {
   const pathname = usePathname();
   const { language } = useLanguage();
   const text = uiText(language).onboarding;
+  // Guests never auto-start the tour, and a guest replay never marks it seen.
+  const { isLoaded: authLoaded, isSignedIn, user } = useUser();
+  const signedIn = authLoaded && !!isSignedIn;
+  const userId = user?.id;
+  const userIdRef = useRef(userId);
+  userIdRef.current = userId;
+  const signedInRef = useRef(signedIn);
+  signedInRef.current = signedIn;
 
   const [running, setRunning] = useState(false);
   const [open, setOpen] = useState(false);
@@ -137,7 +146,7 @@ export function OnboardingTour() {
     (stepIndex: number) => {
       // Resume point only matters while still pending; never persist during a
       // replay of an already-terminal user.
-      if (persistedStatus.current !== "pending") return;
+      if (!signedInRef.current || persistedStatus.current !== "pending") return;
       cancelStepSave();
       stepTimer.current = setTimeout(() => {
         void putSettings({ onboardingStep: stepIndex }).catch(() => {});
@@ -231,12 +240,14 @@ export function OnboardingTour() {
   const finalize = useCallback(
     async (status: OnboardingStatus) => {
       cancelStepSave();
-      try {
-        localStorage.setItem(DISMISSED_KEY, "1");
-      } catch {}
+      if (signedInRef.current && userIdRef.current) {
+        try {
+          localStorage.setItem(dismissedKey(userIdRef.current), "1");
+        } catch {}
+      }
       // Genuine first run (still pending): persist terminal state and keep the
       // callout open if the write fails, so we never silently claim success.
-      if (persistedStatus.current === "pending") {
+      if (signedInRef.current && persistedStatus.current === "pending") {
         setSaving(true);
         setSaveError(false);
         try {
@@ -277,6 +288,10 @@ export function OnboardingTour() {
 
   // Load persisted prefs once.
   useEffect(() => {
+    if (!signedIn) return;
+    setPrefsLoaded(false);
+    persistedStatus.current = "pending";
+    startedAuto.current = false;
     let cancelled = false;
     fetch("/api/settings", { headers: { "Cache-Control": "no-store" } })
       .then((res) => (res.ok ? res.json() : null))
@@ -290,22 +305,22 @@ export function OnboardingTour() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [signedIn, userId]);
 
   // Auto-start: only a pending user, only on /chat, only once.
   useEffect(() => {
-    if (!prefsLoaded || running || startedAuto.current) return;
+    if (!signedIn || !userId || !prefsLoaded || running || startedAuto.current) return;
     // A replay requested from another route owns startup. Waiting here avoids a
     // pending user's normal auto-start racing before ChatInterface has mounted.
     if (isReplayRequestedAfterNavigation()) return;
     try {
-      if (localStorage.getItem(DISMISSED_KEY)) return;
+      if (localStorage.getItem(dismissedKey(userId))) return;
     } catch {}
     if (shouldAutoStart(persistedStatus.current, pathname)) {
       startedAuto.current = true;
       start(persistedStep.current, false);
     }
-  }, [pathname, running, start, prefsLoaded]);
+  }, [pathname, running, start, prefsLoaded, signedIn, userId]);
 
   // Replay from the permanent entry — local, never downgrades persisted status.
   useEffect(() => {

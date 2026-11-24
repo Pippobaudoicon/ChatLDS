@@ -1,6 +1,6 @@
 # ChatLDS Project Knowledge Base
 
-Last updated: 2026-11-04
+Last updated: 2026-11-24
 
 This document is the single source of truth for project context.
 Read this first before deep code exploration.
@@ -25,7 +25,8 @@ Read this first before deep code exploration.
 - DB: Neon Postgres + Drizzle ORM.
 - Vector DB: Pinecone.
 - Embeddings: Voyage AI (`voyage-4-large`, 1024 dims).
-- LLM runtime: Vercel AI SDK (`streamText`) through gateway.
+- Runtime: Node.js 22+ (24 recommended), required by AI SDK 7.
+- LLM runtime: Vercel AI SDK 7 (`ai@7`, `@ai-sdk/react@4`, explicit `@ai-sdk/gateway@4`; `streamText`) through gateway. The mobile app stays on ai@6 and parses the same UI Message Stream protocol (`v1`).
 - Cache and resumable stream transport: Upstash Redis REST plus
   `resumable-stream/generic` (status-polling fallback when Redis is absent).
 - Observability: Vercel Analytics + Speed Insights.
@@ -37,7 +38,7 @@ Read this first before deep code exploration.
   generation, active work is visible in the sidebar, and returning to a
   conversation resumes its Redis-backed stream or reloads the completed result.
 - Search-scope toggle (chat composer, replaces the old per-source toggles):
-  - `Standard` — sends `ALL_SOURCES` (scriptures, conference, handbook, study_helps, topics); the model may narrow *within* this scope.
+  - `Standard` — sends `ALL_SOURCES` (scriptures, conference, handbook, study_helps, topics, teachings); the model may narrow *within* this scope.
   - `Super` — sends `SUPER_SOURCES` (every Pinecone namespace). Persisted to `localStorage` under `chat:search-scope`.
   - `/search` uses the same composer-style card: a "Sources" dropdown with per-source checkboxes (`ALL_SOURCES`), the same `SearchScopeToggle` for Super, and a results-count dropdown (6/10/20). Before the first search it is centered like an empty chat (title, box, example cards); results show a one-line summary (count · detected language · sources · translated query when different).
 - Language selector: UI-only language preference. Users can pick only the languages with UI copy: English, Italian, Spanish (`SELECTABLE_UI_LANGUAGES` in `src/components/chat/i18n.ts`, derived from `UI_TEXT`). French, Portuguese, and German remain valid `UiLanguage` values in the types and API schemas (unchanged for clients such as the mobile app) but are hidden from the selector until they have copy; a stored pick of one of them is ignored in favor of the device language. Adding a `locales/<lang>.ts` file and its `UI_TEXT` entry makes a language selectable.
@@ -101,6 +102,16 @@ Read this first before deep code exploration.
   user data must add its own check. In the sidebar, guests get locked
   Search/Memory/Billing buttons (`FeatureGate`, `src/components/ui/feature-gate.tsx`, reusable for Pro-only buttons) that open a sign-up card instead
   of navigating.
+- **Remember-me** (`src/lib/auth/remember.ts`): Clerk's free plan caps sessions
+  at 7 days, so the proxy gives signed-in browsers a 1-year httpOnly
+  `chatlds_remember` cookie (`<userId>:<secret>`; Redis key
+  `remember:<sha256(secret)>` → userId; not issued to requests with an
+  `Authorization` header, i.e. native bearer clients). On a signed-out full page load
+  (`sec-fetch-mode: navigate`, not `/sign-in*`/`/sign-up*`) with that cookie,
+  the proxy GETDELs the key, mints a Clerk sign-in token and redirects to
+  `/sign-in?__clerk_ticket=…&redirect_url=<original>`; `<SignIn/>` redeems it
+  and the cookie is rotated. `afterSignOutUrl="/sign-in?signed_out=1"` makes the
+  proxy delete the token. Web only (mobile uses bearer tokens).
 - Auth pages (`/sign-in`, `/sign-up`) render `src/components/auth/AuthShell.tsx`:
   a ChatLDS split layout around Clerk's `<SignIn/>`/`<SignUp/>` components.
   There are no custom auth hooks: styling is `appearance.elements` Tailwind
@@ -213,6 +224,8 @@ Read this first before deep code exploration.
    `resumable-stream/generic` publishes the SSE stream and a returning client uses
    `GET /api/chat/[id]/stream` to resume it. The producer continues after the
    original browser disconnects.
+   Upstash REST subscribe is SSE split on newlines, so the publisher in
+   `src/lib/chat/resumable-stream.ts` JSON-encodes every payload.
 13. Without Redis stream resume, the server consumes the stream in a Next.js
    `after()` task so generation can continue while that function remains alive.
    Clients poll `GET /api/conversations/[id]?status=1` and reload persisted messages
@@ -246,6 +259,22 @@ Read this first before deep code exploration.
     is ignored (0.12.75).
   - Claims persisted generation ownership before streaming, returns `409` while
     another non-stale turn is active, and commits only for the owning turn.
+- `POST /api/realtime/token` and `POST /api/realtime/tool` (web voice prototype,
+  0.12.86; both `404` unless `NEXT_PUBLIC_REALTIME_VOICE=1`; signed-in only: `401`
+  without a user, `403` for guests)
+  - `token` counts each voice session start once against the plan's chat rate
+    limiter (same `429` response as `/api/chat`), then mints a short-lived AI
+    Gateway client secret with `gateway.experimental_realtime.getToken` for
+    `REALTIME_MODEL` and returns `{ token, url, expiresAt, tools }`. The browser
+    (`experimental_useRealtime` in `VoiceChat.tsx`) opens the model WebSocket
+    directly; session config lives in `src/lib/realtime/config.ts`.
+  - `tool` executes the single `semantic_search({ query, language })` tool on the
+    server (zod-validated, `runSemanticRetrieval` over `ALL_SOURCES`, topK 6,
+    ~600 chars per result). General retrieval uses the index language
+    (`getIndexLanguage()`); `language` only selects `scriptureLanguage`. It shares
+    `/api/search`'s `search:<plan>:<userId>` limiter bucket (same `429` response). The hook's client-side `onToolCall` POSTs here and
+    returns the JSON to the model. Voice transcripts are not persisted.
+  - Smoke check: `REALTIME_MODEL=<id> pnpm run realtime:smoke`.
 - `GET /api/chat/[id]/stream`
   - Auth and conversation ownership required.
   - Resumes the current SSE stream through `resumable-stream/generic` when
@@ -293,7 +322,7 @@ Read this first before deep code exploration.
   - Auth or guest cookie required, conversation ownership checked.
   - Returns `{ messageId, followUps }` for the latest assistant message; `409`
     while the conversation is still generating. Generated once per answer
-    (small `FOLLOW_UP_MODEL` call, `google/gemini-2.5-flash-lite` by default, written in the question's language) and
+    (small `FOLLOW_UP_MODEL` call, `google/gemini-2.5-flash-lite` by default, reasoning disabled, one question per line, written in the question's language) and
     merged into that message's `details_json.followUps`; later calls return the
     stored list, so model cost is bounded by the chat quota. Not written if the
     answer was regenerated during the call.
@@ -303,6 +332,21 @@ Read this first before deep code exploration.
 - `PUT /api/settings`
   - Auth required. Updates whichever preferences are present (default response
     style and/or onboarding tour state); at least one field is required.
+- `DELETE /api/account`
+  - Real Clerk user only (`auth()`, cookie or bearer; guests get `401`).
+    Deletes the user's rows in every `clerk_user_id` table (conversations,
+    which cascade to messages; feedback; settings; memory profile, periods and
+    conversation memory) in one `db.batch`, then deletes the Clerk user. Paid
+    Clerk Billing subscription items (active/upcoming/past_due, non-default
+    plan) are cancelled immediately first, with no proration/refund handling, so
+    a billing failure leaves nothing deleted. `204` on success, `502 { error }`
+    if a step fails; retry-safe (Clerk 404/403 on lookup, 404 on delete count
+    as done). Required by App Store / Play for the native apps.
+- `POST /api/billing/handoff`
+  - Real Clerk user only (cookie or bearer; `401 { error }` otherwise). Mints a
+    60s single-use Clerk sign-in token and returns `{ url }` =
+    `<request origin>/sign-in?__clerk_ticket=…&redirect_url=/billing` for the
+    native apps to open in the system browser (`src/lib/auth/billing-handoff.ts`).
 
 ## 6) Data model summary
 
@@ -343,9 +387,9 @@ Notes:
   into the eval gold set.
 - The persisted assistant `content` (and its `versions_json` entry) is the text of
   every step joined with a blank line — the pre-tool progress sentence plus the
-  answer — so a reload shows what streamed (`onFinish`'s own `text` is only the
+  answer — so a reload shows what streamed (`onEnd`'s own `text` is only the
   final step).
-- Assistant `details_json` (written in `onFinish`) also stores cost/citation
+- Assistant `details_json` (written in `onEnd`) also stores cost/citation
   telemetry: `cachedInputTokens` (`usage.inputTokenDetails.cacheReadTokens`),
   `costUsd` (AI Gateway `providerMetadata.gateway.cost`, summed over steps;
   excludes gateway surcharges), `provider` / `resolvedModel` (final step's
@@ -362,7 +406,7 @@ Notes:
   `firstToolCallMs`, `serverFirstTextMs`, `answerReadyMs` — generation/cache
   resolved, captured before the trailing DB/cache writes, so not total handler
   time), per-step **inclusive** wall time (`steps[].wallMs` covers model + any
-  in-step tool execution, since `onStepFinish` fires after tools run), and
+  in-step tool execution, since `onStepEnd` fires after tools run), and
   per-tool `{name, durationMs, ok, cacheHit}`. The empty tool-decision turn is
   derived as `firstToolCallMs − preStreamMs` (not the gap from `firstToolCallMs`
   to `serverFirstTextMs`, which is retrieval plus later model work).
@@ -399,11 +443,26 @@ Notes:
 ## 7) Retrieval and prompting behavior
 
 - Uses Pinecone index `lds-rag-v1` (override via `PINECONE_INDEX`) and per-source
-  namespaces. v1 namespaces: scriptures, conference, handbook, study_helps,
+  namespaces. All index reads go through `src/lib/rag/vector-store.ts`;
+  `VECTOR_BACKEND=qdrant` (temporary bridge, Nov 2026) reads a Qdrant collection with
+  the same ids, vectors and metadata instead (namespace = `namespace` payload field). v1 namespaces: scriptures, conference, handbook, study_helps,
   gospel_topics, gospel_selfreliance, gospel_teachings, gospel_other, gospel_study,
   gospel_history, gospel_youth (plus gospel_music kept as a planned-but-empty
   namespace). Legacy namespaces liahona / gospel_family / gospel_videos /
   gospel_handbook were retired (gospel_handbook content now lives under handbook).
+  Standard scope (`ALL_SOURCES`) = scriptures, conference, handbook, study_helps,
+  gospel_topics, gospel_teachings (Teachings of Presidents of the Church, eng + ita).
+  The Family Proclamation and The Living Christ live in `gospel_topics`; Official
+  Declarations 1–2 are in `scriptures` (volume `dc-testament`, book `od`).
+  `gospel_topics` and `gospel_teachings` hold official Italian versions too
+  (`TRANSLATED_SOURCES` in `retriever.ts`): for a non-English turn they are queried
+  in both languages and the English twin of a document is dropped when its
+  Italian version was retrieved (`preferTranslation`).
+  The system prompt routes "what did President X teach about Y" to `semantic_search`
+  (`search_conference_talks` only covers conference talks, not the Teachings manuals).
+  Scripture-reference aliases for Official Declarations are the long forms only (the
+  slug `od` stays internal; its `book` metadata is "Official Declaration" / "Dichiarazione Ufficiale").
+  `GET /api/sources` (public, 5 min cache) exposes `{ standard, super }` for the native apps.
   Vectors carry a `related_ids` cross-reference projection from the graph.
   Both `lookup_scripture_passage` and `semantic_search` consume it via the shared
   `expandRelatedContext` helper: after retrieval they fetch the results'
@@ -457,7 +516,7 @@ Notes:
 - `RAG_INDEX_LANGUAGE` controls the single-language semantic retrieval target. It defaults to English (`eng`) for `lds-rag-v1` (English-main corpus; scriptures also carry Italian chunks). Set to `ita` only to target the legacy `lds-rag` index.
 - Retrieval preserves source-language metadata. Scriptures are bilingual; the main model selects `"ita"` or `"eng"` for every scripture-producing tool. A per-turn lock forces all tools to the same selection, semantic fan-out queries only that scripture language, and post-expansion filtering removes any opposite-language scripture chunk. Production callers disable cross-language scripture fallback: an empty result is returned instead of showing scriptures in the wrong language. Only the `scriptures` namespace has Italian vectors; every other namespace is English-only, so the semantic fan-out (`retrieve`) and `retrieveConferenceCandidates` query them in the index language only (one Pinecone query per namespace per query vector). Because each source is queried in a single language, a turn never holds an English/Italian pair of one passage, so there is no cross-language collapse step. Regression for the scripture-language guards: `pnpm run test:cross-language`.
 - **Single-language direct-passage contract.** `lookup_scripture_passage` returns one language. The cross-reference graph's `related_ids` are stored as English ids, so `expandRelatedContext` **localizes** scripture cross-refs to the passage language: it rewrites the id's language segment (`scriptures:eng:<slug>:… → scriptures:ita:…`, `localizeScriptureId` — pure slug remap, no LLM) and fetches by id; any ref whose exact verse-range chunk doesn't exist in the target language (the languages chunked the same verses differently) is recovered by `fetchLocalizedScriptureRefs` — list that book+chapter in the target language by id prefix, keep chunks whose verse range overlaps (canonical slug+chapter resolution, still no LLM). `filterRelatedToLanguage` then drops anything still cross-language (e.g. English-only study helps). So an Italian `Giovanni 3:16` returns the Italian passage **plus its Italian cross-reference chunks**, never mixed English. Result is re-capped to `RELATED_CONTEXT_CAP` (exact-id matches first). The requested passage stays pinned first; the eval golden set has permanent `Giovanni 3` / `Giovanni 3:16` / `John 3` / `John 3:16` fixtures asserting first-result book/passage and scripture language (`expectFirstRefAnyOf` + `expectScriptureLanguage`).
-- Structured scripture retrieval (verse + chapter, including bare chapter refs like "Alma 32") filters Pinecone on **language-invariant** signals (`language` + `chapter`) and enforces the requested book via its **slug** (chunk id 3rd segment `scriptures:<lang>:<bookSlug>:…` / URL path), NOT the display book name. This is deliberate: `parseScriptureSelection().canonicalBook` is Italian (legacy table — "Giovanni", "Salmi", "2 Nefi") and does not match the English `book` metadata, so a `book: { $eq }` filter would silently return nothing and fall back to Italian or to unfiltered semantic results. (If the canonicalBook table is ever localized to English, the slug-based matching still holds.)
+- Structured scripture retrieval (verse + chapter, including bare chapter refs like "Alma 32") filters Pinecone on `language` + `chapter` + `book` (the book's display name in that language: `bookMetadataName()` in `scripture-reference.ts` — Italian = `canonicalBook`, English = `ENGLISH_BOOK_NAMES`, both checked against every chunk of the corpus) with topK 40 (a chapter has at most 29 chunks of one book). Without the book filter a chapter number alone matches ~280 chunks across all books: topK 300 doubled the response (160 → 320 KB per query) and a 20-chapter range took 2.5 s / 7.3 MB (measured with `scripts/eval/review/measure_chapter_topk.ts`). The requested book is still re-checked via its **slug** (chunk id 3rd segment `scriptures:<lang>:<bookSlug>:…` / URL path); the match is exact (no display-name/2-letter fallback). Alias matching is longest-first ("1 John" ≠ "John"), "Book of Mormon"/"Libro di Mormon" is a title and never a whole-book request (whole book only on explicit "intero/whole/entire/tutto il libro"). A reference that carries its own topic — **at least 3 content words besides the reference** (`ScriptureReferenceSelection.residualWords`; filler such as "cosa insegna", "what does", "chapter" and words of ≤3 letters are not counted) — no longer returns early: the structured chunks are pinned on top of the normal semantic search over the selected sources (topK/2 by default; `lookup_scripture_passage` passes `pinnedLimit: Infinity` and `retrieve()` never cuts pinned chunks, so the tool sees the whole passage and itself cuts it at 30, the schema's topK maximum; a range of chapters with more than 30 chunks carries a `truncated` sentence in the tool result, with or without a topic). With 0–2 such words ("Cosa insegna Alma 32?", "Alma 32 e la fede") the answer stays purely structural. Tool chunks reach the model with at most 1200 characters of text (`TEXT_PREVIEW_LIMIT`, `tools/shared/chunk-formatting.ts`; 2000 was tried in 0.12.96 and reverted: +10% cost, no measured gain).
 - Enrichment metadata is consumed (present on enriched namespaces — scriptures + conference): the retriever maps `summary`, `topics`, `entities` (people/places/doctrines), and `references` onto each chunk. These are (a) sent to the model as per-source context via `toToolChunk` (context only — not citable sources), (b) shown as tags/reference chips on source cards, and (c) used for a small, capped topic/entity rerank boost when query terms overlap a chunk's topics/entities.
 - Special scripture handling for whole chapter/book requests:
   - parses scripture references,
@@ -471,7 +530,7 @@ Notes:
   `prepareStep` then disables every tool (`activeTools: []`, `toolChoice: "none"`)
   so the next step writes the final answer. Retrieval caching lives in the tool layer
   for `semantic_search`, `lookup_scripture_passage`, and `search_conference_talks`.
-  `stopWhen: stepCountIs(4)` is the emergency cap for model + tool steps per
+  `stopWhen: isStepCount(4)` is the emergency cap for model + tool steps per
   turn. The only pre-seeded context is the regenerate-with-fixed-chunks path
   (P1 eager retrieval was removed: it only fired on English prompts).
 - AI function tools available in the chat runtime:
@@ -535,6 +594,8 @@ Notes:
   `system-prompt.ts` exports `RESPONSE_STYLES` (`balanced` | `scholar` | `simple`
   | `concise`), `DEFAULT_RESPONSE_STYLE` (`balanced`), and
   `buildSystemPrompt(styleId)`. `SYSTEM_PROMPT` = `buildSystemPrompt(default)`.
+  Answers name sources inline and never end with a sources/bibliography list
+  (the UI shows sources; 0.12.93).
   The default "Balanced" style targets 80–150 words in one or two short
   paragraphs for ordinary questions, with essential supporting points and
   citations (0.12.74). Simple questions can be shorter; requested coverage and
@@ -561,6 +622,15 @@ Notes:
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
 - `CLERK_SECRET_KEY`
 - `NEXT_PUBLIC_CLERK_SIGN_IN_URL`
+- `REALTIME_GATEWAY_API_KEY` is required by realtime voice: `getToken` rejects Vercel
+  OIDC tokens with `403 Client secrets can only be minted with a Gateway API key`.
+  Only the realtime token minting uses it (`createGateway({ apiKey })` in
+  `src/lib/realtime/voice.ts`); text chat keeps OIDC. Do not set it as
+  `AI_GATEWAY_API_KEY`: the shared provider would then prefer the key over OIDC for
+  every call. Set it in the Vercel project env too wherever voice is enabled.
+- `NEXT_PUBLIC_REALTIME_VOICE` (`1` shows the composer mic button and enables
+  `/api/realtime/*`; absent = off) and `REALTIME_MODEL` (default
+  `openai/gpt-realtime-mini`; `next.config.ts` inlines it for the browser codec).
 - `NEXT_PUBLIC_CLERK_SIGN_UP_URL`
 - `DATABASE_URL`
 - `UPSTASH_KV_REST_API_URL` / `UPSTASH_KV_REST_API_TOKEN` (set by the Vercel
@@ -571,12 +641,13 @@ Notes:
 - `VOYAGE_API_KEY`
 - `PINECONE_API_KEY`
 - `PINECONE_INDEX` (optional; defaults to `lds-rag-v1`; set to `lds-rag` for the legacy index)
+- `VECTOR_BACKEND` (optional; `qdrant` reads the index from Qdrant instead of Pinecone — temporary bridge) with `QDRANT_URL`, `QDRANT_API_KEY`, `QDRANT_COLLECTION` (optional; defaults to `PINECONE_INDEX`)
 - `RAG_INDEX_LANGUAGE` (optional; defaults to `eng` for `lds-rag-v1`; set to `ita` for the legacy index)
 - `CHAT_MODEL` (optional; defaults to `deepseek/deepseek-v4.1-flash`)
 - `RAG_ROUTING_MODEL` (optional; defaults to `openai/gpt-oss-120b`) — dedicated `/api/search` query routing/translation model (used only when `RAG_LANGUAGE_ROUTING=true`), independent from `CHAT_MODEL` (`reasoningEffort: low`, 600-token ceiling)
 - `RAG_ROUTING_FALLBACK_MODEL` (optional; defaults to `openai/gpt-5.4-mini`) — one-shot fallback used once if the primary routing model returns no structured output
 - `RAG_LANGUAGE_ROUTING` (optional; defaults to `false`) — `GET /api/search` only: set to `true` to translate search queries with the routing model. Chat never routes
-- `FOLLOW_UP_MODEL` (optional; defaults to `google/gemini-2.5-flash-lite`, pinned independently from `CHAT_MODEL`) — small non-reasoning structured-output model for the suggested next questions: one call per answer, 300-token ceiling, answer trimmed to 2500 characters, 10 s timeout (no suggestions on timeout)
+- `FOLLOW_UP_MODEL` (optional; defaults to `google/gemini-2.5-flash-lite`, pinned independently from `CHAT_MODEL`; deployed as `vmc/chatlds-followup-model`) — small model for the suggested next questions: one call per answer with reasoning disabled (`reasoning: "none"` — the deployed reasoning model otherwise spends the whole budget thinking and returns nothing), plain-text reply of one question per line (no structured output: the gateway model doesn't enforce it), 300-token ceiling, answer trimmed to 2500 characters, 10 s timeout (no suggestions on timeout)
 - `RAG_GRAPH_RERANK` (optional; defaults to `true`) — graph-aware rerank kill-switch
 - `RAG_RERANK` (optional; defaults to `false`) — Voyage cross-encoder rerank
 - `RAG_MULTI_QUERY` (optional; defaults to `false`) — multi-query expansion
@@ -636,6 +707,8 @@ Reference template: `.env.example`.
   - `src/app/api/conversations/route.ts`
   - `src/app/api/conversations/[id]/route.ts`
   - `src/app/api/settings/route.ts` (per-user prefs: response style + onboarding state)
+  - `src/app/api/account/route.ts` + `src/lib/auth/delete-account.ts` (account deletion)
+  - `src/app/api/billing/handoff/route.ts` + `src/lib/auth/billing-handoff.ts` (native billing handoff)
 - User settings:
   - `src/lib/db/user-settings.ts` (read/write `rag_user_settings`)
 - Chat generation lifecycle:
@@ -810,6 +883,13 @@ Reference template: `.env.example`.
   `nothink` (DeepSeek `thinking: { type: "disabled" }`) — and a blind pairwise
   LLM judge. It reports first-answer-text time, tokens, gateway cost and citations,
   and writes JSON to `scripts/eval/results/`. It costs well under $1 per run.
+- RAG review eval (`scripts/eval/review/`, see its README): 104 questions (62% Italian,
+  most answered by English sources) with verified gold; `pnpm eval:review <label>
+  [standard] [super]` generates through the real chat turn over the AI Gateway
+  (≈$0.25 per plan), scores deterministically and judges claim support through the
+  `codex`/`muse` subscription CLIs; `pnpm eval:review:validate` checks gold
+  against the local lds-scraper chunks (a reference listed in the cited chunk's own `references` metadata is not counted as a ref→[N] mismatch); `pnpm eval:review:probe` probes the
+  structured scripture lookup, including reference + topic through the real tool (retrieval only, ~$0).
 - Routing fast-path test: `pnpm run test:routing` (`scripts/test/language-routing.test.ts`)
   — pure, network-free assertions that the local same-language short-circuit
   (`detectIndexLanguageMatch`) fires only for confidently, dominantly index-language

@@ -5,6 +5,7 @@ import {
   type ResumableStreamContext,
   type Subscriber,
 } from "resumable-stream/generic";
+import type { Redis } from "@upstash/redis";
 import { getRedis, hasRedisConfig } from "@/lib/rag/cache";
 
 let streamContext: ResumableStreamContext | null = null;
@@ -13,12 +14,14 @@ function stringifyMessage(message: unknown): string {
   return typeof message === "string" ? message : JSON.stringify(message);
 }
 
-function createUpstashPublisher(): Publisher {
-  const redis = getRedis();
-
+export function createUpstashPublisher(redis: Redis = getRedis()): Publisher {
   return {
     connect: async () => undefined,
-    publish: (channel, message) => redis.publish(channel, message),
+    // Upstash REST subscribe is SSE split on "\n", so a raw multi-line payload
+    // (every SSE chunk, the replay, the DONE marker) arrives truncated and the
+    // resumer hangs. JSON-encode it; the subscriber's auto-deserialize undoes it.
+    publish: (channel, message) =>
+      redis.publish(channel, JSON.stringify(message)),
     set: (key, value, options) =>
       redis.set(key, value, options?.EX ? { ex: options.EX } : undefined),
     get: (key) => redis.get<string | number>(key),
