@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.12.102
+
+- **Teachings of Presidents of the Church are now in Standard search.**
+  `gospel_teachings` joins `ALL_SOURCES`, so Standard scope = scriptures,
+  conference, handbook, study_helps, topics, teachings (Super is unchanged).
+  The Family Proclamation and The Living Christ are indexed in `gospel_topics`
+  (no new namespace), and Official Declarations 1 and 2 in `scriptures`
+  (`od`, with "Dichiarazione ufficiale", "Official Declaration 2" aliases
+  in the reference parser). `gospel_topics`/`gospel_teachings` now also carry
+  the official Italian text; for a non-English turn the retriever queries both
+  languages and keeps only the Italian copy of a document that exists in both.
+  The system prompt now sends "what did President X teach about Y" to
+  `semantic_search` (it used `search_conference_talks`, which never sees the
+  manuals): eval leader questions judged correct 17/38 → 27/38.
+  New public `GET /api/sources` returns `{ standard, super }` (ids only, from
+  `ALL_SOURCES`/`SUPER_SOURCES`) so the native apps stop hardcoding the lists.
 ## 0.12.101
 
 - **Fix: `truncated` never fired for reference + topic.** `pinnedLimit: 30` already capped

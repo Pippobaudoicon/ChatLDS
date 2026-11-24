@@ -38,7 +38,7 @@ Read this first before deep code exploration.
   generation, active work is visible in the sidebar, and returning to a
   conversation resumes its Redis-backed stream or reloads the completed result.
 - Search-scope toggle (chat composer, replaces the old per-source toggles):
-  - `Standard` — sends `ALL_SOURCES` (scriptures, conference, handbook, study_helps, topics); the model may narrow *within* this scope.
+  - `Standard` — sends `ALL_SOURCES` (scriptures, conference, handbook, study_helps, topics, teachings); the model may narrow *within* this scope.
   - `Super` — sends `SUPER_SOURCES` (every Pinecone namespace). Persisted to `localStorage` under `chat:search-scope`.
   - `/search` uses the same composer-style card: a "Sources" dropdown with per-source checkboxes (`ALL_SOURCES`), the same `SearchScopeToggle` for Super, and a results-count dropdown (6/10/20). Before the first search it is centered like an empty chat (title, box, example cards); results show a one-line summary (count · detected language · sources · translated query when different).
 - Language selector: UI-only language preference. Users can pick only the languages with UI copy: English, Italian, Spanish (`SELECTABLE_UI_LANGUAGES` in `src/components/chat/i18n.ts`, derived from `UI_TEXT`). French, Portuguese, and German remain valid `UiLanguage` values in the types and API schemas (unchanged for clients such as the mobile app) but are hidden from the selector until they have copy; a stored pick of one of them is ignored in favor of the device language. Adding a `locales/<lang>.ts` file and its `UI_TEXT` entry makes a language selectable.
@@ -448,6 +448,17 @@ Notes:
   gospel_history, gospel_youth (plus gospel_music kept as a planned-but-empty
   namespace). Legacy namespaces liahona / gospel_family / gospel_videos /
   gospel_handbook were retired (gospel_handbook content now lives under handbook).
+  Standard scope (`ALL_SOURCES`) = scriptures, conference, handbook, study_helps,
+  gospel_topics, gospel_teachings (Teachings of Presidents of the Church, eng + ita).
+  The Family Proclamation and The Living Christ live in `gospel_topics`; Official
+  Declarations 1–2 are in `scriptures` (volume `dc-testament`, book `od`).
+  `gospel_topics` and `gospel_teachings` hold official Italian versions too
+  (`TRANSLATED_SOURCES` in `retriever.ts`): for a non-English turn they are queried
+  in both languages and the English twin of a document is dropped when its
+  Italian version was retrieved (`preferTranslation`).
+  The system prompt routes "what did President X teach about Y" to `semantic_search`
+  (`search_conference_talks` only covers conference talks, not the Teachings manuals).
+  `GET /api/sources` (public, 5 min cache) exposes `{ standard, super }` for the native apps.
   Vectors carry a `related_ids` cross-reference projection from the graph.
   Both `lookup_scripture_passage` and `semantic_search` consume it via the shared
   `expandRelatedContext` helper: after retrieval they fetch the results'

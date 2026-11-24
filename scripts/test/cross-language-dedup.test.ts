@@ -6,13 +6,12 @@
  *
  * Run: `pnpm run test:cross-language`
  *
- * Scriptures are the only bilingual namespace, and the semantic fan-out queries
- * them in one language, so a turn never holds an English/Italian pair of the same
- * passage. These asserts pin the guards that keep it that way: the opposite-language
+ * Scriptures are bilingual, and the semantic fan-out queries them in one language,
+ * so a turn never holds an English/Italian pair of the same passage. These asserts pin the guards that keep it that way: the opposite-language
  * scripture is removed, other sources pass through, and the first tool's language
  * choice locks every later tool.
  */
-import { filterScripturesByLanguage } from "@/lib/rag/retriever";
+import { filterScripturesByLanguage, preferTranslation } from "@/lib/rag/retriever";
 import { createRagToolContext } from "@/lib/rag/tools/shared/tool-context";
 import type { SourceChunk } from "@/lib/types";
 
@@ -55,6 +54,26 @@ check(
     englishOnly.some((item) => item.source === "conference")
 );
 
+// Teachings / Proclamation exist partly in Italian: an Italian turn keeps the Italian text
+// of a document and drops its English twin, but keeps English-only documents.
+const teaching = (id: string, language: string) =>
+  ({ ...chunk(id, language, 0.8), source: "gospel_teachings" }) as SourceChunk;
+const kept = preferTranslation(
+  [
+    teaching("gospel_teachings:eng:manual:teachings-brigham-young:chapter-1:c0:v1", "eng"),
+    teaching("gospel_teachings:ita:manual:teachings-brigham-young:chapter-1:c1:v1", "ita"),
+    teaching("gospel_teachings:eng:manual:teachings-brigham-young:chapter-9:c0:v1", "eng"),
+    conference,
+  ],
+  "ita"
+).map((item) => item.id);
+check(
+  "Italian prompt drops the English twin of a translated document only",
+  kept.length === 3 &&
+    !kept.includes("gospel_teachings:eng:manual:teachings-brigham-young:chapter-1:c0:v1") &&
+    kept.includes("gospel_teachings:eng:manual:teachings-brigham-young:chapter-9:c0:v1")
+);
+
 const languageLock = createRagToolContext();
 check(
   "first tool locks scripture language for the turn",
@@ -92,7 +111,7 @@ async function priorityCheck() {
 }
 
 priorityCheck().then(() => {
-  const total = 5;
+  const total = 6;
   console.log(`\n${total - failures}/${total} passed`);
   if (failures > 0) process.exit(1);
 });

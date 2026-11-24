@@ -63,6 +63,9 @@ const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   { volumeSlug: "pgp", bookSlug: "js-h", canonicalBook: "Joseph Smith—Storia", maxChapters: 1, aliases: ["joseph smith storia", "joseph smith history", "js-h", "js h"] },
   { volumeSlug: "pgp", bookSlug: "a-of-f", canonicalBook: "Articoli di Fede", maxChapters: 1, aliases: ["articoli di fede", "articles of faith", "a of f"] },
 
+  // ── Official Declarations (end of the D&C) ───────────────────────
+  { volumeSlug: "dc-testament", bookSlug: "od", canonicalBook: "Dichiarazione Ufficiale", maxChapters: 2, aliases: ["dichiarazione ufficiale", "dichiarazioni ufficiali", "official declaration", "official declarations", "od"] },
+
   // ── Old Testament ──────────────────────────────────────────────────
   { volumeSlug: "ot", bookSlug: "gen", canonicalBook: "Genesi", maxChapters: 50, aliases: ["genesi", "genesis", "gen"] },
   { volumeSlug: "ot", bookSlug: "ex", canonicalBook: "Esodo", maxChapters: 40, aliases: ["esodo", "exodus", "ex"] },
