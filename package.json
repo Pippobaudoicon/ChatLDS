@@ -1,6 +1,6 @@
 {
   "name": "rag-chat",
-  "version": "0.12.93",
+  "version": "0.12.94",
   "license": "Apache-2.0",
   "private": true,
   "packageManager": "pnpm@10.34.5",
@@ -17,6 +17,9 @@
     "db:migrate": "dotenv -o -e .env -e .env.local -- drizzle-kit migrate",
     "docs:guard": "bash scripts/docs-guard.sh",
     "eval": "dotenv -o -e .env -e .env.local -- tsx scripts/eval/run.ts",
+    "eval:review": "bash scripts/eval/review/eval.sh",
+    "eval:review:validate": "python3 scripts/eval/review/validate_set.py",
+    "eval:review:probe": "dotenv -o -e .env -e .env.local -- tsx --tsconfig tsconfig.json scripts/eval/review/probe_scripture.ts",
     "test:routing": "tsx scripts/test/language-routing.test.ts",
     "test:language-policy": "tsx scripts/test/language-policy.test.ts",
     "test:onboarding": "tsx scripts/test/onboarding-steps.test.ts",

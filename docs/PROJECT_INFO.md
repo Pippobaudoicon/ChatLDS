@@ -863,6 +863,13 @@ Reference template: `.env.example`.
   `nothink` (DeepSeek `thinking: { type: "disabled" }`) — and a blind pairwise
   LLM judge. It reports first-answer-text time, tokens, gateway cost and citations,
   and writes JSON to `scripts/eval/results/`. It costs well under $1 per run.
+- RAG review eval (`scripts/eval/review/`, see its README): 104 questions (62% Italian,
+  most answered by English sources) with verified gold; `pnpm eval:review <label>
+  [standard] [super]` generates through the real chat turn over the AI Gateway
+  (≈$0.25 per plan), scores deterministically and judges claim support through the
+  `codex`/`muse` subscription CLIs; `pnpm eval:review:validate` checks gold
+  against the local lds-scraper chunks; `pnpm eval:review:probe` probes the
+  structured scripture lookup (retrieval only, ~$0).
 - Routing fast-path test: `pnpm run test:routing` (`scripts/test/language-routing.test.ts`)
   — pure, network-free assertions that the local same-language short-circuit
   (`detectIndexLanguageMatch`) fires only for confidently, dominantly index-language

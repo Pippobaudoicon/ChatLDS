@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.94
+
+- **RAG review eval harness** (`scripts/eval/review/`, tooling only — no runtime change).
+  104 questions (65 Italian, many answered by English Conference / Handbook /
+  Gospel Topics sources), each with a gold source verified against the local
+  chunk files (`pnpm eval:review:validate`), the expected behaviour (answer /
+  not found / no official position) and reference facts. `pnpm eval:review
+  <label> [standard] [super]` runs the real chat turn (same prompt, tools and loop
+  policy as `route.ts`; Upstash off, Pinecone read-only), scores retrieval and
+  `[N]` citations deterministically and judges claim support / reference fidelity
+  through the `codex` / `muse` subscription CLIs (no paid judge API). `pnpm
+  eval:review:probe` is a retrieval-only probe of the structured scripture
+  lookup. The older `scripts/eval/{run,answers}.ts` evals are untouched.
+
 ## 0.12.93
 
 - **Answers no longer end with a "Sources:"/"Fonti:" list.** The system prompt
