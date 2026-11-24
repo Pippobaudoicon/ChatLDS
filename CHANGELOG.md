@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.12.105
+
+- **Step 2 of the RAG review: metadata and links, no re-embedding.** Reads the fields that
+  lds-scraper writes on the existing vectors (Qdrant: `qdrant_bridge_load.py --set-metadata`,
+  done; Pinecone: `update-metadata`, ready, to run after 1 December); without them every
+  path behaves as before (the lookup still filters on the `book` name, not `book_slug`).
+  - `search_conference_talks` passes speaker and year as vector-store filters (`speaker_name`,
+    `year`, payload-indexed in Qdrant); it falls back to speaker only, then year only, then no filter, so a partial
+    name ("Monson") still works through the existing post-filters. New cache key.
+  - The lookup payload has per-verse `notes` (footnotes/TG/BD of each verse, replacing
+    the chunk-level `references` list) and `talks` (the 3 most recent conference talks citing
+    each verse). The tool description says `talks` is not complete: for "which talks cite
+    Alma 7:11" the model also calls `search_conference_talks` (with the old wording it stopped
+    at the 3 listed talks).
+  - Every source carries `authority` (scripture, proclamation, conference, teachings_manual,
+    handbook, reference, history, study_manual) for the model. No authority ranking.
+  - `SourceChunk` gains optional `authority`, `verseNotes`, `citedInTalks` (apps unaffected).
+  - "Eter 12:6" (the model's Italian spelling) is parsed as Ether; it used to fall back to a
+    semantic search that matched "Eterno".
+  - Topical Guide entries (3,630) are in `study_helps` (Qdrant; Pinecone after 1 December).
+  - Eval: 5 new questions (Monson, Alma 7:11 talks, 2 Nephi 2:25 notes, TG Charity),
+    `probe_step2.ts` retrieval probe, `run.ts` filter takes a comma-separated id list,
+    judge/score see `notes`/`talks`.
+
 ## 0.12.103
 
 - **Temporary Qdrant bridge for the vector index.** Pinecone's free-plan monthly read

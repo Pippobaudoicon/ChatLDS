@@ -4,7 +4,7 @@
  * prepareChatToolStep + streamText over the AI Gateway (so it costs real money: ~$0.3 per 100 turns).
  * No DB, no Clerk, no memory tools; Upstash is disabled so nothing is cached or written anywhere.
  *
- *   SCOPE=standard|super [CHAT_MODEL=...] [OUT=dir] tsx --tsconfig tsconfig.json scripts/eval/review/run.ts [idFilter]
+ *   SCOPE=standard|super [CHAT_MODEL=...] [OUT=dir] tsx --tsconfig tsconfig.json scripts/eval/review/run.ts [idFilter,idFilter2,...]
  * Writes <OUT>/runs-<scope>.json (default OUT: scripts/eval/review/out). Normally driven by eval.sh.
  * Questions marked requires_super (gold only in Super-only namespaces) are skipped for the standard scope.
  */
@@ -32,7 +32,7 @@ const TOOL_USE_COMPLETE =
 type Q = { id: string; lang: "ita" | "eng"; q: string; requires_super?: boolean };
 const filter = process.argv[2] ?? "";
 const questions = (JSON.parse(readFileSync(join(here, "eval_set.json"), "utf8")) as Q[]).filter(
-  (q) => q.id.includes(filter) && (SCOPE === "super" || !q.requires_super)
+  (q) => filter.split(",").some((f) => q.id.includes(f)) && (SCOPE === "super" || !q.requires_super)
 );
 
 const meta = (s: { providerMetadata?: unknown }) =>
@@ -100,7 +100,7 @@ async function runTurn(q: Q) {
         n: i + 1, id: s.id, source: s.source, language: s.language, score: s.score,
         book: s.book, chapter: s.chapter, verse: s.verse, title: s.title, speaker: s.speaker,
         date: s.date, url: s.url, references: s.references, text: s.text,
-        seen: { text: seen.text, references: seen.references, summary: seen.summary },
+        seen: { text: seen.text, references: seen.references, summary: seen.summary, authority: seen.authority, notes: seen.notes, talks: seen.talks },
       };
     }),
   };

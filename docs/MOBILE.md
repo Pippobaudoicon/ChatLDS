@@ -36,6 +36,11 @@ Architecture and plan: `docs/MOBILE_APP_PLAN.md` (written for the old Expo app) 
   `{ "standard": [...ALL_SOURCES], "super": [...SUPER_SOURCES] }` (ids only, display
   order, straight from `types.ts`). Apps read the source lists from here instead of
   hardcoding them; Standard now includes `gospel_teachings`.
+- **SourceChunk** (0.12.105) gains three optional fields: `authority` (string),
+  `verseNotes` and `citedInTalks` (`Record<verse, string[]>`, scripture chunks only).
+  They travel in message sources and `sourcesJson`; the apps' models ignore unknown keys
+  (Kotlin `ignoreUnknownKeys`, Swift `Codable`), so no app change is needed. Payload
+  impact: about +0.4 KB per scripture source on average (p90 1 KB).
 - Realtime voice (`/api/realtime/*`, 0.12.86) is web-only for now; the app does not use it.
 - **DELETE `/api/account`** (0.12.88) — in-app account deletion required by App
   Store / Play. Bearer auth, no body, `204` on success, `502 { error }` on failure

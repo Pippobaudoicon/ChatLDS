@@ -128,6 +128,12 @@ export interface SourceChunk {
   topics?: string[];
   entities?: { people?: string[]; places?: string[]; doctrines?: string[] };
   references?: string[];
+  /** Kind of document: scripture, proclamation, conference, handbook, teachings_manual, reference, study_manual, history. */
+  authority?: string;
+  /** Scripture chunks: each verse's footnote cross-references and TG/BD entries, keyed by verse number. */
+  verseNotes?: Record<string, string[]>;
+  /** Scripture chunks: the most recent conference talks citing each verse ("Title | Speaker | YYYY-MM"), by verse. */
+  citedInTalks?: Record<string, string[]>;
 }
 
 export interface AssistantVersion {

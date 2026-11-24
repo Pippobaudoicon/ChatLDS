@@ -5,6 +5,7 @@ import {
   fetchConferenceTalkChunks,
   conferenceTalkKey,
 } from "@/lib/rag/retriever";
+import type { EqFilter } from "@/lib/rag/vector-store";
 import {
   getToolResultFromCache,
   setToolResultInCache,
@@ -109,17 +110,10 @@ export function createSearchConferenceTalksTool({
         topK,
         queryCandidates,
         retrievalTopK,
+        filters: "native", // 0.12.103: results differ from the post-filter-only ones cached before
       });
       const cached = await getToolResultFromCache<SourceChunk[]>(key);
-      const chunks =
-        cached ??
-        uniqueById(
-          await retrieveConferenceCandidates(
-            queryCandidates,
-            language,
-            retrievalTopK
-          )
-        );
+      const chunks = cached ?? (await retrieveWithNativeFilters(queryCandidates, language, retrievalTopK, effectiveSpeaker, effectiveYear));
 
       if (!cached) {
         void setToolResultInCache(key, chunks);
@@ -245,6 +239,38 @@ export function createSearchConferenceTalksTool({
       };
     },
   });
+}
+
+// Speaker and year as vector-store filters (`speaker_name` is the exact clean name, `year` a number), so a
+// speaker's talks are not limited to whatever the top semantic hits contain. Tries {speaker, year} →
+// {speaker} → {year} → no filter: a partial or misspelled name ("Monson") matches nothing natively and
+// falls back to the year filter or the plain semantic search, then to the post-filters below.
+async function retrieveWithNativeFilters(
+  queries: string[],
+  language: Language,
+  topK: number,
+  speaker: string | undefined,
+  year: number | undefined
+): Promise<SourceChunk[]> {
+  const speakerName = speaker ? cleanSpeakerName(speaker) : undefined;
+  const filters: EqFilter[] = [];
+  if (speakerName && year) filters.push({ speaker_name: { $eq: speakerName }, year: { $eq: year } });
+  if (speakerName) filters.push({ speaker_name: { $eq: speakerName } });
+  if (year) filters.push({ year: { $eq: year } });
+  filters.push({});
+  for (const filter of filters) {
+    const chunks = uniqueById(await retrieveConferenceCandidates(queries, language, topK, filter));
+    if (chunks.length > 0 || Object.keys(filter).length === 0) return chunks;
+  }
+  return [];
+}
+
+/** "Presidente Russell M. Nelson" → "Russell M. Nelson" (the form stored in `speaker_name`). */
+export function cleanSpeakerName(speaker: string): string {
+  return speaker
+    .trim()
+    .replace(/^(?:(?:president|presidente|elder|anziano|sister|sorella|brother|fratello|bishop|vescovo)\.?\s+)+/i, "")
+    .replace(/\s+/g, " ");
 }
 
 // Among title-matched chunks, choose the talk (by id prefix) with the most

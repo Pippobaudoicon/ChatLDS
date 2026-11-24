@@ -50,7 +50,7 @@ export const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   { volumeSlug: "bofm", bookSlug: "3-ne", canonicalBook: "3 Nefi", maxChapters: 30, aliases: ["3 nefi", "3 nephi", "3 ne", "terzo nefi", "third nephi"] },
   { volumeSlug: "bofm", bookSlug: "4-ne", canonicalBook: "4 Nefi", maxChapters: 1, aliases: ["4 nefi", "4 nephi", "4 ne", "quarto nefi", "fourth nephi"] },
   { volumeSlug: "bofm", bookSlug: "morm", canonicalBook: "Mormon", maxChapters: 9, aliases: ["mormon", "morm"] },
-  { volumeSlug: "bofm", bookSlug: "ether", canonicalBook: "Ether", maxChapters: 15, aliases: ["ether", "etere"] },
+  { volumeSlug: "bofm", bookSlug: "ether", canonicalBook: "Ether", maxChapters: 15, aliases: ["ether", "eter", "etere"] },
   { volumeSlug: "bofm", bookSlug: "moro", canonicalBook: "Moroni", maxChapters: 10, aliases: ["moroni", "moro"] },
 
   // ── Doctrine & Covenants ───────────────────────────────────────────
