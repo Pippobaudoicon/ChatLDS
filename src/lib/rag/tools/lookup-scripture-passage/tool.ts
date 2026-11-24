@@ -40,7 +40,12 @@ const RELATED_CONTEXT_CAP = 24;
 interface CachedPassage {
   passage: SourceChunk[];
   related: SourceChunk[];
+  /** Structured passage chunks found before the MAX_PASSAGE_CHUNKS cut. */
+  passageFound?: number;
 }
+
+// The schema's topK maximum: a structured passage is never cut below this (topK only sizes the semantic fill).
+const MAX_PASSAGE_CHUNKS = 30;
 
 export interface LookupScripturePassageDeps {
   context: RagToolContext;
@@ -60,7 +65,7 @@ export function createLookupScripturePassageTool({
   onProgress,
 }: LookupScripturePassageDeps) {
   return tool({
-    description: `Retrieve scripture passages (Book of Mormon, D&C, Pearl of Great Price) by reference or scripture-focused query. Pass the reference in the user's own language (e.g. "Giovanni 3:16" or "John 3:16") and select the matching indexed language ("ita" or "eng"). Book names are matched language-invariantly, so do not translate the reference. Results may include related cross-reference and study-help chunks.`,
+    description: `Retrieve scripture passages (Bible: Old and New Testament, Book of Mormon, D&C, Pearl of Great Price) by reference or scripture-focused query. Pass the reference in the user's own language (e.g. "Giovanni 3:16" or "John 3:16") and select the matching indexed language ("ita" or "eng"). Book names are matched language-invariantly, so do not translate the reference. Results may include related cross-reference and study-help chunks.`,
     inputSchema,
     execute: async ({ reference, language, topK }) => {
       const startedAt = Date.now();
@@ -80,17 +85,21 @@ export function createLookupScripturePassageTool({
       const key = toolResultCacheKey("lookup_scripture_passage", language, {
         reference,
         topK,
-        v: 5,
+        v: 7,
       });
       const cached = await getToolResultFromCache<CachedPassage>(key);
 
       let passage: SourceChunk[];
       let relatedContext: SourceChunk[];
+      let passageFound: number | undefined;
       if (cached) {
-        ({ passage, related: relatedContext } = cached);
+        ({ passage, related: relatedContext, passageFound } = cached);
       } else {
         const chunks = await retrieve(reference, ["scriptures"], language, topK, {
           scriptureLanguage: language,
+          // "Alma 32 e la fede": the whole passage first, semantic results only fill what is left.
+          // (not MAX_PASSAGE_CHUNKS: the slice below cuts at 30 and sets `truncated`, which needs the real count)
+          pinnedLimit: Number.POSITIVE_INFINITY,
         });
         const selection = parseScriptureSelection(reference, language);
 
@@ -107,7 +116,8 @@ export function createLookupScripturePassageTool({
             })
           : chunks;
 
-        passage = (strictChunks.length > 0 ? strictChunks : chunks).slice(0, topK);
+        passage = strictChunks.length > 0 ? strictChunks.slice(0, MAX_PASSAGE_CHUNKS) : chunks.slice(0, topK);
+        passageFound = strictChunks.length;
         // Attach the passage's cross-references + study-help context (graph) in
         // the passage's ACTUAL language (the model-selected language, or the
         // fallback language when the passage was only available there). The graph
@@ -119,7 +129,7 @@ export function createLookupScripturePassageTool({
           await expandRelatedContext(passage, passageLanguage, { cap: RELATED_CONTEXT_CAP }),
           passageLanguage
         );
-        void setToolResultInCache(key, { passage, related: relatedContext });
+        void setToolResultInCache(key, { passage, related: relatedContext, passageFound });
       }
 
       // Graph-aware rerank of the supporting context (flag-gated), applied AFTER
@@ -144,6 +154,9 @@ export function createLookupScripturePassageTool({
         language,
         cacheHit: !!cached,
         total: indexedChunks.length,
+        ...(passageFound && passageFound > MAX_PASSAGE_CHUNKS
+          ? { truncated: `The requested passage has at least ${passageFound} chunks; only the first ${MAX_PASSAGE_CHUNKS} are returned. Ask for a narrower chapter or verse range to see the rest.` }
+          : {}),
         chunks: indexedChunks.map(({ chunk, citationIndex }) =>
           toToolChunk(chunk, citationIndex)
         ),

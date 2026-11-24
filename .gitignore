@@ -51,3 +51,5 @@ next-env.d.ts
 
 # Eval harness output
 scripts/eval/results/
+scripts/eval/review/out/
+__pycache__/

@@ -1,0 +1,1635 @@
+[
+ {
+  "id": "ref-mosiah-3-19",
+  "cat": "scripture_ref",
+  "lang": "eng",
+  "q": "What does Mosiah 3:19 teach about the natural man?",
+  "gold": {
+   "refs": [
+    "Mosiah 3:19"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The natural man is an enemy to God and will be unless he yields to the enticings of the Holy Spirit, puts off the natural man, becomes a saint through the Atonement of Christ, and becomes as a child: submissive, meek, humble, patient, full of love."
+ },
+ {
+  "id": "ref-ether-12-27",
+  "cat": "scripture_ref",
+  "lang": "ita",
+  "q": "Cosa insegna Ether 12:27 sulla debolezza?",
+  "gold": {
+   "refs": [
+    "Ether 12:27"
+   ]
+  },
+  "expect": "answer",
+  "facts": "God gives men weakness that they may be humble; His grace is sufficient for all who humble themselves and have faith; then He will make weak things become strong."
+ },
+ {
+  "id": "ref-moses-1-39",
+  "cat": "scripture_ref",
+  "lang": "ita",
+  "q": "Che cosa dice Mosè 1:39?",
+  "gold": {
+   "refs": [
+    "Moses 1:39"
+   ]
+  },
+  "expect": "answer",
+  "facts": "This is my work and my glory—to bring to pass the immortality and eternal life of man."
+ },
+ {
+  "id": "ref-matt-5-14",
+  "cat": "scripture_ref",
+  "lang": "eng",
+  "q": "Explain Matthew 5:14-16.",
+  "gold": {
+   "refs": [
+    "Matthew 5:14"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Ye are the light of the world; a city on a hill cannot be hid; let your light so shine that others see your good works and glorify your Father in heaven."
+ },
+ {
+  "id": "ch-jacob-5",
+  "cat": "scripture_chapter",
+  "lang": "ita",
+  "q": "Riassumi Giacobbe 5, l'allegoria dell'olivo.",
+  "gold": {
+   "chapter": "Jacob 5"
+  },
+  "expect": "answer",
+  "facts": "Zenos' allegory of the tame and wild olive trees: the Lord of the vineyard labors to save the house of Israel, scattering and grafting branches, final pruning and gathering."
+ },
+ {
+  "id": "ch-mosiah-4",
+  "cat": "scripture_chapter",
+  "lang": "eng",
+  "q": "Summarize Mosiah 4.",
+  "gold": {
+   "chapter": "Mosiah 4"
+  },
+  "expect": "answer",
+  "facts": "King Benjamin's people receive remission of sins; retaining a remission of sins; caring for the poor (are we not all beggars?); watch yourselves, your thoughts, words and deeds."
+ },
+ {
+  "id": "ch-abraham-3",
+  "cat": "scripture_chapter",
+  "lang": "ita",
+  "q": "Di cosa parla Abrahamo 3?",
+  "gold": {
+   "chapter": "Abraham 3"
+  },
+  "expect": "answer",
+  "facts": "Abraham learns of the stars and Kolob through the Urim and Thummim; premortal intelligences; noble and great ones; the Council in Heaven; earth created as a proving ground."
+ },
+ {
+  "id": "ch-dc-89",
+  "cat": "scripture_chapter",
+  "lang": "ita",
+  "q": "Spiegami Dottrina e Alleanze 89.",
+  "gold": {
+   "chapter": "Doctrine and Covenants 89"
+  },
+  "expect": "answer",
+  "facts": "The Word of Wisdom: wine/strong drink, tobacco, hot drinks not good; herbs, fruits, grains good, meat sparingly; promises of health, wisdom, running and not being weary, destroying angel passing by."
+ },
+ {
+  "id": "ch-3-nephi-11",
+  "cat": "scripture_chapter",
+  "lang": "eng",
+  "q": "What happens in 3 Nephi 11?",
+  "gold": {
+   "chapter": "3 Nephi 11"
+  },
+  "expect": "answer",
+  "facts": "The voice of the Father introduces the risen Christ at the temple in Bountiful; people feel the prints of the nails; Christ gives authority to baptize, teaches the mode of baptism and His doctrine, condemns contention."
+ },
+ {
+  "id": "doc-natural-man",
+  "cat": "doctrine",
+  "lang": "eng",
+  "q": "What do the scriptures teach about overcoming the natural man?",
+  "gold": {
+   "refs": [
+    "Mosiah 3:19"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Mosiah 3:19 is the key passage; yield to the Holy Spirit, through the Atonement."
+ },
+ {
+  "id": "doc-charity",
+  "cat": "doctrine",
+  "lang": "ita",
+  "q": "Che cos'è la carità secondo le Scritture?",
+  "gold": {
+   "refs": [
+    "Moroni 7:45",
+    "Moroni 7:47",
+    "1 Corinthians 13:4"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Charity is the pure love of Christ (Moroni 7:47); suffereth long, is kind, envieth not (Moroni 7:45; 1 Cor 13); charity never faileth."
+ },
+ {
+  "id": "doc-testimony-bom",
+  "cat": "doctrine",
+  "lang": "eng",
+  "q": "How can someone come to know the Book of Mormon is true?",
+  "gold": {
+   "refs": [
+    "Moroni 10:4"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Moroni's promise: read, ponder, ask God in the name of Christ with a sincere heart, real intent, faith in Christ; He will manifest the truth by the power of the Holy Ghost."
+ },
+ {
+  "id": "doc-joy",
+  "cat": "doctrine",
+  "lang": "ita",
+  "q": "Qual è lo scopo della vita secondo il Libro di Mormon? Gli uomini esistono per...?",
+  "gold": {
+   "refs": [
+    "2 Nephi 2:25"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Adam fell that men might be; and men are, that they might have joy (2 Nephi 2:25)."
+ },
+ {
+  "id": "doc-baptism-necessary",
+  "cat": "doctrine",
+  "lang": "ita",
+  "q": "Perché il battesimo è necessario per la salvezza?",
+  "gold": {
+   "refs": [
+    "John 3:5",
+    "2 Nephi 31:5",
+    "2 Nephi 31:17",
+    "Doctrine and Covenants 20:37"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Except a man be born of water and of the Spirit he cannot enter the kingdom of God (John 3:5); Christ was baptized to fulfill all righteousness (2 Ne 31); gate to the path."
+ },
+ {
+  "id": "doc-degrees-glory",
+  "cat": "doctrine",
+  "lang": "eng",
+  "q": "What are the three degrees of glory?",
+  "gold": {
+   "refs": [
+    "Doctrine and Covenants 76:50",
+    "Doctrine and Covenants 76:71",
+    "Doctrine and Covenants 76:81",
+    "1 Corinthians 15:40"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Celestial, terrestrial, telestial (D&C 76; 1 Cor 15:40-42 sun, moon, stars)."
+ },
+ {
+  "id": "doc-grace-works",
+  "cat": "doctrine",
+  "lang": "eng",
+  "q": "What does the Book of Mormon teach about grace and works?",
+  "gold": {
+   "refs": [
+    "2 Nephi 25:23"
+   ]
+  },
+  "expect": "answer",
+  "facts": "It is by grace that we are saved, after all we can do (2 Nephi 25:23); relying wholly upon the merits of Christ (2 Ne 31:19)."
+ },
+ {
+  "id": "doc-oath-covenant",
+  "cat": "doctrine",
+  "lang": "ita",
+  "q": "Che cosa sono il giuramento e l'alleanza del sacerdozio?",
+  "gold": {
+   "refs": [
+    "Doctrine and Covenants 84:33",
+    "Doctrine and Covenants 84:39"
+   ]
+  },
+  "expect": "answer",
+  "facts": "D&C 84:33-44: those who obtain the priesthoods and magnify their calling are sanctified; receive all the Father hath; oath and covenant cannot be broken."
+ },
+ {
+  "id": "doc-faith-seed",
+  "cat": "doctrine",
+  "lang": "eng",
+  "q": "How is faith compared to a seed in the Book of Mormon?",
+  "gold": {
+   "refs": [
+    "Alma 32:28",
+    "Alma 32:21"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Alma 32:21-43: faith is not a perfect knowledge; experiment upon the word; plant the seed; if it swells, it is good; nourish it to become a tree."
+ },
+ {
+  "id": "doc-baptism-dead",
+  "cat": "doctrine",
+  "lang": "ita",
+  "q": "Su quali Scritture si basa il battesimo per i morti?",
+  "gold": {
+   "refs": [
+    "1 Corinthians 15:29",
+    "Doctrine and Covenants 128:15",
+    "Doctrine and Covenants 128:18",
+    "Doctrine and Covenants 124:29"
+   ]
+  },
+  "expect": "answer",
+  "facts": "1 Cor 15:29; D&C 124, 127, 128 (welding link; they without us cannot be made perfect), D&C 138."
+ },
+ {
+  "id": "doc-godhead-body",
+  "cat": "doctrine",
+  "lang": "eng",
+  "q": "Does God the Father have a body?",
+  "gold": {
+   "refs": [
+    "Doctrine and Covenants 130:22"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The Father has a body of flesh and bones as tangible as man's; the Son also; the Holy Ghost is a personage of Spirit (D&C 130:22)."
+ },
+ {
+  "id": "pres-nelson-sabbath",
+  "cat": "leader",
+  "lang": "eng",
+  "q": "What did President Russell M. Nelson teach about the Sabbath being a delight?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Sabbath Is a Delight"
+   }
+  },
+  "expect": "answer",
+  "facts": "Nelson, 'The Sabbath Is a Delight', April 2015: the Sabbath is a sign between God and us; ask 'What sign do I want to give God?'; he moved from lists of dos and don'ts."
+ },
+ {
+  "id": "pres-nelson-prevail",
+  "cat": "leader",
+  "lang": "ita",
+  "q": "Cosa ha insegnato il presidente Nelson nel discorso \"Lasciate che Dio prevalga\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Let God Prevail"
+   }
+  },
+  "expect": "answer",
+  "facts": "Oct 2020: Israel means 'let God prevail'; are you willing to let God prevail in your life?; gathering of Israel."
+ },
+ {
+  "id": "pres-uchtdorf-grace",
+  "cat": "leader",
+  "lang": "eng",
+  "q": "What did Elder Uchtdorf teach in 'The Gift of Grace'?",
+  "gold": {
+   "talk": {
+    "speaker": "Uchtdorf",
+    "title": "Gift of Grace"
+   }
+  },
+  "expect": "answer",
+  "facts": "April 2015: grace opens the gates of heaven and the windows of heaven; we obey not to earn salvation but out of love; grace is not a backup plan."
+ },
+ {
+  "id": "pres-hinckley-education",
+  "cat": "leader",
+  "lang": "eng",
+  "q": "What did President Gordon B. Hinckley teach about getting an education?",
+  "gold": {
+   "idprefix": [
+    "gospel_teachings:eng:manual:teachings-of-presidents-of-the-church-gordon-b-hinckley"
+   ],
+   "content": [
+    "education"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Teachings of Presidents of the Church: Gordon B. Hinckley has teaching on education: get all the education you can; the Lord wants us to train our minds and hands.",
+  "requires_super": true
+ },
+ {
+  "id": "pres-monson-rescue",
+  "cat": "leader",
+  "lang": "ita",
+  "q": "Cosa insegnava il presidente Thomas S. Monson sul soccorrere gli altri?",
+  "gold": {
+   "idprefix": [
+    "gospel_teachings:eng:manual:teachings-of-presidents-of-the-church-thomas-s-monson"
+   ],
+   "speaker": [
+    "Monson"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Monson: going to the rescue, ministering to the one, acting on promptings, service.",
+  "requires_super": true
+ },
+ {
+  "id": "pres-joseph-smith-keystone",
+  "cat": "leader",
+  "lang": "ita",
+  "q": "Che cosa ha detto Joseph Smith sul Libro di Mormon come chiave di volta?",
+  "gold": {
+   "content": [
+    "keystone of our religion"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Joseph Smith: the Book of Mormon was the most correct of any book on earth, and the keystone of our religion, and a man would get nearer to God by abiding by its precepts than by any other book."
+ },
+ {
+  "id": "pres-christofferson-doctrine",
+  "cat": "coverage_trap",
+  "lang": "eng",
+  "q": "What did Elder D. Todd Christofferson teach in his talk 'The Doctrine of Christ'?",
+  "gold": {
+   "talk": {
+    "speaker": "Christofferson",
+    "title": "Doctrine of Christ"
+   }
+  },
+  "expect": "not_found",
+  "facts": "Christofferson's 'The Doctrine of Christ' is April 2012 (not in corpus, which starts 2015). Talks with the same title exist by Brian K. Ashton (Oct 2016), Evan A. Schmutz (Apr 2023), Dale G. Renlund (Apr 2024). Correct behavior: say Christofferson's talk was not found and NOT attribute another speaker's same-titled talk to Christofferson."
+ },
+ {
+  "id": "pres-holland-lord-i-believe",
+  "cat": "coverage_trap",
+  "lang": "eng",
+  "q": "Summarize Elder Holland's talk 'Lord, I Believe'.",
+  "gold": {
+   "talk": {
+    "speaker": "Holland",
+    "title": "Lord, I Believe"
+   }
+  },
+  "expect": "not_found",
+  "facts": "April 2013 talk; corpus starts 2015. Correct behavior: say the talk is not available, do not invent its contents (it is about the father in Mark 9 'Lord, I believe; help thou mine unbelief', hold fast to what you know)."
+ },
+ {
+  "id": "quote-packer-doctrine",
+  "cat": "attribution",
+  "lang": "eng",
+  "q": "Who said 'True doctrine, understood, changes attitudes and behavior'?",
+  "gold": {
+   "content": [
+    "True doctrine, understood, changes attitudes and behavior"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Boyd K. Packer, 'Little Children', October 1986 general conference. Correct attribution = Packer, not the later speaker who quotes him.",
+  "requires_super": true
+ },
+ {
+  "id": "quote-uchtdorf-doubt",
+  "cat": "attribution",
+  "lang": "ita",
+  "q": "Chi ha detto \"dubitate dei vostri dubbi prima di dubitare della vostra fede\"?",
+  "gold": {
+   "content": [
+    "doubt your doubts"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Dieter F. Uchtdorf, 'Come, Join with Us', October 2013."
+ },
+ {
+  "id": "quote-oaks-good-better-best",
+  "cat": "attribution",
+  "lang": "eng",
+  "q": "Who gave the talk 'Good, Better, Best' and what was its main point?",
+  "gold": {
+   "content": [
+    "Good, Better, Best"
+   ],
+   "speaker": [
+    "Oaks"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Dallin H. Oaks, October 2007: some good things must be given up to choose better or best; family time, priorities. Talk itself not in corpus (2007)."
+ },
+ {
+  "id": "quote-nelson-joy",
+  "cat": "attribution",
+  "lang": "ita",
+  "q": "Chi ha insegnato che la gioia che proviamo ha poco a che fare con le circostanze della nostra vita e tutto a che fare con il fulcro della nostra vita?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Joy and Spiritual Survival"
+   }
+  },
+  "expect": "answer",
+  "facts": "Russell M. Nelson, 'Joy and Spiritual Survival', October 2016."
+ },
+ {
+  "id": "xref-ether-12-6",
+  "cat": "crossref",
+  "lang": "ita",
+  "q": "Quali riferimenti incrociati collegano Ether 12:6 ad altri passi sulla fede?",
+  "gold": {
+   "refs": [
+    "Hebrews 11:1",
+    "Alma 32:21",
+    "Romans 8:24"
+   ],
+   "anchor_ref": "Ether 12:6"
+  },
+  "expect": "answer",
+  "facts": "Footnotes of Ether 12:6: Hebrews 11:1, Romans 8:24, Alma 32:21, 2 Nephi 1:15, 3 Nephi 26:11; TG Sign Seekers, TG Test."
+ },
+ {
+  "id": "xref-moroni-10-4",
+  "cat": "crossref",
+  "lang": "eng",
+  "q": "Which other scriptures are cross-referenced in the footnotes of Moroni 10:4?",
+  "gold": {
+   "refs": [
+    "James 1:5",
+    "Moroni 7:9",
+    "Psalms 145:18",
+    "Ether 4:6"
+   ],
+   "anchor_ref": "Moroni 10:4"
+  },
+  "expect": "answer",
+  "facts": "Footnotes of Moroni 10:4: James 1:5, Moroni 7:9, Psalms 145:18, 1 Nephi 13:39, Ether 4:6, Ether 5:1, Mosiah 1:6, Alma 3:12; TG Prayer, TG Faith, TG Revelation..."
+ },
+ {
+  "id": "xref-tg-grace",
+  "cat": "crossref",
+  "lang": "eng",
+  "q": "What scriptures does the Topical Guide list under 'Grace'?",
+  "gold": {
+   "idprefix": [
+    "study_helps:eng:scriptures:tg:grace"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Topical Guide 'Grace' lists e.g. John 1:14,17; Rom 3:24; Eph 2:8; 2 Ne 25:23; Ether 12:27; Moro 10:32-33; D&C 93:12-20. TG is not ingested: correct behavior is to say the TG entry was not retrieved rather than invent its list."
+ },
+ {
+  "id": "xref-bd-atonement",
+  "cat": "crossref",
+  "lang": "ita",
+  "q": "Cosa dice la Guida alle Scritture alla voce Espiazione?",
+  "gold": {
+   "idprefix": [
+    "study_helps:eng:scriptures:gs:atone",
+    "study_helps:eng:scriptures:bd:atone"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Guide to the Scriptures / Bible Dictionary entry 'Atone, Atonement': to reconcile man to God; Christ's suffering in Gethsemane and on the cross."
+ },
+ {
+  "id": "xref-talks-alma-7-11",
+  "cat": "crossref",
+  "lang": "eng",
+  "q": "Which general conference talks have taught about Alma 7:11-12 and Christ taking upon Him our pains and infirmities?",
+  "gold": {
+   "talkcites": "Alma 7:11"
+  },
+  "expect": "answer",
+  "facts": "66 talks 2015-2026 cite Alma 7:11 (e.g. 'Strengthened by the Atonement of Jesus Christ', Oct 2015, Craig C. Christensen? / various)."
+ },
+ {
+  "id": "hb-baptism-officiator",
+  "cat": "handbook",
+  "lang": "ita",
+  "q": "Secondo il Manuale generale, chi può celebrare un battesimo?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "priest"
+   ]
+  },
+  "expect": "answer",
+  "facts": "A priest or a Melchizedek Priesthood holder may perform a baptism, under the direction of the presiding authority (General Handbook 18.7)."
+ },
+ {
+  "id": "hb-cremation",
+  "cat": "handbook",
+  "lang": "eng",
+  "q": "What does the General Handbook say about cremation?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "cremat"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The Church does not normally encourage cremation; the family decides; where law requires it, deceased endowed members may be dressed in temple clothing (General Handbook 38.7/funeral policies)."
+ },
+ {
+  "id": "pos-evolution",
+  "cat": "official_position",
+  "lang": "ita",
+  "q": "Qual è la posizione ufficiale della Chiesa sull'evoluzione?",
+  "gold": {},
+  "expect": "no_official_position",
+  "facts": "The Church has no official position on the scientific theory of evolution beyond affirming God as Creator and Adam as the first man ('The Origin of Man', 1909). Correct answer must not invent an official stance."
+ },
+ {
+  "id": "pos-bom-geography",
+  "cat": "official_position",
+  "lang": "eng",
+  "q": "Where exactly did the events of the Book of Mormon take place? What is the Church's position?",
+  "gold": {
+   "title": [
+    "Book of Mormon Geography"
+   ]
+  },
+  "expect": "no_official_position",
+  "facts": "The Church takes no position on the specific geographic locations of Book of Mormon events (Gospel Topics essay 'Book of Mormon Geography')."
+ },
+ {
+  "id": "pos-second-coming-date",
+  "cat": "official_position",
+  "lang": "ita",
+  "q": "In che anno avverrà la Seconda Venuta di Cristo?",
+  "gold": {
+   "refs": [
+    "Matthew 24:36",
+    "Doctrine and Covenants 49:7"
+   ]
+  },
+  "expect": "no_official_position",
+  "facts": "No one knows the day or hour (Matthew 24:36; D&C 49:7). Correct answer gives no date."
+ },
+ {
+  "id": "pos-race-priesthood",
+  "cat": "official_position",
+  "lang": "ita",
+  "q": "Perché fino al 1978 i neri non potevano ricevere il sacerdozio? Qual è la posizione della Chiesa oggi?",
+  "gold": {
+   "title": [
+    "Race and the Priesthood"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Gospel Topics essay 'Race and the Priesthood': restriction's origins unclear; Church disavows past theories (curse, premortal unworthiness); 1978 revelation (Official Declaration 2). Must NOT present the disavowed theories as doctrine."
+ },
+ {
+  "id": "pos-moon-men",
+  "cat": "official_position",
+  "lang": "eng",
+  "q": "Did Joseph Smith teach that men live on the moon? Is that Church doctrine?",
+  "gold": {},
+  "expect": "no_official_position",
+  "facts": "Only a late second-hand recollection (Oliver B. Huntington); not in official Church sources and not doctrine. Correct answer: no official source, not doctrine."
+ },
+ {
+  "id": "pos-adam-god",
+  "cat": "official_position",
+  "lang": "eng",
+  "q": "Is the Adam-God theory taught by Brigham Young official Church doctrine?",
+  "gold": {},
+  "expect": "no_official_position",
+  "facts": "Not Church doctrine; President Spencer W. Kimball (Oct 1976) denounced it as false doctrine. Must not present it as doctrine."
+ },
+ {
+  "id": "conf-nelson-peacemakers",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha insegnato il presidente Nelson sull'essere pacificatori e sulla contesa nel discorso \"Peacemakers Needed\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Peacemakers Needed"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Nelson (April 2023): contention is evil and toxic (he compares it to a surgeon's dangerous anger); disciples of Jesus Christ must be peacemakers, love their enemies and treat others with compassion. Charity, the pure love of Christ, is the antidote to contention. The Atonement and the temple give power to overcome contention; examine our hearts for pride and jealousy.",
+  "anchors": [
+   "contention",
+   "charity"
+  ]
+ },
+ {
+  "id": "conf-nelson-think-celestial",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Che cosa significa 'pensare in modo celestiale' secondo il presidente Nelson?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Think Celestial"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Nelson (October 2023, 'Think Celestial!'): thinking celestial means being spiritually minded and aligning mortal choices with eternal goals, because Christ's Atonement makes the Father's plan possible. It involves expecting opposition, enduring trials with an eternal perspective, temple sealing and covenant keeping for eternal families, tithing and temple worship.",
+  "anchors": [
+   "celestial"
+  ]
+ },
+ {
+  "id": "conf-oaks-kingdoms-of-glory",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha spiegato il presidente Oaks sui regni di gloria nel discorso \"Kingdoms of Glory\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Oaks",
+    "title": "Kingdoms of Glory"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Oaks (October 2023): God's plan gives all His children a kingdom of glory; there are three (celestial, terrestrial, telestial), as Paul described. The kingdom received depends on the laws we choose to abide; the celestial kingdom requires covenants and ordinances, and exaltation requires eternal marriage covenants made in the temple.",
+  "anchors": [
+   "telestial"
+  ]
+ },
+ {
+  "id": "conf-uchtdorf-prodigal",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa insegna l'anziano Uchtdorf sulla parabola del figliol prodigo nel discorso \"The Prodigal and the Road That Leads Home\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Uchtdorf",
+    "title": "Prodigal"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Uchtdorf (October 2023): in the parable the son leaves, squanders everything and then 'comes to himself' and returns; the father waits and receives him with joy, showing God's unconditional love and forgiveness. Heavenly Father welcomes all who repent and return; the Atonement of Jesus Christ makes returning possible and transforms lives.",
+  "anchors": [
+   "prodigal"
+  ]
+ },
+ {
+  "id": "conf-andersen-tithing",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha detto l'anziano Andersen sulla decima e sulle finestre dei cieli?",
+  "gold": {
+   "talk": {
+    "speaker": "Andersen",
+    "title": "Tithing"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Andersen (October 2023, 'Tithing: Opening the Windows of Heaven'): tithing is returning 10% of our increase to God; it is a matter of faith and puts the Lord first, with the promised opening of the windows of heaven (Malachi). Tithing funds are sacred, belong to the Lord and are used for the poor, missionary work, temples and education; leaders are stewards answerable to the Lord.",
+  "anchors": [
+   "windows of heaven"
+  ]
+ },
+ {
+  "id": "conf-christofferson-sealing",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Che cos'è il potere di suggellamento secondo l'anziano Christofferson?",
+  "gold": {
+   "talk": {
+    "speaker": "Christofferson",
+    "title": "Sealing Power"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Christofferson (October 2023, 'The Sealing Power'): the sealing power was restored by Elijah to Joseph Smith in the Kirtland Temple; it makes priesthood ordinances binding on earth and in heaven, validates vicarious ordinances for the dead, and binds families eternally. It is held by the President of the Church; its highest expression is eternal marriage.",
+  "anchors": [
+   "sealing power"
+  ]
+ },
+ {
+  "id": "conf-holland-hidden-fire",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha detto il presidente Holland sulla preghiera nel discorso \"Motions of a Hidden Fire\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Holland",
+    "title": "Hidden Fire"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Holland (April 2024): God hears and answers every prayer according to His love and wisdom; we should pray always, for others, and in the name of Jesus Christ. Prayer is our sweetest hour and simplest form of worship; the adversary tries to prevent prayer; Christ prayed often, notably in Gethsemane.",
+  "anchors": [
+   "prayer"
+  ]
+ },
+ {
+  "id": "conf-bednar-be-still",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Come possiamo conoscere Dio secondo l'anziano Bednar in \"Be Still, and Know That I Am God\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Bednar",
+    "title": "Be Still"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Bednar (April 2024): inner spiritual stillness lets us know God as Father and Jesus Christ as Savior. Our foundation is secured to Christ through covenants and ordinances (compared to anchor pins connecting a building to bedrock); sacred times (Sabbath) and holy places (meetinghouses, temples, homes) help us experience stillness.",
+  "anchors": [
+   "still"
+  ]
+ },
+ {
+  "id": "conf-renlund-virtuous-cycle",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cos'è il ciclo virtuoso della dottrina di Cristo descritto dall'anziano Renlund?",
+  "gold": {
+   "talk": {
+    "speaker": "Renlund",
+    "title": "Virtuous Cycle"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Renlund (April 2024): the doctrine of Christ (faith in Jesus Christ, repentance, baptism, the gift of the Holy Ghost, enduring to the end) is not a one-time sequence but a repeated, iterative cycle that builds spiritual momentum and draws us closer to the Savior over a lifetime; renewing baptismal covenants through the sacrament is part of it.",
+  "anchors": [
+   "doctrine of Christ"
+  ]
+ },
+ {
+  "id": "conf-nelson-priesthood-keys",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha detto il presidente Nelson sulle chiavi del sacerdozio restaurate nel Tempio di Kirtland?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Priesthood Keys"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Nelson (April 2024, 'Rejoice in the Gift of Priesthood Keys'): in the Kirtland Temple heavenly messengers (Jesus Christ, Moses, Elias, Elijah) restored priesthood keys, including the keys for the gathering of Israel and the sealing keys. These keys make the Abrahamic blessings and temple ordinances available to covenant keepers; the Church recently purchased the Kirtland Temple.",
+  "anchors": [
+   "Kirtland"
+  ]
+ },
+ {
+  "id": "conf-holland-little-child",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha raccontato il presidente Holland su Easton Jolley e sull'essere come un bambino?",
+  "gold": {
+   "talk": {
+    "speaker": "Holland",
+    "title": "Little Child"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Holland (April 2025, 'As a Little Child'): to enter the kingdom of heaven we must become humble as a little child (Matthew 18; King Benjamin). Easton Jolley, a boy with muscular dystrophy, newly ordained to the Aaronic Priesthood, insisted on passing the sacrament alone, climbing the steps to serve his father the bishop, as an example of childlike faith and humility.",
+  "anchors": [
+   "Easton"
+  ]
+ },
+ {
+  "id": "conf-renlund-name-of-christ",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa significa prendere su di noi il nome di Gesù Cristo secondo l'anziano Renlund?",
+  "gold": {
+   "talk": {
+    "speaker": "Renlund",
+    "title": "Taking on the Name"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Renlund (October 2025): taking Christ's name upon us involves identification with Him, remembering Him (the weekly sacrament renews covenants), emulating Him by seeking His attributes especially charity, and alignment with His purposes, which brings empowerment through God's power. He opens with the story of Dr. Selzman, a professor in a chair named after President Nelson, who resolved to be more like him.",
+  "anchors": [
+   "name of Jesus Christ"
+  ]
+ },
+ {
+  "id": "conf-nelson-overcome-world",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha insegnato il presidente Nelson in \"Overcome the World and Find Rest\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Overcome the World"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Nelson (October 2022): through Jesus Christ's Atonement we can overcome the world and find rest. Overcoming means putting God above worldly things, yielding to the Holy Spirit and putting off the natural man; keeping temple covenants gives rest and access to the Savior's power, making life easier; nurture your testimony of Jesus Christ.",
+  "anchors": [
+   "rest"
+  ]
+ },
+ {
+  "id": "conf-nelson-correct-name",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Perché il presidente Nelson ha detto che è importante usare il nome corretto della Chiesa?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Correct Name"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Nelson (October 2018): the correct name, The Church of Jesus Christ of Latter-day Saints, is a divine command from the Savior, not a rebranding; the Church bears His name. Using nicknames that omit the Savior's name disregards His Atonement. Approved shortened references such as 'the Church' or 'the Church of Jesus Christ' are acceptable.",
+  "anchors": [
+   "name of the Church"
+  ]
+ },
+ {
+  "id": "conf-renlund-unfairness",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Come risponde l'anziano Renlund al problema dell'ingiustizia nel discorso \"Infuriating Unfairness\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Renlund",
+    "title": "Infuriating"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Renlund (April 2021): much unfairness comes from agency and mortal imperfection (including other people's choices); Jesus Christ understands all unfairness and through His Atonement will make all unfairness right in eternity. God's love is steadfast, we must trust His timing, and we should stop throwing stones of judgment.",
+  "anchors": [
+   "unfair"
+  ]
+ },
+ {
+  "id": "conf-holland-waiting",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Che consiglio dà l'anziano Holland a chi sta aspettando una risposta dal Signore in \"Waiting on the Lord\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Holland",
+    "title": "Waiting on the Lord"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Holland (October 2020): during prolonged trials (like COVID-19, illness, struggles, wayward children) God hears and answers prayers in His own time and way; faith means trusting Him in good times and in suffering, patiently nourishing the seed of faith, relying on the Atonement of Jesus Christ for renewal and strength.",
+  "anchors": [
+   "wait"
+  ]
+ },
+ {
+  "id": "conf-eyring-try-try-try",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha detto il presidente Eyring sulle preghiere sacramentali e sul prendere su di noi il nome di Cristo in \"Try, Try, Try\"?",
+  "gold": {
+   "talk": {
+    "speaker": "Eyring",
+    "title": "Try, Try, Try"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Eyring (October 2018): mortal life is a divinely designed test; God provides a way through trials via Christ's Atonement. In the sacramental prayer we witness our willingness to take Christ's name, always remember Him and keep His commandments, with the promise of His Spirit; taking His name continues beyond baptism and brings faith, hope and charity.",
+  "anchors": [
+   "sacrament"
+  ]
+ },
+ {
+  "id": "conf-christofferson-belonging",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cos'è la dottrina dell'appartenenza secondo l'anziano Christofferson?",
+  "gold": {
+   "talk": {
+    "speaker": "Christofferson",
+    "title": "Doctrine of Belonging"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Christofferson (October 2022, 'The Doctrine of Belonging'): belonging comprises gathering covenant people, service and sacrifice, and the centrality of Jesus Christ. Members must eliminate racism, prejudice and divisions and become one in Christ; leave judgment to the Lord, include everyone and minister to those who feel they don't belong.",
+  "anchors": [
+   "belong"
+  ]
+ },
+ {
+  "id": "conf-nelson-faith-mountains",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha detto il presidente Nelson sulla fede che sposta le montagne nel discorso di Pasqua 2021?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Faith in Him Will Move Mountains"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Nelson (April 2021, 'Christ Is Risen; Faith in Him Will Move Mountains'): faith in Jesus Christ is the foundation of belief and unlocks divine power; even a particle of faith, like a mustard seed, can enable the impossible. Steps to grow faith include studying the scriptures about the Atonement, choosing to believe, acting in faith, partaking of sacred ordinances and praying for help.",
+  "anchors": [
+   "mountain"
+  ]
+ },
+ {
+  "id": "conf-rasband-proclamation",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa ha detto l'anziano Rasband sulla Proclamazione sulla famiglia?",
+  "gold": {
+   "talk": {
+    "speaker": "Rasband",
+    "title": "Family Proclamation"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Rasband (October 2025, 'The Family Proclamation—Words from God'): the proclamation was revealed 30 years ago; it was prepared by the Quorum of the Twelve with the First Presidency and introduced by President Hinckley at a Relief Society meeting. It affirms that each person is a beloved spirit child of heavenly parents and that the family is central to God's plan; its principles align with the covenant path.",
+  "anchors": [
+   "Relief Society"
+  ]
+ },
+ {
+  "id": "quote-nelson-think-celestial",
+  "lang": "ita",
+  "cat": "attribution",
+  "q": "Chi ha lanciato l'invito \"Pensate in modo celestiale!\" e in quale conferenza?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Think Celestial"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Russell M. Nelson, general conference October 2023, 'Think Celestial!'.",
+  "anchors": [
+   "Think celestial"
+  ]
+ },
+ {
+  "id": "conf-uchtdorf-fear",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "What did President Uchtdorf teach in 'Perfect Love Casteth Out Fear' about motivating through fear?",
+  "gold": {
+   "talk": {
+    "speaker": "Uchtdorf",
+    "title": "Perfect Love"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Uchtdorf (April 2017): fear produces only temporary, shallow obedience and cannot change hearts; unrighteous dominion and compulsion grieve the Spirit. God is merciful, not vengeful, and motivates through persuasion and love, not fear; the Great Awakening used fear of hell and influenced young Joseph Smith to pray.",
+  "anchors": [
+   "fear"
+  ]
+ },
+ {
+  "id": "conf-christofferson-marriage",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "What did Elder Christofferson say in 'Why Marriage, Why Family' about the plan of salvation?",
+  "gold": {
+   "talk": {
+    "speaker": "Christofferson",
+    "title": "Why Marriage"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Christofferson (April 2015): marriage between a man and a woman is a divine responsibility rooted in the premortal plan of salvation. God's plan has three components: the Creation, the Fall (mortality and choice) and Redemption through Christ's Atonement. Marriage and family are ordained for physical birth and spiritual rebirth, prerequisites for eternal life and exaltation.",
+  "anchors": [
+   "Bonhoeffer"
+  ]
+ },
+ {
+  "id": "conf-oaks-plan-proclamation",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "What does Elder Oaks teach in 'The Plan and the Proclamation'?",
+  "gold": {
+   "talk": {
+    "speaker": "Oaks",
+    "title": "Plan and the Proclamation"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Oaks (October 2017): Latter-day Saints have a unique doctrine and worldview from knowing God's plan of salvation, in which mortality lets spirit children progress toward exaltation, which is a family matter. The family proclamation outlines the plan; this can cause conflict with the world, but Saints are to choose the Lord's way.",
+  "anchors": [
+   "proclamation"
+  ]
+ },
+ {
+  "id": "conf-nelson-price-priesthood",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "What did President Nelson teach in 'The Price of Priesthood Power'?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Price of Priesthood Power"
+   }
+  },
+  "expect": "answer",
+  "facts": "Elder Nelson (April 2016): priesthood power is God's own power; worthiness and humility unlock it and sin blocks it. He tells of the Hatfield family and the sealing ordinances for the deceased girls. To increase priesthood power: search the scriptures, worship in the temple, serve others, pray sincerely and develop Christlike attributes.",
+  "anchors": [
+   "Hatfield"
+  ]
+ },
+ {
+  "id": "conf-uchtdorf-fourth-floor",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "What did President Uchtdorf say about faith and agency in 'Fourth Floor, Last Door'?",
+  "gold": {
+   "talk": {
+    "speaker": "Uchtdorf",
+    "title": "Fourth Floor"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Uchtdorf (October 2016): faith is a strong conviction that moves to action and is powerful, but it cannot violate another person's agency, even in response to sincere prayers; God invites and persuades but never compels. Faith cannot force God's will (Paul's thorn); its purpose is to empower us to act.",
+  "anchors": [
+   "agency"
+  ]
+ },
+ {
+  "id": "conf-nelson-spiritual-momentum",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "How does President Nelson say we can build spiritual momentum in 'The Power of Spiritual Momentum'?",
+  "gold": {
+   "talk": {
+    "speaker": "Nelson",
+    "title": "Spiritual Momentum"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Nelson (April 2022): spiritual momentum is ignited by obedience, love and gratitude and maintained by staying on the covenant path through baptism, the sacrament and temple ordinances; daily repentance, daily nourishment of testimony, seeking miracles with faith, and ending personal conflict accelerate it.",
+  "anchors": [
+   "momentum"
+  ]
+ },
+ {
+  "id": "conf-oaks-divine-helps",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "What 'divine helps for mortality' does President Oaks list in his April 2025 talk?",
+  "gold": {
+   "talk": {
+    "speaker": "Oaks",
+    "title": "Divine Helps"
+   }
+  },
+  "expect": "answer",
+  "facts": "President Oaks (April 2025): the Atonement of Jesus Christ is the greatest help; others are the Light/Spirit of Christ, the scriptures, commandments, ordinances and covenants, and the Holy Ghost (the gift received after baptism). He warns that neglecting prayer, scripture study, repentance and covenant keeping leaves many unprepared to meet Christ.",
+  "anchors": [
+   "Holy Ghost"
+  ]
+ },
+ {
+  "id": "xref-talks-helaman-5-12",
+  "lang": "ita",
+  "cat": "crossref",
+  "q": "Quali discorsi della conferenza generale citano Helaman 5:12, la roccia del nostro Redentore?",
+  "gold": {
+   "talkcites": "Helaman 5:12"
+  },
+  "expect": "answer",
+  "facts": "Helaman 5:12 ('it is upon the rock of our Redeemer, who is Christ, the Son of God, that ye must build your foundation') is cited in 29 of the indexed conference talks; any recent conference talk on building a foundation on Christ that cites Helaman 5:12 is a valid answer, and each named talk must really cite it."
+ },
+ {
+  "id": "xref-talks-john-3-16",
+  "lang": "eng",
+  "cat": "crossref",
+  "q": "Which general conference talks quote John 3:16?",
+  "gold": {
+   "talkcites": "John 3:16"
+  },
+  "expect": "answer",
+  "facts": "John 3:16 ('For God so loved the world...') is cited by many indexed conference talks (49 in the local corpus); every talk named in the answer must actually cite or quote it."
+ },
+ {
+  "id": "ref-1-john-4-8",
+  "lang": "ita",
+  "cat": "scripture_ref",
+  "q": "Cosa dice 1 Giovanni 4:8?",
+  "gold": {
+   "refs": [
+    "1 John 4:8"
+   ]
+  },
+  "expect": "answer",
+  "facts": "1 John 4:8: 'He that loveth not knoweth not God; for God is love.' It is in 1 John, not the Gospel of John.",
+  "anchors": [
+   "God is love"
+  ]
+ },
+ {
+  "id": "ref-mark-2-14",
+  "lang": "ita",
+  "cat": "scripture_ref",
+  "q": "Che cosa racconta Marco 2:14?",
+  "gold": {
+   "refs": [
+    "Mark 2:14"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Mark 2:14: Jesus sees Levi the son of Alphaeus sitting at the receipt of custom (tax office), says 'Follow me', and Levi arises and follows Him. It is in Mark, not Malachi.",
+  "anchors": [
+   "Levi"
+  ]
+ },
+ {
+  "id": "ref-mosiah-8-21",
+  "lang": "ita",
+  "cat": "scripture_ref",
+  "q": "Cosa insegna Mosia 8:21?",
+  "gold": {
+   "refs": [
+    "Mosiah 8:21"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Mosiah 8:21 (King Limhi after hearing Ammon): the works of the Lord are marvelous and the understandings of men are blind and impenetrable, for they will not seek wisdom nor desire that she should rule over them. It is in Mosiah, not Moses.",
+  "anchors": [
+   "seek wisdom"
+  ]
+ },
+ {
+  "id": "ref-moroni-7-30",
+  "lang": "ita",
+  "cat": "scripture_ref",
+  "q": "Cosa dice Moroni 7:30 sugli angeli?",
+  "gold": {
+   "refs": [
+    "Moroni 7:30"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Moroni 7:30: angels are subject to Christ and minister according to the word of His command, showing themselves to those of strong faith and a firm mind in every form of godliness. It is in Moroni 7, not Moses 7.",
+  "anchors": [
+   "subject unto him"
+  ]
+ },
+ {
+  "id": "ref-jacob-4-9",
+  "lang": "ita",
+  "cat": "scripture_ref",
+  "q": "Che cosa insegna Giacobbe 4:9 sul potere della parola di Dio?",
+  "gold": {
+   "refs": [
+    "Jacob 4:9"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Jacob 4:9: by the power of God's word man came upon the face of the earth, which was created by the power of His word; if God could speak and the world was, and speak and man was created, He can command the earth and the world. It is in Jacob (Book of Mormon), not James.",
+  "anchors": [
+   "power of his word"
+  ]
+ },
+ {
+  "id": "ref-abraham-3-22",
+  "lang": "ita",
+  "cat": "scripture_ref",
+  "q": "Cosa insegna Abraamo 3:22-23 sulle intelligenze e sui nobili e grandi?",
+  "gold": {
+   "refs": [
+    "Abraham 3:22"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Abraham 3:22-23: the Lord showed Abraham the intelligences that were organized before the world was; among them were many of the noble and great ones, and God said He would make them His rulers ('these I will make my rulers'). It is in the Book of Abraham, not Genesis.",
+  "anchors": [
+   "noble and great"
+  ]
+ },
+ {
+  "id": "hb-sacrament-pass",
+  "lang": "ita",
+  "cat": "handbook",
+  "q": "Secondo il Manuale generale, chi può benedire e chi può distribuire il sacramento?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "may pass the sacrament"
+   ]
+  },
+  "expect": "answer",
+  "facts": "General Handbook 18.9.3: priesthood holders may prepare the sacrament; priests and Melchizedek Priesthood holders may bless it; deacons, teachers, priests and Melchizedek Priesthood holders may pass it.",
+  "anchors": [
+   "may pass the sacrament"
+  ]
+ },
+ {
+  "id": "hb-word-of-wisdom",
+  "lang": "ita",
+  "cat": "handbook",
+  "q": "Cosa dice il Manuale generale sul tè e sul caffè nella Parola di Saggezza?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "hot drinks (tea and coffee)"
+   ]
+  },
+  "expect": "answer",
+  "facts": "General Handbook 38.8 (Word of Wisdom): Doctrine and Covenants 89 includes abstinence from tobacco, strong drinks (alcohol) and hot drinks (tea and coffee); other harmful substances are not specified, and members should use wisdom and prayerful judgment.",
+  "anchors": [
+   "hot drinks (tea and coffee)"
+  ]
+ },
+ {
+  "id": "hb-naming-blessing",
+  "lang": "ita",
+  "cat": "handbook",
+  "q": "Chi può dare un nome e una benedizione a un bambino secondo il Manuale generale?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "naming and blessing a child is performed by Melchizedek Priesthood holders"
+   ]
+  },
+  "expect": "answer",
+  "facts": "General Handbook 18.3: the ordinance of naming and blessing a child is performed by Melchizedek Priesthood holders (Doctrine and Covenants 20:70); the family coordinates it with the bishop, who holds the keys for naming and blessing children in the ward.",
+  "anchors": [
+   "naming and blessing a child is performed by Melchizedek Priesthood holders"
+  ]
+ },
+ {
+  "id": "hb-tithing-declaration",
+  "lang": "ita",
+  "cat": "handbook",
+  "q": "Cos'è la dichiarazione della decima e a chi si fa secondo il Manuale generale?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "tithing declaration"
+   ]
+  },
+  "expect": "answer",
+  "facts": "General Handbook 34.3.2: the bishop meets with each member during the last few months of each year to receive their tithing declaration; members declare their status as tithe payers and make sure contribution records are accurate; whenever possible whole families, including children, attend together.",
+  "anchors": [
+   "tithing declaration"
+  ]
+ },
+ {
+  "id": "hb-funeral",
+  "lang": "eng",
+  "cat": "handbook",
+  "q": "Who conducts a funeral for a member according to the General Handbook?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "If a funeral for a member is held in a Church building, the bishop conducts it"
+   ]
+  },
+  "expect": "answer",
+  "facts": "General Handbook 29.6: if a funeral for a member is held in a Church building, the bishop conducts it; if held in a home, mortuary or at the graveside the family may ask the bishop to conduct it; a bishop's counselor may conduct if the bishop cannot.",
+  "anchors": [
+   "the bishop conducts it"
+  ]
+ },
+ {
+  "id": "hb-gambling",
+  "lang": "eng",
+  "cat": "handbook",
+  "q": "What is the Church's guidance on gambling and lotteries?",
+  "gold": {
+   "source": [
+    "handbook",
+    "gospel_topics"
+   ],
+   "content": [
+    "gambling"
+   ]
+  },
+  "expect": "answer",
+  "facts": "General Handbook 38.8.19: the Church opposes and counsels against gambling in any form, including sports betting and government-sponsored lotteries. The Gospel Topics page on gambling adds that gambling is motivated by wanting something for nothing, which is spiritually destructive.",
+  "anchors": [
+   "gambling"
+  ]
+ },
+ {
+  "id": "hb-mission-ages",
+  "lang": "eng",
+  "cat": "handbook",
+  "q": "What ages can single men and women serve as teaching or service missionaries, and for how long?",
+  "gold": {
+   "source": [
+    "handbook"
+   ],
+   "content": [
+    "Single men ages 18–25"
+   ]
+  },
+  "expect": "answer",
+  "facts": "General Handbook 24.2.2: single men ages 18–25 may serve as teaching missionaries for usually 24 months; single women ages 18–29 usually serve 18 months. Service missionaries have the same age ranges and terms. Senior missionaries are ages 40 and older (couples or single) without dependent or minor children at home.",
+  "anchors": [
+   "Single men ages 18–25"
+  ]
+ },
+ {
+  "id": "gt-first-vision-accounts",
+  "lang": "eng",
+  "cat": "gospel_topics",
+  "q": "How many accounts of the First Vision did Joseph Smith leave, and which one is in his own hand?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics-essays:first-vision-accounts"
+   ],
+   "content": [
+    "1832 Account"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The Gospel Topics essay 'First Vision Accounts' discusses several accounts (1832, 1835, 1838, 1842). The 1832 account is the earliest known and the only one written in Joseph Smith's own hand; the 1838 account is the best known and was published in 1842 in the Times and Seasons.",
+  "anchors": [
+   "1832 Account",
+   "1838 Account"
+  ]
+ },
+ {
+  "id": "gt-bom-translation",
+  "lang": "eng",
+  "cat": "gospel_topics",
+  "q": "What does the Church say about how Joseph Smith translated the Book of Mormon, including the seer stone?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics-essays:book-of-mormon-translation"
+   ],
+   "content": [
+    "seer stone"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The essay 'Book of Mormon Translation': Joseph translated by the gift and power of God using the interpreters (Urim and Thummim) and also a small oval seer stone he had found years earlier and had used to look for lost objects; the two instruments were apparently interchangeable and the term 'Urim and Thummim' was applied to both.",
+  "anchors": [
+   "seer stone",
+   "interpreters"
+  ]
+ },
+ {
+  "id": "gt-mother-in-heaven",
+  "lang": "eng",
+  "cat": "gospel_topics",
+  "q": "What is the Church's teaching about a Heavenly Mother?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics-essays:mother-in-heaven"
+   ],
+   "content": [
+    "Heavenly Mother"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The essay 'Mother in Heaven': all people are beloved spirit children of heavenly parents, a Heavenly Father and a Heavenly Mother; this is a cherished, distinctive belief rooted in scripture and prophetic teaching, though there is no record of a formal revelation to Joseph Smith on the subject. Very little else has been revealed.",
+  "anchors": [
+   "Heavenly Mother"
+  ]
+ },
+ {
+  "id": "gt-becoming-like-god",
+  "lang": "ita",
+  "cat": "gospel_topics",
+  "q": "Cosa dice la Chiesa sulla frase di Lorenzo Snow 'Come l'uomo è ora, Dio era un tempo'?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics-essays:becoming-like-god"
+   ],
+   "content": [
+    "As man now is, God once was"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The essay 'Becoming Like God': Lorenzo Snow coined the couplet 'As man now is, God once was: As God now is, man may be'; the couplet has never been canonized; little has been revealed about the first half and little is taught. President Hinckley in 1997 said it 'gets into some pretty deep theology that we don't know much about'; the doctrine that humans can progress to exaltation has been taught since the King Follett discourse.",
+  "anchors": [
+   "As man now is, God once was",
+   "pretty deep theology"
+  ]
+ },
+ {
+  "id": "gt-manifesto",
+  "lang": "ita",
+  "cat": "gospel_topics",
+  "q": "Cos'è stato il Manifesto del 1890 sulla poligamia?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics-essays:the-manifesto-and-the-end-of-plural-marriage"
+   ],
+   "content": [
+    "Manifesto"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The essay on the Manifesto: in 1890 President Wilford Woodruff issued the Manifesto, which led to the end of plural marriage in the Church, after the U.S. Supreme Court upheld the Edmunds-Tucker Act (May 1890) and the Church's temples were at risk; he prayed about it and received guidance by vision and revelation. The end of the practice was a process rather than a single event.",
+  "anchors": [
+   "Edmunds-Tucker"
+  ]
+ },
+ {
+  "id": "gt-abraham-papyri",
+  "lang": "ita",
+  "cat": "gospel_topics",
+  "q": "Cosa dice la Chiesa sulla traduzione del Libro di Abrahamo e sui papiri egizi?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics-essays:translation-and-historicity-of-the-book-of-abraham"
+   ],
+   "content": [
+    "papyri"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The essay on the Book of Abraham: it was first published in 1842 and canonized in the Pearl of Great Price in 1880; it originated with Egyptian papyri that Joseph Smith began translating in 1835; no eyewitness account of the translation survives, only small fragments of the scrolls exist today, and the relationship between the fragments and the text is largely conjecture.",
+  "anchors": [
+   "papyri",
+   "1835"
+  ]
+ },
+ {
+  "id": "gt-fasting",
+  "lang": "ita",
+  "cat": "gospel_topics",
+  "q": "Come si digiuna e cosa sono le offerte di digiuno?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics:fasting-and-fast-offerings"
+   ],
+   "content": [
+    "two consecutive meals"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Gospel Topics 'Fasting and Fast Offerings': one Sabbath each month is set aside for fasting; members go without food and water for two consecutive meals in a 24-hour period and contribute the money they would have spent on food (a fast offering) to help those in need (Alma 34:28).",
+  "anchors": [
+   "two consecutive meals"
+  ]
+ },
+ {
+  "id": "gt-word-of-wisdom",
+  "lang": "ita",
+  "cat": "gospel_topics",
+  "q": "Cosa dice la pagina Argomenti del Vangelo sulla Parola di Saggezza e sulle 'bevande calde'?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics:word-of-wisdom"
+   ],
+   "content": [
+    "hot drinks"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Gospel Topics 'Word of Wisdom': received February 27, 1833 (Doctrine and Covenants 89); it teaches healthy practices (fruits, vegetables, grains, meat used sparingly) and prohibits some substances; latter-day prophets have taught that 'hot drinks' (D&C 89:9) refers to tea and coffee.",
+  "anchors": [
+   "tea and coffee"
+  ]
+ },
+ {
+  "id": "gt-debt",
+  "lang": "ita",
+  "cat": "gospel_topics",
+  "q": "Cosa consiglia la Chiesa riguardo ai debiti?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:manual:gospel-topics:debt"
+   ],
+   "content": [
+    "debt"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Gospel Topics 'Debt': prophets have warned against the bondage of debt, especially its interest; when debt is necessary (a modest home or education) it should be repaid as quickly as possible.",
+  "anchors": [
+   "bondage of debt"
+  ]
+ },
+ {
+  "id": "trap-eyring-remember",
+  "lang": "ita",
+  "cat": "coverage_trap",
+  "q": "Riassumimi il discorso dell'anziano Eyring \"O Remember, Remember\" della conferenza di ottobre 2007.",
+  "gold": {
+   "talk": {
+    "speaker": "Eyring",
+    "title": "Remember, Remember"
+   }
+  },
+  "expect": "not_found",
+  "facts": "Conference talks before 2015 are not indexed, so this talk is not in the sources. The answer must say it was not found and must not invent its content."
+ },
+ {
+  "id": "trap-uchtdorf-merciful",
+  "lang": "ita",
+  "cat": "coverage_trap",
+  "q": "Cosa ha detto il presidente Uchtdorf nel discorso \"The Merciful Obtain Mercy\" del 2012?",
+  "gold": {
+   "talk": {
+    "speaker": "Uchtdorf",
+    "title": "Merciful Obtain Mercy"
+   }
+  },
+  "expect": "not_found",
+  "facts": "Conference talks before 2015 are not indexed, so this talk is not in the sources. The answer must say it was not found and must not invent its content."
+ },
+ {
+  "id": "trap-fake-bednar",
+  "lang": "ita",
+  "cat": "coverage_trap",
+  "q": "Cosa ha insegnato l'anziano Bednar nel discorso \"The Digital Garden of the Gospel\" della conferenza di aprile 2021?",
+  "gold": {
+   "talk": {
+    "speaker": "Bednar",
+    "title": "Digital Garden"
+   }
+  },
+  "expect": "not_found",
+  "facts": "No such talk exists. The answer must say it was not found and must not invent a summary or quotes."
+ },
+ {
+  "id": "sup-benson-pride",
+  "lang": "eng",
+  "cat": "leader",
+  "q": "What did President Ezra Taft Benson teach about pride and humility?",
+  "gold": {
+   "idprefix": [
+    "gospel_teachings:eng:manual:teachings-of-presidents-of-the-church-ezra-taft-benson:chapter-18-beware-of-pride"
+   ],
+   "content": [
+    "universal sin"
+   ]
+  },
+  "expect": "answer",
+  "requires_super": true,
+  "facts": "Teachings of Ezra Taft Benson ch. 18: 'Pride is the universal sin, the great vice. The antidote for pride is humility.' Pride looks sideways to man and argues who is right, is self-will as opposed to God's will and the fear of man over the fear of God; humility responds to God's will and the needs of others.",
+  "anchors": [
+   "universal sin"
+  ]
+ },
+ {
+  "id": "sup-js-correct-principles",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Che cosa disse Joseph Smith sull'insegnare principi corretti e sull'autogoverno?",
+  "gold": {
+   "idprefix": [
+    "gospel_teachings:eng:manual:teachings-joseph-smith:chapter-24"
+   ],
+   "content": [
+    "correct principles"
+   ]
+  },
+  "expect": "answer",
+  "requires_super": true,
+  "facts": "Teachings of Joseph Smith ch. 24: 'I teach them correct principles, and they govern themselves.' The chapter sets this in the context of Zion's Camp (1834), the march to help the Saints in Missouri, during which Joseph taught principles of leadership.",
+  "anchors": [
+   "correct principles"
+  ]
+ },
+ {
+  "id": "sup-hunter-come-back",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa invitò a fare il presidente Howard W. Hunter verso i membri non attivi?",
+  "gold": {
+   "idprefix": [
+    "gospel_teachings:eng:manual:teachings-of-presidents-of-the-church-howard-w-hunter:chapter-12"
+   ],
+   "content": [
+    "come back"
+   ]
+  },
+  "expect": "answer",
+  "requires_super": true,
+  "facts": "Teachings of Howard W. Hunter ch. 12: the day after becoming President he invited those who had transgressed, been offended, hurt or confused to 'come back. Stand with us. Carry on' and 'feast at the table' of the Church, following the Good Shepherd; the chapter recounts the lost sheep parable and reaching out to the less active.",
+  "anchors": [
+   "Come back"
+  ]
+ },
+ {
+  "id": "sup-jfs-little-children",
+  "lang": "ita",
+  "cat": "leader",
+  "q": "Cosa insegnò il presidente Joseph F. Smith sulla salvezza dei bambini piccoli che muoiono?",
+  "gold": {
+   "idprefix": [
+    "gospel_teachings:eng:manual:teachings-joseph-f-smith:chapter-15"
+   ],
+   "content": [
+    "children"
+   ]
+  },
+  "expect": "answer",
+  "requires_super": true,
+  "facts": "Teachings of Joseph F. Smith ch. 15: little children who die before the years of accountability are redeemed by the blood of Christ. He buried nine of his own children (1869–1898); at the death of his daughter Ruth in 1898 he received a revelation of the spirits of his children as full of intelligence, joy and grace.",
+  "anchors": [
+   "accountability"
+  ]
+ }
+]

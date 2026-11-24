@@ -1,5 +1,102 @@
 # Changelog
 
+## 0.12.101
+
+- **Fix: `truncated` never fired for reference + topic.** `pinnedLimit: 30` already capped
+  `retrieve()` at 30, so the tool's found count never exceeded 30. The tool now passes an
+  unbounded `pinnedLimit` and cuts at 30 itself. Probe: `Isaiah 1-20` with and without a
+  topic (eng + ita) returns 30 passage chunks plus the `truncated` sentence (3/3).
+
+## 0.12.100
+
+- **`lookup_scripture_passage`: a structured passage is cut at 30 chunks (the schema's topK
+  maximum), not at topK.** With a topic ("Doctrine and Covenants 124 templi…", "Joseph
+  Smith—History 1 la prima visione…") the passage came back with 16–18 of its 20–29 chunks:
+  the tool cut it at topK 16 and `retrieve()` cut the final list at topK. The tool now passes
+  `pinnedLimit: 30`, `retrieve()` keeps every pinned chunk, and a multi-chapter range with
+  more than 30 chunks says so in the result (`truncated`: "at least N chunks; only the first
+  30 are returned…") instead of cutting silently. Cache key `v: 7` (it now stores the found count).
+- Probe: bare and with-topic lookups of Doctrine and Covenants 124 (20 chunks) and Joseph
+  Smith—History 1 (28 eng / 29 ita) must come back whole (15/15 topical cases pass).
+- Live check (read-only, Pinecone): the `book` filter names match the index metadata for
+  all 87 books in eng and ita plus both Joseph Smith em-dash books.
+
+## 0.12.99
+
+- **Fix: `lookup_scripture_passage` with reference + topic returned half a chapter.**
+  "Alma 32 e la fede nelle difficoltà" (topK 16) pinned only topK/2 structured chunks and
+  the tool's book/chapter filter dropped every semantic result, so the model saw ~8 of the
+  chapter's chunks. The tool now passes `pinnedLimit: topK` to `retrieve()`; the cache key
+  is bumped (`v: 6`).
+- **Structured chapter/verse query filters by book name instead of topK 300.** A chapter
+  number alone matches ~280 chunks (all books), so topK 300 returned 320 KB per query and
+  ~7.3 MB / 2.5 s for a 20-chapter range (topK 80: 160 KB, 4 MB, 2.1 s). The query now also
+  filters on the `book` metadata (`bookMetadataName`, 87 English names, Italian =
+  `canonicalBook`; `Joseph Smith—Storia/Matteo` fixed to the corpus' em dash) with topK 40:
+  ~16 KB per query, 0.15 s for the 20-chapter range, read units unchanged (1/query).
+- `residualWords` is counted around the matched alias position, not the first occurrence
+  of its text ("almanacco alma 32").
+- Eval tooling: `probe_scripture.ts` also calls the tool with reference + topic; new
+  `measure_chapter_topk.ts`.
+
+## 0.12.98
+
+- **Reverted the 2000-char tool chunk preview (0.12.96) to 1200**: no measured quality
+  gain on the review eval, +9% input tokens / +10% cost per turn.
+
+## 0.12.97
+
+- Review eval tooling fixes (no runtime change): `report.py` crashed on the `n` row;
+  `score.py` no longer flags a scripture reference as mismatching its `[N]` when
+  that cited chunk itself lists the reference in its `references` metadata
+  (answers like "the study of Ether 12:1-7 also lists Alma 32:21 [1]").
+
+## 0.12.96
+
+- **Tool chunk text preview 1200 → 2000 characters** (`TEXT_PREVIEW_LIMIT` in
+  `tools/shared/chunk-formatting.ts`). Long Conference/Handbook chunks were cut
+  mid-passage with "...", so the model sometimes cited text it had not seen. Measured
+  on the 104-question review eval (same config, only this change): see the RAG review
+  step 0/1 results report for the token/cost delta.
+- `lookup_scripture_passage` tool description now says it covers the Bible (Old and
+  New Testament) too; the alias table and the corpus already did.
+- Removed the dead `RAG_CLAIM_SUPPORT_AUDIT` flag from the local `.env` (nothing
+  reads it since 0.12.7x; `.env` is untracked, so no code change).
+
+## 0.12.95
+
+- **Fix scripture reference lookup** (RAG review step 1, audit §2.1/§5).
+  - "Book of Mormon" / "Libro di Mormon" is no longer parsed as the whole book of
+    Mormon (chapters 1–9, which also pulled Mosiah/Moses/Moroni via the prefix
+    fallback and returned before searching Conference/Gospel Topics). Whole book
+    only on an explicit "intero / whole / entire / tutto il libro".
+  - Book matching in the retriever is exact on the slug: the 2-letter display-name
+    fallback is gone ("Marco 2:14" used to return Malachi 2, "Geremia 25" Genesis 25,
+    "Giacobbe 4" James 4…).
+  - Aliases are matched longest-first ("1 John 3" no longer becomes John 3) and
+    more tolerant ("Abraamo", "Abramo", "DeA", "1Nefi", "3 Ne", "Morm"). The bare
+    alias "da" (Italian "from") is gone: it turned "da 5 anni" into D&C 5.
+  - A reference with its own topic ("Alma 32 e la fede nelle difficoltà") now ADDS the
+    structured chapter/verse chunks (up to topK/2, pinned on top) to the semantic
+    search over the selected sources instead of returning only the passage.
+  - The chapter query asks Pinecone for 300 candidates (was 80): a chapter number
+    alone matches ~280 chunks across all books, so e.g. Giacobbe 4 lost a chunk.
+  - Unit tests: `pnpm run test:scripture-reference` (in `pnpm test`).
+
+## 0.12.94
+
+- **RAG review eval harness** (`scripts/eval/review/`, tooling only — no runtime change).
+  104 questions (65 Italian, many answered by English Conference / Handbook /
+  Gospel Topics sources), each with a gold source verified against the local
+  chunk files (`pnpm eval:review:validate`), the expected behaviour (answer /
+  not found / no official position) and reference facts. `pnpm eval:review
+  <label> [standard] [super]` runs the real chat turn (same prompt, tools and loop
+  policy as `route.ts`; Upstash off, Pinecone read-only), scores retrieval and
+  `[N]` citations deterministically and judges claim support / reference fidelity
+  through the `codex` / `muse` subscription CLIs (no paid judge API). `pnpm
+  eval:review:probe` is a retrieval-only probe of the structured scripture
+  lookup. The older `scripts/eval/{run,answers}.ts` evals are untouched.
+
 ## 0.12.93
 
 - **Answers no longer end with a "Sources:"/"Fonti:" list.** The system prompt
