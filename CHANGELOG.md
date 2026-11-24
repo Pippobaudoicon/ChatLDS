@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.98
+
+- **Reverted the 2000-char tool chunk preview (0.12.96) to 1200**: no measured quality
+  gain on the review eval, +9% input tokens / +10% cost per turn.
+
 ## 0.12.97
 
 - Review eval tooling fixes (no runtime change): `report.py` crashed on the `n` row;

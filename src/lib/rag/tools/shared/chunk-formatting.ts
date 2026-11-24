@@ -43,8 +43,7 @@ export interface ToolChunkPayload {
   references?: string[];
 }
 
-// Raised from 1200: long Conference/Handbook chunks were cut mid-passage, so the model cited text it never saw.
-const TEXT_PREVIEW_LIMIT = 2000;
+const TEXT_PREVIEW_LIMIT = 1200;
 
 /** Flatten {people,places,doctrines} into a single deduped list for the model. */
 function flattenEntities(entities?: SourceChunk["entities"]): string[] | undefined {
