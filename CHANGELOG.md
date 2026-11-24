@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.12.99
+
+- **Fix: `lookup_scripture_passage` with reference + topic returned half a chapter.**
+  "Alma 32 e la fede nelle difficoltà" (topK 16) pinned only topK/2 structured chunks and
+  the tool's book/chapter filter dropped every semantic result, so the model saw ~8 of the
+  chapter's chunks. The tool now passes `pinnedLimit: topK` to `retrieve()`; the cache key
+  is bumped (`v: 6`).
+- **Structured chapter/verse query filters by book name instead of topK 300.** A chapter
+  number alone matches ~280 chunks (all books), so topK 300 returned 320 KB per query and
+  ~7.3 MB / 2.5 s for a 20-chapter range (topK 80: 160 KB, 4 MB, 2.1 s). The query now also
+  filters on the `book` metadata (`bookMetadataName`, 87 English names, Italian =
+  `canonicalBook`; `Joseph Smith—Storia/Matteo` fixed to the corpus' em dash) with topK 40:
+  ~16 KB per query, 0.15 s for the 20-chapter range, read units unchanged (1/query).
+- `residualWords` is counted around the matched alias position, not the first occurrence
+  of its text ("almanacco alma 32").
+- Eval tooling: `probe_scripture.ts` also calls the tool with reference + topic; new
+  `measure_chapter_topk.ts`.
+
 ## 0.12.98
 
 - **Reverted the 2000-char tool chunk preview (0.12.96) to 1200**: no measured quality

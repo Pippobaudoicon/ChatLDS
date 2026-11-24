@@ -4,6 +4,7 @@ import { INDEXED_LANGUAGES } from "@/lib/types";
 import type { SourceChunk, SourceType, Language } from "@/lib/types";
 import {
   parseScriptureSelection,
+  bookMetadataName,
   withVerseHighlight,
 } from "./scripture-reference";
 import { rerankChunks } from "./reranker";
@@ -249,21 +250,20 @@ async function retrieveWholeChapterChunks(
     limitedChapters.map(async (chapter, chapterIndex) => {
       const [vector] = await Promise.all([embedQuery(`${query} ${chapter}`)]);
 
-      // Constrain by language-invariant signals (language + chapter); the book
-      // is enforced by the slug-based post-filter below. We do NOT filter on the
-      // `book` metadata because it is the display name in the chunk's language
-      // (e.g. "Giovanni" vs "John"), which would not match across languages.
-      // topK is generous so the requested book's verses are captured among all
-      // same-chapter chunks before the post-filter narrows to the right book.
+      // Filter by language + chapter + the book's name in that language (`book` metadata,
+      // see bookMetadataName), so Pinecone returns only this book's chunks (at most 29 per
+      // chapter) instead of the ~280 chunks that share a chapter number across all books.
+      // The slug post-filter below stays as a safety net.
       const chapterRes = await index
         .namespace("scriptures")
         .query({
           vector,
-          topK: selection.wholeBook ? 40 : 300, // a chapter number alone matches ~280 chunks across all books
+          topK: 40,
           includeMetadata: true,
           filter: {
             language: { $eq: language },
             chapter: { $eq: chapter },
+            book: { $eq: bookMetadataName(selection, language) },
           },
         });
 
@@ -324,18 +324,18 @@ async function retrieveSpecificVerseChunks(
   const index = getPinecone().index(INDEX_NAME);
 
   const [vector] = await Promise.all([embedQuery(referenceQuery)]);
-  // Constrain by language + chapter only; the book is enforced by the
-  // slug-based post-filter (see isRequestedScriptureChunk). Filtering on the
-  // `book` metadata would fail across languages ("Giovanni" vs "John").
+  // Language + chapter + book name in that language (see retrieveWholeChapterChunks);
+  // the slug post-filter (isRequestedScriptureChunk) stays as a safety net.
   const res = await index
     .namespace("scriptures")
     .query({
       vector,
-      topK: 80,
+      topK: 40,
       includeMetadata: true,
       filter: {
         language: { $eq: language },
         chapter: { $eq: chapter },
+        book: { $eq: bookMetadataName(selection, language) },
       },
     });
 
@@ -376,6 +376,11 @@ export interface RetrieveOptions {
   multiQuery?: boolean;
   /** Restrict scripture chunks to this indexed prompt language. */
   scriptureLanguage?: Language;
+  /**
+   * Own-topic reference queries only: how many structured passage chunks stay pinned on top of the
+   * semantic results. Defaults to topK/2; lookup_scripture_passage passes topK so the passage is whole.
+   */
+  pinnedLimit?: number;
 }
 
 export async function retrieve(
@@ -469,7 +474,7 @@ export async function retrieve(
   const diversified = useDiversity ? diversify(sorted, topK) : sorted;
   // Structured passage chunks (own-topic reference queries only) stay on top, ahead of the
   // reranked semantic results, which fill the rest.
-  const pinned = structured.slice(0, Math.floor(topK / 2));
+  const pinned = structured.slice(0, options.pinnedLimit ?? Math.floor(topK / 2));
   const pinnedIds = new Set(pinned.map((c) => c.id));
   return [...pinned, ...diversified.filter((c) => !pinnedIds.has(c.id))].slice(0, topK);
 }

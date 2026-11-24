@@ -23,7 +23,8 @@ Requirements: Node 24; `.env.local` with a fresh `VERCEL_OIDC_TOKEN` (`vercel en
 | `score.py` | deterministic: gold in context / rank, `[N]` range, scripture refs valid/grounded/matching their `[N]`, quotes |
 | `judge.py` | claim-level LLM judge through a **subscription CLI** (`codex exec --model gpt-6-luna`, fallback `muse exec --model muse-spark-1.3`; `JUDGE=muse` to flip). Validates the JSON and re-asks on malformed output. Sees what the model saw, including each source's `references` metadata |
 | `report.py` | per plan x language table: gold in context / top 5, claims supported, wrong references, swapped `[N]`, expected behavior, cost and latency p50/p90 |
-| `probe_scripture.ts` | retrieval-only probe of the structured scripture lookup |
+| `probe_scripture.ts` | retrieval-only probe of the structured scripture lookup: 80 random chapters/verses, plus reference + topic through the real `lookup_scripture_passage` tool (chapter must come back complete) |
+| `measure_chapter_topk.ts` | latency / bytes / read units of the chapter query: topK 80 vs 300 vs book-name filter |
 
 The judge is an LLM: spot-check a sample by hand before trusting small differences (two passes in the original audit disagreed on a few borderline items).
 The older `scripts/eval/{run,answers,dataset}.ts` retrieval A/B evals are unrelated and untouched.

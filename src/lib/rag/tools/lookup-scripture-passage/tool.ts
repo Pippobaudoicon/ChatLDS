@@ -80,7 +80,7 @@ export function createLookupScripturePassageTool({
       const key = toolResultCacheKey("lookup_scripture_passage", language, {
         reference,
         topK,
-        v: 5,
+        v: 6,
       });
       const cached = await getToolResultFromCache<CachedPassage>(key);
 
@@ -91,6 +91,8 @@ export function createLookupScripturePassageTool({
       } else {
         const chunks = await retrieve(reference, ["scriptures"], language, topK, {
           scriptureLanguage: language,
+          // "Alma 32 e la fede": the whole passage first, semantic results only fill what is left.
+          pinnedLimit: topK,
         });
         const selection = parseScriptureSelection(reference, language);
 

@@ -59,8 +59,8 @@ const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   // ── Pearl of Great Price ───────────────────────────────────────────
   { volumeSlug: "pgp", bookSlug: "moses", canonicalBook: "Mosè", maxChapters: 8, aliases: ["mose", "mosè", "moses"] },
   { volumeSlug: "pgp", bookSlug: "abr", canonicalBook: "Abrahamo", maxChapters: 5, aliases: ["abrahamo", "abraamo", "abramo", "abraham", "abr"] },
-  { volumeSlug: "pgp", bookSlug: "js-m", canonicalBook: "Joseph Smith-Matteo", maxChapters: 1, aliases: ["joseph smith matteo", "joseph smith matthew", "js-m", "js m"] },
-  { volumeSlug: "pgp", bookSlug: "js-h", canonicalBook: "Joseph Smith-Storia", maxChapters: 1, aliases: ["joseph smith storia", "joseph smith history", "js-h", "js h"] },
+  { volumeSlug: "pgp", bookSlug: "js-m", canonicalBook: "Joseph Smith—Matteo", maxChapters: 1, aliases: ["joseph smith matteo", "joseph smith matthew", "js-m", "js m"] },
+  { volumeSlug: "pgp", bookSlug: "js-h", canonicalBook: "Joseph Smith—Storia", maxChapters: 1, aliases: ["joseph smith storia", "joseph smith history", "js-h", "js h"] },
   { volumeSlug: "pgp", bookSlug: "a-of-f", canonicalBook: "Articoli di Fede", maxChapters: 1, aliases: ["articoli di fede", "articles of faith", "a of f"] },
 
   // ── Old Testament ──────────────────────────────────────────────────
@@ -133,6 +133,32 @@ const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   { volumeSlug: "nt", bookSlug: "jude", canonicalBook: "Giuda", maxChapters: 1, aliases: ["giuda", "jude"] },
   { volumeSlug: "nt", bookSlug: "rev", canonicalBook: "Apocalisse", maxChapters: 22, aliases: ["apocalisse", "revelation", "rev"] },
 ];
+
+// The `book` metadata of the indexed scripture chunks, in English (the Italian one is canonicalBook).
+// Lets the structured lookup filter Pinecone by book instead of downloading every chunk of that chapter number.
+const ENGLISH_BOOK_NAMES: Record<string, string> = {
+  "1-chr": "1 Chronicles", "1-cor": "1 Corinthians", "1-jn": "1 John", "1-kgs": "1 Kings", "1-ne": "1 Nephi",
+  "1-pet": "1 Peter", "1-sam": "1 Samuel", "1-thes": "1 Thessalonians", "1-tim": "1 Timothy",
+  "2-chr": "2 Chronicles", "2-cor": "2 Corinthians", "2-jn": "2 John", "2-kgs": "2 Kings", "2-ne": "2 Nephi",
+  "2-pet": "2 Peter", "2-sam": "2 Samuel", "2-thes": "2 Thessalonians", "2-tim": "2 Timothy", "3-jn": "3 John",
+  "3-ne": "3 Nephi", "4-ne": "4 Nephi", "a-of-f": "Articles of Faith", abr: "Abraham", acts: "Acts", alma: "Alma",
+  amos: "Amos", col: "Colossians", dan: "Daniel", dc: "Doctrine and Covenants", deut: "Deuteronomy",
+  eccl: "Ecclesiastes", enos: "Enos", eph: "Ephesians", esth: "Esther", ether: "Ether", ex: "Exodus",
+  ezek: "Ezekiel", ezra: "Ezra", gal: "Galatians", gen: "Genesis", hab: "Habakkuk", hag: "Haggai", heb: "Hebrews",
+  hel: "Helaman", hosea: "Hosea", isa: "Isaiah", jacob: "Jacob", james: "James", jarom: "Jarom", jer: "Jeremiah",
+  job: "Job", joel: "Joel", john: "John", jonah: "Jonah", josh: "Joshua", "js-h": "Joseph Smith—History",
+  "js-m": "Joseph Smith—Matthew", jude: "Jude", judg: "Judges", lam: "Lamentations", lev: "Leviticus", luke: "Luke",
+  mal: "Malachi", mark: "Mark", matt: "Matthew", micah: "Micah", morm: "Mormon", moro: "Moroni", moses: "Moses",
+  mosiah: "Mosiah", nahum: "Nahum", neh: "Nehemiah", num: "Numbers", obad: "Obadiah", omni: "Omni",
+  philem: "Philemon", philip: "Philippians", prov: "Proverbs", ps: "Psalms", rev: "Revelation", rom: "Romans",
+  ruth: "Ruth", song: "Song of Solomon", titus: "Titus", "w-of-m": "Words of Mormon", zech: "Zechariah",
+  zeph: "Zephaniah",
+};
+
+/** Value of the `book` metadata of this selection's chunks in the given indexed language. */
+export function bookMetadataName(selection: { bookSlug: string; canonicalBook: string }, language: Language): string {
+  return language === "eng" ? ENGLISH_BOOK_NAMES[selection.bookSlug] : selection.canonicalBook;
+}
 
 function normalize(text: string): string {
   return text
@@ -292,9 +318,8 @@ const FILLER_WORDS = new Set(
 );
 
 // Words of the query outside the reference itself ("Alma 32 e la fede come seme" -> 2: fede, seme).
-function countResidualWords(normalized: string, alias: string): number {
-  return normalized
-    .replace(alias, " ")
+function countResidualWords(normalized: string, start: number, end: number): number {
+  return (normalized.slice(0, start) + " " + normalized.slice(end))
     .split(" ")
     .filter((w) => w.length > 3 && !/\d/.test(w) && !FILLER_WORDS.has(w)).length;
 }
@@ -346,7 +371,7 @@ export function parseScriptureSelection(
         return chapterUrl;
       }),
       wholeBook,
-      residualWords: countResidualWords(normalized, m[0].trim()),
+      residualWords: countResidualWords(normalized, m.index, m.index + m[0].length),
     };
   }
 

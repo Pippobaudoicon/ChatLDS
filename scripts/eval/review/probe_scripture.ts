@@ -9,6 +9,9 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { retrieve } from "@/lib/rag/retriever";
+import { createRagTools } from "@/lib/rag/tools";
+import { parseScriptureSelection } from "@/lib/rag/scripture-reference";
+import { ALL_SOURCES } from "@/lib/types";
 
 for (const k of Object.keys(process.env)) if (k.startsWith("UPSTASH") || k.startsWith("KV_")) delete process.env[k];
 const here = dirname(fileURLToPath(import.meta.url));
@@ -56,6 +59,42 @@ async function main() {
       console.log(JSON.stringify(rec));
     }
   }
+  // Reference + topic, through the real lookup_scripture_passage tool (topK 16 as the model's default):
+  // the whole chapter must come back (complete) and a verse reference must still return its chunk first.
+  // A fresh tool set per case: the turn context locks the scripture language and dedups claimed chunks.
+  const newLookup = () =>
+    createRagTools({ language: "eng", sources: ALL_SOURCES, topK: 20, initialChunks: [], maxChunks: 50, maxRetrievalCalls: 2, onSources: () => {} })
+      .lookup_scripture_passage as unknown as {
+      execute: (i: { reference: string; language: string; topK: number }, o: unknown) => Promise<{ chunks: { id: string }[] }>;
+    };
+  const topical: [string, "eng" | "ita", string, string?][] = [
+    ["Alma 32 e la fede nelle difficoltà quotidiane", "ita", "alma:32"],
+    ["Mosia 4 aiutare i poveri e la carità verso tutti", "ita", "mosiah:4"],
+    ["Giacobbe 5 allegoria dell'olivo e il raduno d'Israele", "ita", "jacob:5"],
+    ["Ether 12 fede e debolezza nella vita di ogni giorno", "ita", "ether:12"],
+    ["Alma 32 faith and hope when life is hard", "eng", "alma:32"],
+    ["1 Nephi 3 obedience when the commandments feel impossible", "eng", "1-ne:3"],
+    ["Moroni 10 how to know the Book of Mormon is true", "eng", "moro:10"],
+    ["Alma 7:11 e la sofferenza di Cristo per le nostre infermità", "ita", "alma:7", "alma:7:11"],
+    ["Mosiah 3:19 putting off the natural man and becoming like a child", "eng", "mosiah:3", "mosiah:3:19"],
+  ];
+  const topicalOut: Record<string, unknown>[] = [];
+  for (const [reference, lang, key, verse] of topical) {
+    const [slug, ch] = key.split(":");
+    const want = load(lang).filter((r) => r.id.split(":")[2] === slug && r.chapter === Number(ch));
+    const res = await newLookup().execute({ reference, language: lang, topK: 16 }, { toolCallId: "probe", messages: [] });
+    const got = new Set(res.chunks.map((c) => c.id));
+    const rec = {
+      reference, lang, hybrid: (parseScriptureSelection(reference, lang)?.residualWords ?? 0) >= 3,
+      chapterChunks: want.length, returnedFromChapter: want.filter((c) => got.has(c.id)).length,
+      complete: verse ? undefined : want.every((c) => got.has(c.id)), // a verse reference returns the verse's chunk(s), not the chapter
+      verseFirstOk: verse ? !!res.chunks[0]?.id.startsWith(`scriptures:${lang}:${verse.split(":")[0]}:${verse.split(":")[1]}:`) && want.some((c) => c.id === res.chunks[0].id && c.verse.split("-").map(Number)[0] <= Number(verse.split(":")[2]) && Number(verse.split(":")[2]) <= Number(c.verse.split("-").pop())) : undefined,
+    };
+    topicalOut.push(rec);
+    console.log(JSON.stringify(rec));
+  }
+  console.log({ topicalChapterComplete: `${topicalOut.filter((x) => x.complete).length}/${topicalOut.filter((x) => x.complete !== undefined).length}`, topicalVerseFirst: `${topicalOut.filter((x) => x.verseFirstOk).length}/${topicalOut.filter((x) => x.verseFirstOk !== undefined).length}` });
+
   const agg = (lang?: string) => {
     const r = out.filter((x) => !lang || x.lang === lang);
     const pct = (f: (x: Record<string, unknown>) => boolean) => ((100 * r.filter(f).length) / r.length).toFixed(1);
@@ -65,6 +104,6 @@ async function main() {
   console.log(summary);
   const file = process.argv[2] ?? join(here, "out", "probe_scripture.json");
   mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, JSON.stringify({ summary, out }, null, 1));
+  writeFileSync(file, JSON.stringify({ summary, out, topicalOut }, null, 1));
 }
 main().then(() => process.exit(0), (e) => { console.error(e); process.exit(1); });

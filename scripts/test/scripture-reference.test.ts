@@ -2,7 +2,7 @@
  * Scripture reference parsing + book matching (audit §2.1 / §5 step 1).
  * Run: `pnpm run test:scripture-reference` — pure and deterministic, no network.
  */
-import { parseScriptureSelection } from "@/lib/rag/scripture-reference";
+import { bookMetadataName, parseScriptureSelection } from "@/lib/rag/scripture-reference";
 import { isRequestedScriptureChunk } from "@/lib/rag/retriever";
 import type { SourceChunk } from "@/lib/types";
 
@@ -61,6 +61,16 @@ check(
   "reference + topic has own topic",
   (parseScriptureSelection("Alma 32 fede speranza difficoltà quotidiane", "ita")?.residualWords ?? 0) >= 3
 );
+
+// residualWords counts around the matched alias, not the first occurrence of its text ("almanacco alma 32" -> 1).
+check("residualWords positional", parseScriptureSelection("almanacco alma 32", "ita")?.residualWords === 1);
+check("residualWords: topic words only", parseScriptureSelection("Alma 32 fede speranza difficoltà", "ita")?.residualWords === 3);
+
+// `book` metadata name used for the Pinecone filter (matches the indexed chunks, checked against the corpus by the probe).
+const bm = (q: string, l: "ita" | "eng") => bookMetadataName(parseScriptureSelection(q, l)!, l);
+check("book name eng", bm("1 John 3", "eng") === "1 John" && bm("D&C 1", "eng") === "Doctrine and Covenants");
+check("book name ita", bm("1 Giovanni 3", "ita") === "1 Giovanni" && bm("Mosia 8", "ita") === "Mosia");
+check("book name em dash", bm("Joseph Smith Storia 1", "ita") === "Joseph Smith—Storia" && bm("Joseph Smith History 1", "eng") === "Joseph Smith—History");
 
 // Exact book match: no 2-letter prefix fallback ("Marco" must not match "Malachia").
 const chunk = (id: string, book: string): SourceChunk => ({ id, book } as SourceChunk);
