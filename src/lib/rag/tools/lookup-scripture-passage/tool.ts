@@ -60,7 +60,7 @@ export function createLookupScripturePassageTool({
   onProgress,
 }: LookupScripturePassageDeps) {
   return tool({
-    description: `Retrieve scripture passages (Book of Mormon, D&C, Pearl of Great Price) by reference or scripture-focused query. Pass the reference in the user's own language (e.g. "Giovanni 3:16" or "John 3:16") and select the matching indexed language ("ita" or "eng"). Book names are matched language-invariantly, so do not translate the reference. Results may include related cross-reference and study-help chunks.`,
+    description: `Retrieve scripture passages (Bible: Old and New Testament, Book of Mormon, D&C, Pearl of Great Price) by reference or scripture-focused query. Pass the reference in the user's own language (e.g. "Giovanni 3:16" or "John 3:16") and select the matching indexed language ("ita" or "eng"). Book names are matched language-invariantly, so do not translate the reference. Results may include related cross-reference and study-help chunks.`,
     inputSchema,
     execute: async ({ reference, language, topK }) => {
       const startedAt = Date.now();

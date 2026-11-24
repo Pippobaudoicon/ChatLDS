@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.12.96
+
+- **Tool chunk text preview 1200 → 2000 characters** (`TEXT_PREVIEW_LIMIT` in
+  `tools/shared/chunk-formatting.ts`). Long Conference/Handbook chunks were cut
+  mid-passage with "...", so the model sometimes cited text it had not seen. Measured
+  on the 104-question review eval (same config, only this change): see the RAG review
+  step 0/1 results report for the token/cost delta.
+- `lookup_scripture_passage` tool description now says it covers the Bible (Old and
+  New Testament) too; the alias table and the corpus already did.
+- Removed the dead `RAG_CLAIM_SUPPORT_AUDIT` flag from the local `.env` (nothing
+  reads it since 0.12.7x; `.env` is untracked, so no code change).
+
 ## 0.12.95
 
 - **Fix scripture reference lookup** (RAG review step 1, audit §2.1/§5).
