@@ -476,7 +476,7 @@ export async function retrieve(
   // reranked semantic results, which fill the rest.
   const pinned = structured.slice(0, options.pinnedLimit ?? Math.floor(topK / 2));
   const pinnedIds = new Set(pinned.map((c) => c.id));
-  return [...pinned, ...diversified.filter((c) => !pinnedIds.has(c.id))].slice(0, topK);
+  return [...pinned, ...diversified.filter((c) => !pinnedIds.has(c.id))].slice(0, Math.max(topK, pinned.length));
 }
 
 export async function retrieveConferenceCandidates(

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.100
+
+- **`lookup_scripture_passage`: a structured passage is cut at 30 chunks (the schema's topK
+  maximum), not at topK.** With a topic ("Doctrine and Covenants 124 templi…", "Joseph
+  Smith—History 1 la prima visione…") the passage came back with 16–18 of its 20–29 chunks:
+  the tool cut it at topK 16 and `retrieve()` cut the final list at topK. The tool now passes
+  `pinnedLimit: 30`, `retrieve()` keeps every pinned chunk, and a multi-chapter range with
+  more than 30 chunks says so in the result (`truncated`: "at least N chunks; only the first
+  30 are returned…") instead of cutting silently. Cache key `v: 7` (it now stores the found count).
+- Probe: bare and with-topic lookups of Doctrine and Covenants 124 (20 chunks) and Joseph
+  Smith—History 1 (28 eng / 29 ita) must come back whole (15/15 topical cases pass).
+- Live check (read-only, Pinecone): the `book` filter names match the index metadata for
+  all 87 books in eng and ita plus both Joseph Smith em-dash books.
+
 ## 0.12.99
 
 - **Fix: `lookup_scripture_passage` with reference + topic returned half a chapter.**

@@ -75,6 +75,15 @@ async function main() {
     ["Alma 32 faith and hope when life is hard", "eng", "alma:32"],
     ["1 Nephi 3 obedience when the commandments feel impossible", "eng", "1-ne:3"],
     ["Moroni 10 how to know the Book of Mormon is true", "eng", "moro:10"],
+    // Largest chapters (20 / 28 eng / 29 ita chunks), bare and with a topic: must come back whole
+    ["Doctrine and Covenants 124", "eng", "dc:124"],
+    ["Dottrina e Alleanze 124", "ita", "dc:124"],
+    ["Doctrine and Covenants 124 temples and priesthood keys for the latter days", "eng", "dc:124"],
+    ["Dottrina e Alleanze 124 templi e chiavi del sacerdozio negli ultimi giorni", "ita", "dc:124"],
+    ["Joseph Smith—History 1", "eng", "js-h:1"],
+    ["Joseph Smith—Storia 1", "ita", "js-h:1"],
+    ["Joseph Smith—History 1 the first vision and how prayer was answered", "eng", "js-h:1"],
+    ["Joseph Smith—Storia 1 la prima visione e come fu risposta la preghiera", "ita", "js-h:1"],
     ["Alma 7:11 e la sofferenza di Cristo per le nostre infermità", "ita", "alma:7", "alma:7:11"],
     ["Mosiah 3:19 putting off the natural man and becoming like a child", "eng", "mosiah:3", "mosiah:3:19"],
   ];
