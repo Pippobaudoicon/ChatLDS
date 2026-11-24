@@ -9,8 +9,10 @@ from common import EVAL, gold_hit, load_chunks, norm, parse_ref
 
 NAMESPACES = ["conference", "handbook", "gospel_topics", "study_helps", "gospel_study", "gospel_teachings",
               "gospel_history", "gospel_other", "gospel_selfreliance", "gospel_youth"]
-corpus = [c for ns in NAMESPACES for c in load_chunks(ns)] + [c for lang in ("eng", "ita") for c in load_chunks("scriptures", (lang,))]
-STD = {"scriptures", "conference", "handbook", "study_helps", "gospel_topics"}  # ALL_SOURCES (types.ts)
+BILINGUAL = {"scriptures", "gospel_topics", "gospel_teachings"}  # also indexed in Italian
+corpus = [c for ns in NAMESPACES if ns not in BILINGUAL for c in load_chunks(ns)] + [
+    c for ns in BILINGUAL for c in load_chunks(ns, ("eng", "ita"))]
+STD = {"scriptures", "conference", "handbook", "study_helps", "gospel_topics", "gospel_teachings"}  # ALL_SOURCES (types.ts)
 
 bad = []
 for q in EVAL.values():

@@ -2,7 +2,7 @@
  * Scripture reference parsing + book matching (audit §2.1 / §5 step 1).
  * Run: `pnpm run test:scripture-reference` — pure and deterministic, no network.
  */
-import { bookMetadataName, parseScriptureSelection } from "@/lib/rag/scripture-reference";
+import { SCRIPTURE_BOOKS, bookMetadataName, parseScriptureSelection } from "@/lib/rag/scripture-reference";
 import { isRequestedScriptureChunk } from "@/lib/rag/retriever";
 import type { SourceChunk } from "@/lib/types";
 
@@ -71,6 +71,10 @@ const bm = (q: string, l: "ita" | "eng") => bookMetadataName(parseScriptureSelec
 check("book name eng", bm("1 John 3", "eng") === "1 John" && bm("D&C 1", "eng") === "Doctrine and Covenants");
 check("book name ita", bm("1 Giovanni 3", "ita") === "1 Giovanni" && bm("Mosia 8", "ita") === "Mosia");
 check("book name em dash", bm("Joseph Smith Storia 1", "ita") === "Joseph Smith—Storia" && bm("Joseph Smith History 1", "eng") === "Joseph Smith—History");
+
+// Every book needs its English `book` metadata name, or the Pinecone filter would be `$eq: undefined`.
+check("every book has an English name", SCRIPTURE_BOOKS.every((b) => !!bookMetadataName(b, "eng")));
+check("book name OD", bm("Official Declaration 2", "eng") === "Official Declaration" && bm("Dichiarazione ufficiale 1", "ita") === "Dichiarazione Ufficiale");
 
 // Exact book match: no 2-letter prefix fallback ("Marco" must not match "Malachia").
 const chunk = (id: string, book: string): SourceChunk => ({ id, book } as SourceChunk);

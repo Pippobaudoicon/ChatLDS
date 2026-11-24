@@ -145,6 +145,23 @@ function mergeChunks(chunks: SourceChunk[]): SourceChunk[] {
   );
 }
 
+// Besides the scriptures, these namespaces hold some official Italian translations
+// (Teachings of Presidents; the Family Proclamation and The Living Christ). They are
+// partly English-only, so an Italian turn queries both languages and keeps the Italian
+// text of a document whenever it came back.
+const TRANSLATED_SOURCES = new Set<SourceType>(["gospel_teachings", "gospel_topics"]);
+
+export function preferTranslation(chunks: SourceChunk[], language: Language): SourceChunk[] {
+  // Same document in both languages = same id minus the language and the `:cN:vN` suffix.
+  const docKey = (c: SourceChunk) => c.id.replace(/^(\w+):(eng|ita):/, "$1:").replace(/:c\d+:v\d+$/, "");
+  const translated = new Set(
+    chunks.filter((c) => TRANSLATED_SOURCES.has(c.source) && c.language === language).map(docKey)
+  );
+  return chunks.filter(
+    (c) => !TRANSLATED_SOURCES.has(c.source) || c.language === language || !translated.has(docKey(c))
+  );
+}
+
 /** Keep non-scripture chunks plus scriptures in the requested indexed language. */
 export function filterScripturesByLanguage(
   chunks: SourceChunk[],
@@ -432,29 +449,36 @@ export async function retrieve(
   const vectors = await embedQueries(queries);
   const index = getPinecone().index(INDEX_NAME);
 
-  // Query all variants × selected namespaces in parallel. Only scriptures are
-  // bilingual (the turn's locked scripture language); every other namespace is
-  // English-only, so it is queried in the index language alone.
+  // Query all variants × selected namespaces in parallel. Scriptures are bilingual
+  // (the turn's locked scripture language); TRANSLATED_SOURCES also in that language
+  // when it differs from the index language; every other namespace is English-only.
   const results = await Promise.all(
     vectors.flatMap((vector) =>
-      sources.map((source) => {
-        const sourceLanguage = source === "scriptures" ? scriptureLanguage : language;
-        return index
-          .namespace(source)
-          .query({
-            vector,
-            topK,
-            includeMetadata: true,
-            filter: { language: { $eq: sourceLanguage } },
-          })
-          .then((res) =>
-            res.matches.map((match): SourceChunk => toChunk(source, sourceLanguage, match))
-          );
+      sources.flatMap((source) => {
+        const languages =
+          source === "scriptures"
+            ? [scriptureLanguage]
+            : TRANSLATED_SOURCES.has(source)
+              ? [...new Set([scriptureLanguage, language])]
+              : [language];
+        return languages.map((sourceLanguage) =>
+          index
+            .namespace(source)
+            .query({
+              vector,
+              topK,
+              includeMetadata: true,
+              filter: { language: { $eq: sourceLanguage } },
+            })
+            .then((res) =>
+              res.matches.map((match): SourceChunk => toChunk(source, sourceLanguage, match))
+            )
+        );
       })
     )
   );
 
-  const deduped = mergeChunks(results.flat());
+  const deduped = preferTranslation(mergeChunks(results.flat()), scriptureLanguage);
 
   // Cross-encoder rerank (flag-gated): scores every candidate against the query
   // directly, calibrating relevance across namespaces/languages. Primary sort

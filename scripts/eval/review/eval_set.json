@@ -318,8 +318,7 @@
    ]
   },
   "expect": "answer",
-  "facts": "Teachings of Presidents of the Church: Gordon B. Hinckley has teaching on education: get all the education you can; the Lord wants us to train our minds and hands.",
-  "requires_super": true
+  "facts": "Teachings of Presidents of the Church: Gordon B. Hinckley has teaching on education: get all the education you can; the Lord wants us to train our minds and hands."
  },
  {
   "id": "pres-monson-rescue",
@@ -335,8 +334,7 @@
    ]
   },
   "expect": "answer",
-  "facts": "Monson: going to the rescue, ministering to the one, acting on promptings, service.",
-  "requires_super": true
+  "facts": "Monson: going to the rescue, ministering to the one, acting on promptings, service."
  },
  {
   "id": "pres-joseph-smith-keystone",
@@ -1566,7 +1564,6 @@
    ]
   },
   "expect": "answer",
-  "requires_super": true,
   "facts": "Teachings of Ezra Taft Benson ch. 18: 'Pride is the universal sin, the great vice. The antidote for pride is humility.' Pride looks sideways to man and argues who is right, is self-will as opposed to God's will and the fear of man over the fear of God; humility responds to God's will and the needs of others.",
   "anchors": [
    "universal sin"
@@ -1586,7 +1583,6 @@
    ]
   },
   "expect": "answer",
-  "requires_super": true,
   "facts": "Teachings of Joseph Smith ch. 24: 'I teach them correct principles, and they govern themselves.' The chapter sets this in the context of Zion's Camp (1834), the march to help the Saints in Missouri, during which Joseph taught principles of leadership.",
   "anchors": [
    "correct principles"
@@ -1606,7 +1602,6 @@
    ]
   },
   "expect": "answer",
-  "requires_super": true,
   "facts": "Teachings of Howard W. Hunter ch. 12: the day after becoming President he invited those who had transgressed, been offended, hurt or confused to 'come back. Stand with us. Carry on' and 'feast at the table' of the Church, following the Good Shepherd; the chapter recounts the lost sheep parable and reaching out to the less active.",
   "anchors": [
    "Come back"
@@ -1626,10 +1621,100 @@
    ]
   },
   "expect": "answer",
-  "requires_super": true,
   "facts": "Teachings of Joseph F. Smith ch. 15: little children who die before the years of accountability are redeemed by the blood of Christ. He buried nine of his own children (1869–1898); at the death of his daughter Ruth in 1898 he received a revelation of the spirits of his children as full of intelligence, joy and grace.",
   "anchors": [
    "accountability"
   ]
+ },
+ {
+  "id": "cov-proclamation-eng",
+  "cat": "coverage",
+  "lang": "eng",
+  "q": "According to The Family: A Proclamation to the World, what are the responsibilities of husband and wife toward their children?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:scriptures:the-family-a-proclamation-to-the-world:"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The Proclamation says husband and wife have a solemn responsibility to love and care for each other and for their children; parents have a sacred duty to rear their children in love and righteousness, to provide for their physical and spiritual needs, to teach them to love and serve one another, observe the commandments of God, and be law-abiding citizens."
+ },
+ {
+  "id": "cov-proclamation-ita",
+  "cat": "coverage",
+  "lang": "ita",
+  "q": "Cosa dice il Proclama sulla famiglia riguardo alle responsabilità dei genitori verso i figli?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:ita:scriptures:the-family-a-proclamation-to-the-world:"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Il Proclama sulla famiglia dichiara che marito e moglie hanno la solenne responsabilità di amarsi e di prendersi cura l'uno dell'altra e dei figli; i genitori hanno il sacro dovere di allevare i figli nell'amore e nella rettitudine, provvedere ai loro bisogni fisici e spirituali, insegnare loro ad amarsi e servirsi a vicenda, osservare i comandamenti di Dio ed essere cittadini rispettosi della legge."
+ },
+ {
+  "id": "cov-livingchrist-eng",
+  "cat": "coverage",
+  "lang": "eng",
+  "q": "What does the 'The Living Christ' testimony of the apostles say about Jesus Christ?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:eng:scriptures:the-living-christ-the-testimony-of-the-apostles:"
+   ]
+  },
+  "expect": "answer",
+  "facts": "The Living Christ (January 1, 2000) is the testimony of the First Presidency and the Quorum of the Twelve Apostles on the reality of Jesus Christ's life: He is the Great Jehovah of the Old Testament, the Messiah of the New, the Creator under the direction of the Father, the Only Begotten, Savior and Redeemer who atoned for the sins of the world, rose from the dead, and will return."
+ },
+ {
+  "id": "cov-livingchrist-ita",
+  "cat": "coverage",
+  "lang": "ita",
+  "q": "Cosa dichiara «Il Cristo vivente: la testimonianza degli apostoli» su Gesù Cristo?",
+  "gold": {
+   "idprefix": [
+    "gospel_topics:ita:scriptures:the-living-christ-the-testimony-of-the-apostles:"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Il Cristo vivente (1 gennaio 2000) è la testimonianza della Prima Presidenza e del Quorum dei Dodici Apostoli sulla realtà della vita di Gesù Cristo: è il grande Geova dell'Antico Testamento, il Messia del Nuovo, il Creatore sotto la direzione del Padre, l'Unigenito, Salvatore e Redentore che ha espiato i peccati del mondo, è risorto e ritornerà."
+ },
+ {
+  "id": "cov-od2-ita",
+  "cat": "coverage",
+  "lang": "ita",
+  "q": "Cosa dichiara la Dichiarazione ufficiale 2 riguardo al sacerdozio?",
+  "gold": {
+   "idprefix": [
+    "scriptures:ita:od:2:"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Dichiarazione ufficiale 2 (8 giugno 1978, Spencer W. Kimball, N. Eldon Tanner, Marion G. Romney): il Signore ha reso noto che è giunto il giorno promesso in cui ogni uomo fedele e degno della Chiesa può ricevere il santo sacerdozio, con il potere di esercitarne l'autorità divina, e godere insieme ai suoi cari di ogni benedizione che ne deriva, comprese le benedizioni del tempio; la dichiarazione fu sostenuta all'unanimità alla conferenza generale del 30 settembre 1978."
+ },
+ {
+  "id": "cov-od1-eng",
+  "cat": "coverage",
+  "lang": "eng",
+  "q": "What does Official Declaration 1 say about plural marriage?",
+  "gold": {
+   "idprefix": [
+    "scriptures:eng:od:1:"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Official Declaration 1 (the 1890 Manifesto, Wilford Woodruff): the President declares the charges that the Church is teaching or permitting plural marriage are false; he says he intends to submit to the laws of Congress forbidding plural marriage, and advises the Latter-day Saints to refrain from contracting any marriage forbidden by the law of the land."
+ },
+ {
+  "id": "cov-teachings-ita",
+  "cat": "leader",
+  "lang": "ita",
+  "q": "Cosa insegnò il presidente Gordon B. Hinckley sull'istruzione?",
+  "gold": {
+   "idprefix": [
+    "gospel_teachings:ita:manual:teachings-of-presidents-of-the-church-gordon-b-hinckley"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Teachings of Presidents of the Church: Gordon B. Hinckley (edizione italiana): ha insegnato ai giovani a ottenere tutta l'istruzione possibile, perché il Signore vuole che alleniamo la mente e le mani."
  }
 ]

@@ -47,6 +47,7 @@ export const ALL_SOURCES: SourceType[] = [
   "handbook",
   "study_helps",
   "gospel_topics",
+  "gospel_teachings",
 ];
 
 export const DEFAULT_SOURCES: SourceType[] = [
