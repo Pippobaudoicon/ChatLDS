@@ -19,6 +19,7 @@
   structured lookup filter, and `od` is no longer a free-text alias (too short).
   New public `GET /api/sources` returns `{ standard, super }` (ids only, from
   `ALL_SOURCES`/`SUPER_SOURCES`) so the native apps stop hardcoding the lists.
+
 ## 0.12.101
 
 - **Fix: `truncated` never fired for reference + topic.** `pinnedLimit: 30` already capped
