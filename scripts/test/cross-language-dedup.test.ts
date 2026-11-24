@@ -7,9 +7,10 @@
  * Run: `pnpm run test:cross-language`
  *
  * Scriptures are bilingual, and the semantic fan-out queries them in one language,
- * so a turn never holds an English/Italian pair of the same passage. These asserts pin the guards that keep it that way: the opposite-language
- * scripture is removed, other sources pass through, and the first tool's language
- * choice locks every later tool.
+ * so a turn never holds an English/Italian pair of the same passage. These asserts
+ * pin the guards that keep it that way: the opposite-language scripture is removed,
+ * other sources pass through, and the first tool's language choice locks every
+ * later tool. Translated documents (Teachings, Topics) keep only their Italian copy.
  */
 import { filterScripturesByLanguage, preferTranslation } from "@/lib/rag/retriever";
 import { createRagToolContext } from "@/lib/rag/tools/shared/tool-context";

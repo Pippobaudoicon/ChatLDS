@@ -458,8 +458,8 @@ export async function retrieve(
         const languages =
           source === "scriptures"
             ? [scriptureLanguage]
-            : TRANSLATED_SOURCES.has(source) && scriptureLanguage !== language
-              ? [scriptureLanguage, language]
+            : TRANSLATED_SOURCES.has(source)
+              ? [...new Set([scriptureLanguage, language])]
               : [language];
         return languages.map((sourceLanguage) =>
           index

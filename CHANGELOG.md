@@ -7,13 +7,16 @@
   conference, handbook, study_helps, topics, teachings (Super is unchanged).
   The Family Proclamation and The Living Christ are indexed in `gospel_topics`
   (no new namespace), and Official Declarations 1 and 2 in `scriptures`
-  (`od`, with "Dichiarazione ufficiale", "Official Declaration 2" aliases
+  (`od`, with "Dichiarazione ufficiale" and "Official Declaration" aliases
   in the reference parser). `gospel_topics`/`gospel_teachings` now also carry
   the official Italian text; for a non-English turn the retriever queries both
   languages and keeps only the Italian copy of a document that exists in both.
   The system prompt now sends "what did President X teach about Y" to
   `semantic_search` (it used `search_conference_talks`, which never sees the
   manuals): eval leader questions judged correct 17/38 → 27/38.
+  The eval set gains 7 `cov-*` coverage questions (Proclamation, Living Christ,
+  Official Declarations, Italian Teachings); `od` has its English book name for the
+  structured lookup filter, and `od` is no longer a free-text alias (too short).
   New public `GET /api/sources` returns `{ standard, super }` (ids only, from
   `ALL_SOURCES`/`SUPER_SOURCES`) so the native apps stop hardcoding the lists.
 ## 0.12.101

@@ -35,7 +35,7 @@ const CHURCH_SCRIPTURES_BASE =
   "https://www.churchofjesuschrist.org/study/scriptures";
 
 // Focused on the most commonly queried books first, with aliases in ITA/ENG.
-const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
+export const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   // ── Book of Mormon ─────────────────────────────────────────────────
   { volumeSlug: "bofm", bookSlug: "1-ne", canonicalBook: "1 Nefi", maxChapters: 22, aliases: ["1 nefi", "1 nephi", "1 ne", "primo nefi", "first nephi"] },
   { volumeSlug: "bofm", bookSlug: "2-ne", canonicalBook: "2 Nefi", maxChapters: 33, aliases: ["2 nefi", "2 nephi", "2 ne", "secondo nefi", "second nephi"] },
@@ -64,7 +64,7 @@ const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   { volumeSlug: "pgp", bookSlug: "a-of-f", canonicalBook: "Articoli di Fede", maxChapters: 1, aliases: ["articoli di fede", "articles of faith", "a of f"] },
 
   // ── Official Declarations (end of the D&C) ───────────────────────
-  { volumeSlug: "dc-testament", bookSlug: "od", canonicalBook: "Dichiarazione Ufficiale", maxChapters: 2, aliases: ["dichiarazione ufficiale", "dichiarazioni ufficiali", "official declaration", "official declarations", "od"] },
+  { volumeSlug: "dc-testament", bookSlug: "od", canonicalBook: "Dichiarazione Ufficiale", maxChapters: 2, aliases: ["dichiarazione ufficiale", "dichiarazioni ufficiali", "official declaration", "official declarations"] },
 
   // ── Old Testament ──────────────────────────────────────────────────
   { volumeSlug: "ot", bookSlug: "gen", canonicalBook: "Genesi", maxChapters: 50, aliases: ["genesi", "genesis", "gen"] },
@@ -152,7 +152,7 @@ const ENGLISH_BOOK_NAMES: Record<string, string> = {
   job: "Job", joel: "Joel", john: "John", jonah: "Jonah", josh: "Joshua", "js-h": "Joseph Smith—History",
   "js-m": "Joseph Smith—Matthew", jude: "Jude", judg: "Judges", lam: "Lamentations", lev: "Leviticus", luke: "Luke",
   mal: "Malachi", mark: "Mark", matt: "Matthew", micah: "Micah", morm: "Mormon", moro: "Moroni", moses: "Moses",
-  mosiah: "Mosiah", nahum: "Nahum", neh: "Nehemiah", num: "Numbers", obad: "Obadiah", omni: "Omni",
+  mosiah: "Mosiah", nahum: "Nahum", neh: "Nehemiah", num: "Numbers", obad: "Obadiah", od: "Official Declaration", omni: "Omni",
   philem: "Philemon", philip: "Philippians", prov: "Proverbs", ps: "Psalms", rev: "Revelation", rom: "Romans",
   ruth: "Ruth", song: "Song of Solomon", titus: "Titus", "w-of-m": "Words of Mormon", zech: "Zechariah",
   zeph: "Zephaniah",

@@ -10,7 +10,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-  "version": "0.12.102",
+    "test": "pnpm run test:routing && pnpm run test:language-policy && pnpm run test:onboarding && pnpm run test:cross-language && pnpm run test:chat-lifecycle && pnpm run test:chat-turn && pnpm run test:guest && pnpm run test:follow-ups && pnpm run test:delete-account && pnpm run test:billing-handoff && pnpm run test:resumable-stream && pnpm run test:scripture-reference && pnpm run test:sources",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run test",
     "prepare": "git config core.hooksPath .githooks || true",
     "db:generate": "dotenv -o -e .env -e .env.local -- drizzle-kit generate",

@@ -458,6 +458,8 @@ Notes:
   Italian version was retrieved (`preferTranslation`).
   The system prompt routes "what did President X teach about Y" to `semantic_search`
   (`search_conference_talks` only covers conference talks, not the Teachings manuals).
+  Scripture-reference aliases for Official Declarations are the long forms only (the
+  slug `od` stays internal; its `book` metadata is "Official Declaration" / "Dichiarazione Ufficiale").
   `GET /api/sources` (public, 5 min cache) exposes `{ standard, super }` for the native apps.
   Vectors carry a `related_ids` cross-reference projection from the graph.
   Both `lookup_scripture_passage` and `semantic_search` consume it via the shared

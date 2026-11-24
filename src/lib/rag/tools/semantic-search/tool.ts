@@ -72,7 +72,7 @@ export function createSemanticSearchTool({
 }: SemanticSearchDeps) {
   // Ceiling for the model's `sources` override = exactly what the user enabled in
   // the UI. "Super" is explicit: it sends the full SUPER_SOURCES set, so that case
-  // is already covered without special-casing. (Previously, selecting all 5 VISIBLE
+  // is already covered without special-casing. (Previously, selecting all the VISIBLE
   // toggles — ALL_SOURCES.length — was mis-read as Super and silently unlocked the
   // hidden namespaces the user never picked.)
   const allowedSources = new Set<SourceType>(defaultSources);
