@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.97
+
+- Review eval tooling fixes (no runtime change): `report.py` crashed on the `n` row;
+  `score.py` no longer flags a scripture reference as mismatching its `[N]` when
+  that cited chunk itself lists the reference in its `references` metadata
+  (answers like "the study of Ether 12:1-7 also lists Alma 32:21 [1]").
+
 ## 0.12.96
 
 - **Tool chunk text preview 1200 → 2000 characters** (`TEXT_PREVIEW_LIMIT` in

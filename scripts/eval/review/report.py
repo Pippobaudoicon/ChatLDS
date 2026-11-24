@@ -26,7 +26,7 @@ def metrics(rows, judges):
     ct = sum(j["claims_total"] for j in jr)
     cs = sum(j["claims_supported"] for j in jr)
     return {
-        "n": len(rows),
+        "n": str(len(rows)),
         "gold in context": pct(sum(r["hit"] for r in ret), len(ret)),
         "gold in top 5": pct(sum(1 for r in ret if r["gold_rank"] and r["gold_rank"] <= 5), len(ret)),
         "claims supported": pct(cs, ct),

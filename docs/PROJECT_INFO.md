@@ -868,7 +868,7 @@ Reference template: `.env.example`.
   [standard] [super]` generates through the real chat turn over the AI Gateway
   (≈$0.25 per plan), scores deterministically and judges claim support through the
   `codex`/`muse` subscription CLIs; `pnpm eval:review:validate` checks gold
-  against the local lds-scraper chunks; `pnpm eval:review:probe` probes the
+  against the local lds-scraper chunks (a reference listed in the cited chunk's own `references` metadata is not counted as a ref→[N] mismatch); `pnpm eval:review:probe` probes the
   structured scripture lookup (retrieval only, ~$0).
 - Routing fast-path test: `pnpm run test:routing` (`scripts/test/language-routing.test.ts`)
   — pure, network-free assertions that the local same-language short-circuit

@@ -31,6 +31,19 @@ def find_refs(text):
     return out
 
 
+def lists_ref(s, slug, ch, v):
+    """Is slug ch:v one of the cross-references the cited chunk itself lists (its `references` metadata)?
+    Answers like "the study of Ether 12:1-7 also lists Alma 32:21 [1]" are grounded, not a mismatch."""
+    for ref in (s.get("seen") or {}).get("references") or []:
+        try:
+            sl, c, vv = parse_ref(ref)
+        except Exception:
+            continue
+        if (sl, c) == (slug, ch) and vv in (None, v):
+            return True
+    return False
+
+
 def score_run(r):
     q = EVAL[r["id"]]
     g = q["gold"]
@@ -73,7 +86,7 @@ def score_run(r):
         if m and 1 <= int(m.group(1)) <= len(srcs):
             cite_checked += 1
             s = srcs[int(m.group(1)) - 1]
-            if s["source"] == "scriptures" and not covers(s, slug, ch, v):
+            if s["source"] == "scriptures" and not covers(s, slug, ch, v) and not lists_ref(s, slug, ch, v):
                 cite_mismatch.append(f"{label} -> [{m.group(1)}] {s['id']}")
     res.update(refs_in_answer=len(refs), invalid_refs=bad, ungrounded_refs=ungrounded,
                ref_cite_checked=cite_checked, ref_cite_mismatch=cite_mismatch)
