@@ -19,6 +19,8 @@ export interface ScriptureReferenceSelection {
   verseEnd?: number;
   urls: string[];
   wholeBook: boolean;
+  /** Content words in the query beyond the reference itself (0 for a bare "Alma 32"). */
+  residualWords: number;
 }
 
 interface ScriptureBookDef {
@@ -35,8 +37,8 @@ const CHURCH_SCRIPTURES_BASE =
 // Focused on the most commonly queried books first, with aliases in ITA/ENG.
 const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   // ── Book of Mormon ─────────────────────────────────────────────────
-  { volumeSlug: "bofm", bookSlug: "1-ne", canonicalBook: "1 Nefi", maxChapters: 22, aliases: ["1 nefi", "1 nephi", "primo nefi", "first nephi"] },
-  { volumeSlug: "bofm", bookSlug: "2-ne", canonicalBook: "2 Nefi", maxChapters: 33, aliases: ["2 nefi", "2 nephi", "secondo nefi", "second nephi"] },
+  { volumeSlug: "bofm", bookSlug: "1-ne", canonicalBook: "1 Nefi", maxChapters: 22, aliases: ["1 nefi", "1 nephi", "1 ne", "primo nefi", "first nephi"] },
+  { volumeSlug: "bofm", bookSlug: "2-ne", canonicalBook: "2 Nefi", maxChapters: 33, aliases: ["2 nefi", "2 nephi", "2 ne", "secondo nefi", "second nephi"] },
   { volumeSlug: "bofm", bookSlug: "jacob", canonicalBook: "Giacobbe", maxChapters: 7, aliases: ["giacobbe", "jacob"] },
   { volumeSlug: "bofm", bookSlug: "enos", canonicalBook: "Enos", maxChapters: 1, aliases: ["enos"] },
   { volumeSlug: "bofm", bookSlug: "jarom", canonicalBook: "Jarom", maxChapters: 1, aliases: ["jarom"] },
@@ -45,18 +47,18 @@ const SCRIPTURE_BOOKS: ScriptureBookDef[] = [
   { volumeSlug: "bofm", bookSlug: "mosiah", canonicalBook: "Mosia", maxChapters: 29, aliases: ["mosia", "mosiah"] },
   { volumeSlug: "bofm", bookSlug: "alma", canonicalBook: "Alma", maxChapters: 63, aliases: ["alma"] },
   { volumeSlug: "bofm", bookSlug: "hel", canonicalBook: "Helaman", maxChapters: 16, aliases: ["helaman", "hel"] },
-  { volumeSlug: "bofm", bookSlug: "3-ne", canonicalBook: "3 Nefi", maxChapters: 30, aliases: ["3 nefi", "3 nephi", "terzo nefi", "third nephi"] },
-  { volumeSlug: "bofm", bookSlug: "4-ne", canonicalBook: "4 Nefi", maxChapters: 1, aliases: ["4 nefi", "4 nephi", "quarto nefi", "fourth nephi"] },
-  { volumeSlug: "bofm", bookSlug: "morm", canonicalBook: "Mormon", maxChapters: 9, aliases: ["mormon"] },
+  { volumeSlug: "bofm", bookSlug: "3-ne", canonicalBook: "3 Nefi", maxChapters: 30, aliases: ["3 nefi", "3 nephi", "3 ne", "terzo nefi", "third nephi"] },
+  { volumeSlug: "bofm", bookSlug: "4-ne", canonicalBook: "4 Nefi", maxChapters: 1, aliases: ["4 nefi", "4 nephi", "4 ne", "quarto nefi", "fourth nephi"] },
+  { volumeSlug: "bofm", bookSlug: "morm", canonicalBook: "Mormon", maxChapters: 9, aliases: ["mormon", "morm"] },
   { volumeSlug: "bofm", bookSlug: "ether", canonicalBook: "Ether", maxChapters: 15, aliases: ["ether", "etere"] },
   { volumeSlug: "bofm", bookSlug: "moro", canonicalBook: "Moroni", maxChapters: 10, aliases: ["moroni", "moro"] },
 
   // ── Doctrine & Covenants ───────────────────────────────────────────
-  { volumeSlug: "dc-testament", bookSlug: "dc", canonicalBook: "Dottrina e Alleanze", maxChapters: 138, aliases: ["dottrina e alleanze", "dottrina alleanze", "dottrina & alleanze", "d&a", "da", "d c", "dc", "doctrine and covenants", "d&c"] },
+  { volumeSlug: "dc-testament", bookSlug: "dc", canonicalBook: "Dottrina e Alleanze", maxChapters: 138, aliases: ["dottrina e alleanze", "dottrina alleanze", "dottrina & alleanze", "d&a", "dea", "d c", "dc", "doctrine and covenants", "d&c"] },
 
   // ── Pearl of Great Price ───────────────────────────────────────────
   { volumeSlug: "pgp", bookSlug: "moses", canonicalBook: "Mosè", maxChapters: 8, aliases: ["mose", "mosè", "moses"] },
-  { volumeSlug: "pgp", bookSlug: "abr", canonicalBook: "Abrahamo", maxChapters: 5, aliases: ["abrahamo", "abraham"] },
+  { volumeSlug: "pgp", bookSlug: "abr", canonicalBook: "Abrahamo", maxChapters: 5, aliases: ["abrahamo", "abraamo", "abramo", "abraham", "abr"] },
   { volumeSlug: "pgp", bookSlug: "js-m", canonicalBook: "Joseph Smith-Matteo", maxChapters: 1, aliases: ["joseph smith matteo", "joseph smith matthew", "js-m", "js m"] },
   { volumeSlug: "pgp", bookSlug: "js-h", canonicalBook: "Joseph Smith-Storia", maxChapters: 1, aliases: ["joseph smith storia", "joseph smith history", "js-h", "js h"] },
   { volumeSlug: "pgp", bookSlug: "a-of-f", canonicalBook: "Articoli di Fede", maxChapters: 1, aliases: ["articoli di fede", "articles of faith", "a of f"] },
@@ -138,6 +140,7 @@ function normalize(text: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9\s:-]/g, " ")
+    .replace(/(\d)([a-z])/g, "$1 $2")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -270,69 +273,81 @@ function parseChapterExpression(rest: string, maxChapters: number): {
 function isWholeBookIntentForBook(query: string, canonicalBook: string): boolean {
   const normalized = normalize(query);
   const book = normalize(canonicalBook);
-  const signals = [
-    "intero",
-    "tutto",
-    "intera",
-    "whole",
-    "entire",
-    "full book",
-    "book of",
-  ];
-  return signals.some((s) => normalized.includes(s)) && normalized.includes(book);
+  // Only an explicit "whole book" request; "Book of Mormon" / "Libro di Mormon" is a title, not a request.
+  const explicit = /\b(intero|intera|whole|entire|full book)\b|tutto il libro|tutta la/.test(normalized);
+  return explicit && normalized.includes(book);
+}
+
+// Longest alias first, so "1 john" / "joseph smith matteo" win over "john" / "matteo".
+const ALIAS_MATCHERS = SCRIPTURE_BOOKS.flatMap((book) =>
+  book.aliases.map((alias) => {
+    const aliasPattern = escapeRegExp(normalize(alias));
+    return { book, len: aliasPattern.length, rx: new RegExp(`(?:^|\\s)${aliasPattern}(?=\\s|$)`) };
+  })
+).sort((a, b) => b.len - a.len);
+
+// Words that carry no topic beyond "this passage" (see countResidualWords).
+const FILLER_WORDS = new Set(
+  "cosa insegna insegnamenti dice what does teach teaches about capitolo capitoli chapter chapters spiega spiegami explain riassumi riassunto summary significa mean means meaning tell dimmi parlami della dello degli delle nella nello sul sulla come quali quale with that this from read leggi versetto versetti verse verses verso passage passo".split(" ")
+);
+
+// Words of the query outside the reference itself ("Alma 32 e la fede come seme" -> 2: fede, seme).
+function countResidualWords(normalized: string, alias: string): number {
+  return normalized
+    .replace(alias, " ")
+    .split(" ")
+    .filter((w) => w.length > 3 && !/\d/.test(w) && !FILLER_WORDS.has(w)).length;
 }
 
 export function parseScriptureSelection(
   query: string,
   language: Language
 ): ScriptureReferenceSelection | null {
-  const normalized = normalize(query);
+  // "Book of Mormon" / "Libro di Mormon" is a title, not a reference to the book of Mormon.
+  const normalized = normalize(query).replace(/\b(book of mormon|libro di mormon)\b/g, " ");
 
-  for (const book of SCRIPTURE_BOOKS) {
-    for (const alias of book.aliases) {
-      const aliasPattern = escapeRegExp(normalize(alias));
-      const aliasRx = new RegExp(`(?:^|\\s)${aliasPattern}(?=\\s|$)`);
-      const m = normalized.match(aliasRx);
-      if (!m || m.index === undefined) continue;
+  for (const { book, rx: aliasRx } of ALIAS_MATCHERS) {
+    const m = normalized.match(aliasRx);
+    if (!m || m.index === undefined) continue;
 
-      const afterAlias = normalized.slice(m.index + m[0].length).trim();
-      const beforeAlias = normalized.slice(0, m.index).trim();
-      const parsedAfter = parseChapterExpression(afterAlias, book.maxChapters);
-      const parsedBefore = parseChapterExpression(beforeAlias, book.maxChapters);
-      const parsed = parsedAfter.chapters.length > 0 || parsedAfter.hasVerse
-        ? parsedAfter
-        : parsedBefore;
+    const afterAlias = normalized.slice(m.index + m[0].length).trim();
+    const beforeAlias = normalized.slice(0, m.index).trim();
+    const parsedAfter = parseChapterExpression(afterAlias, book.maxChapters);
+    const parsedBefore = parseChapterExpression(beforeAlias, book.maxChapters);
+    const parsed = parsedAfter.chapters.length > 0 || parsedAfter.hasVerse
+      ? parsedAfter
+      : parsedBefore;
 
-      const wholeBook =
-        parsed.chapters.length === 0 && isWholeBookIntentForBook(query, book.canonicalBook);
-      const chapters = wholeBook
-        ? toChapterList(1, book.maxChapters, book.maxChapters)
-        : parsed.chapters;
+    const wholeBook =
+      parsed.chapters.length === 0 && isWholeBookIntentForBook(query, book.canonicalBook);
+    const chapters = wholeBook
+      ? toChapterList(1, book.maxChapters, book.maxChapters)
+      : parsed.chapters;
 
-      if (chapters.length === 0) {
-        continue;
-      }
-
-      return {
-        volumeSlug: book.volumeSlug,
-        bookSlug: book.bookSlug,
-        canonicalBook: book.canonicalBook,
-        chapters,
-        verseStart: parsed.verseStart,
-        verseEnd: parsed.verseEnd,
-        urls: chapters.map((chapter) => {
-          const chapterUrl = buildUrl(book.volumeSlug, book.bookSlug, chapter, language);
-          if (
-            parsed.verseStart !== undefined &&
-            chapter === chapters[0]
-          ) {
-            return withVerseHighlight(chapterUrl, parsed.verseStart, parsed.verseEnd);
-          }
-          return chapterUrl;
-        }),
-        wholeBook,
-      };
+    if (chapters.length === 0) {
+      continue;
     }
+
+    return {
+      volumeSlug: book.volumeSlug,
+      bookSlug: book.bookSlug,
+      canonicalBook: book.canonicalBook,
+      chapters,
+      verseStart: parsed.verseStart,
+      verseEnd: parsed.verseEnd,
+      urls: chapters.map((chapter) => {
+        const chapterUrl = buildUrl(book.volumeSlug, book.bookSlug, chapter, language);
+        if (
+          parsed.verseStart !== undefined &&
+          chapter === chapters[0]
+        ) {
+          return withVerseHighlight(chapterUrl, parsed.verseStart, parsed.verseEnd);
+        }
+        return chapterUrl;
+      }),
+      wholeBook,
+      residualWords: countResidualWords(normalized, m[0].trim()),
+    };
   }
 
   return null;

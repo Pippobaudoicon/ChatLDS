@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.12.95
+
+- **Fix scripture reference lookup** (RAG review step 1, audit §2.1/§5).
+  - "Book of Mormon" / "Libro di Mormon" is no longer parsed as the whole book of
+    Mormon (chapters 1–9, which also pulled Mosiah/Moses/Moroni via the prefix
+    fallback and returned before searching Conference/Gospel Topics). Whole book
+    only on an explicit "intero / whole / entire / tutto il libro".
+  - Book matching in the retriever is exact on the slug: the 2-letter display-name
+    fallback is gone ("Marco 2:14" used to return Malachi 2, "Geremia 25" Genesis 25,
+    "Giacobbe 4" James 4…).
+  - Aliases are matched longest-first ("1 John 3" no longer becomes John 3) and
+    more tolerant ("Abraamo", "Abramo", "DeA", "1Nefi", "3 Ne", "Morm"). The bare
+    alias "da" (Italian "from") is gone: it turned "da 5 anni" into D&C 5.
+  - A reference with its own topic ("Alma 32 e la fede nelle difficoltà") now ADDS the
+    structured chapter/verse chunks (up to topK/2, pinned on top) to the semantic
+    search over the selected sources instead of returning only the passage.
+  - The chapter query asks Pinecone for 300 candidates (was 80): a chapter number
+    alone matches ~280 chunks across all books, so e.g. Giacobbe 4 lost a chunk.
+  - Unit tests: `pnpm run test:scripture-reference` (in `pnpm test`).
+
 ## 0.12.94
 
 - **RAG review eval harness** (`scripts/eval/review/`, tooling only — no runtime change).

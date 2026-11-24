@@ -204,63 +204,27 @@ function verseOverlaps(
   return bounds.start <= requestedEnd && requestedStart <= bounds.end;
 }
 
-function normalizeBookName(value: string): string[] {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .split(" ")
-    .filter(Boolean);
-}
-
 function maybeScripturePath(url: string | undefined): string {
   return (url ?? "").toLowerCase();
 }
 
-function isRequestedScriptureChunk(
+// Exact book match only: the chunk id encodes the language-invariant book slug as its
+// 3rd segment (`scriptures:<lang>:<bookSlug>:<chapter>:…`), the same slug
+// parseScriptureSelection yields; the URL path is the fallback. (Chapter is already
+// constrained by the Pinecone metadata filter at every call site.) There is deliberately
+// no display-name fallback: comparing 2-letter prefixes made "Marco" match "Malachia".
+export function isRequestedScriptureChunk(
   chunk: SourceChunk,
-  canonicalBook: string,
   volumeSlug: string,
   bookSlug: string,
   chapter: number
 ): boolean {
-  // Primary, language-invariant signal: the chunk id encodes the book slug as
-  // its 3rd segment (`scriptures:<lang>:<bookSlug>:<chapter>:…`). This is the
-  // same slug parseScriptureSelection yields, so it matches regardless of the
-  // chunk's display-language book name. (Chapter is already constrained by the
-  // Pinecone metadata filter at every call site.)
-  if (chunk.id.split(":")[2] === bookSlug) {
-    return true;
-  }
-
+  if (chunk.id.split(":")[2] === bookSlug) return true;
   const path = maybeScripturePath(chunk.url);
-  if (
+  return (
     path.includes(`/study/scriptures/${volumeSlug}/${bookSlug}/${chapter}`) ||
     path.includes(`/scriptures/${volumeSlug}/${bookSlug}/${chapter}`)
-  ) {
-    return true;
-  }
-
-  if (!chunk.book) return false;
-
-  const bookTokens = normalizeBookName(chunk.book);
-  const canonicalTokens = normalizeBookName(canonicalBook);
-  if (bookTokens.length === 0 || canonicalTokens.length === 0) return false;
-
-  const bookFirst = bookTokens[0];
-  const canonicalFirst = canonicalTokens[0];
-  const hasNumericPrefix = /^\d+$/.test(bookFirst) || /^\d+$/.test(canonicalFirst);
-
-  if (hasNumericPrefix && bookFirst !== canonicalFirst) {
-    return false;
-  }
-
-  const bookSecond = bookTokens[1] ?? bookTokens[0];
-  const canonicalSecond = canonicalTokens[1] ?? canonicalTokens[0];
-  return bookSecond.slice(0, 2) === canonicalSecond.slice(0, 2);
+  );
 }
 
 async function retrieveWholeChapterChunks(
@@ -295,7 +259,7 @@ async function retrieveWholeChapterChunks(
         .namespace("scriptures")
         .query({
           vector,
-          topK: selection.wholeBook ? 40 : 80,
+          topK: selection.wholeBook ? 40 : 300, // a chapter number alone matches ~280 chunks across all books
           includeMetadata: true,
           filter: {
             language: { $eq: language },
@@ -310,7 +274,6 @@ async function retrieveWholeChapterChunks(
         .filter((chunk) => {
           return isRequestedScriptureChunk(
             chunk,
-            selection.canonicalBook,
             selection.volumeSlug,
             selection.bookSlug,
             chapter
@@ -383,7 +346,6 @@ async function retrieveSpecificVerseChunks(
       if (
         !isRequestedScriptureChunk(
           chunk,
-          selection.canonicalBook,
           selection.volumeSlug,
           selection.bookSlug,
           chapter
@@ -444,14 +406,17 @@ export async function retrieve(
     ? await retrievePreferredLanguage(retrieveWholeChapterChunks, query, scriptureRetrievalLanguages)
     : [];
 
-  if (scriptureSelection && verseChunks.length > 0) {
-    const limit = Math.max(topK, Math.min(48, verseChunks.length));
-    return verseChunks.slice(0, limit);
-  }
+  // A bare reference ("Alma 32", "John 3:16") is answered structurally. When the query also
+  // carries its own topic ("Alma 32 e la fede nelle difficoltà"), the structured passage is
+  // ADDED to the semantic search below instead of replacing it.
+  const structured = verseChunks.length > 0 ? verseChunks : chapterChunks;
+  const hasOwnTopic = (scriptureSelection?.residualWords ?? 0) >= 3;
 
-  if (scriptureSelection && chapterChunks.length > 0) {
-    const limit = Math.max(topK, Math.min(topK * 2, chapterChunks.length));
-    return chapterChunks.slice(0, limit);
+  if (scriptureSelection && structured.length > 0 && !hasOwnTopic) {
+    const limit = verseChunks.length > 0
+      ? Math.max(topK, Math.min(48, verseChunks.length))
+      : Math.max(topK, Math.min(topK * 2, chapterChunks.length));
+    return structured.slice(0, limit);
   }
 
   // Multi-query expansion: fan a few phrasings (canonical LDS wording + plainer
@@ -484,7 +449,7 @@ export async function retrieve(
     )
   );
 
-  const deduped = mergeChunks([...verseChunks, ...chapterChunks, ...results.flat()]);
+  const deduped = mergeChunks(results.flat());
 
   // Cross-encoder rerank (flag-gated): scores every candidate against the query
   // directly, calibrating relevance across namespaces/languages. Primary sort
@@ -498,15 +463,15 @@ export async function retrieve(
     return boost > 0 ? { ...chunk, score: Math.min(0.999, chunk.score + boost) } : chunk;
   });
 
-  const limit = chapterChunks.length
-    ? Math.max(topK, Math.min(topK * 2, chapterChunks.length))
-    : topK;
-
   // Sort by score descending; optionally apply per-source/per-title diversity
   // caps so one namespace or talk cannot dominate the returned top-k.
   const sorted = sortRetrievedChunks(boosted, language);
-  const diversified = useDiversity ? diversify(sorted, limit) : sorted;
-  return diversified.slice(0, limit);
+  const diversified = useDiversity ? diversify(sorted, topK) : sorted;
+  // Structured passage chunks (own-topic reference queries only) stay on top, ahead of the
+  // reranked semantic results, which fill the rest.
+  const pinned = structured.slice(0, Math.floor(topK / 2));
+  const pinnedIds = new Set(pinned.map((c) => c.id));
+  return [...pinned, ...diversified.filter((c) => !pinnedIds.has(c.id))].slice(0, topK);
 }
 
 export async function retrieveConferenceCandidates(
