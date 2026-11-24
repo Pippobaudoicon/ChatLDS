@@ -32,9 +32,11 @@ def find_refs(text):
 
 
 def lists_ref(s, slug, ch, v):
-    """Is slug ch:v one of the cross-references the cited chunk itself lists (its `references` metadata)?
+    """Is slug ch:v one of the cross-references the cited chunk itself lists (its `references` metadata or per-verse `notes`)?
     Answers like "the study of Ether 12:1-7 also lists Alma 32:21 [1]" are grounded, not a mismatch."""
-    for ref in (s.get("seen") or {}).get("references") or []:
+    seen = s.get("seen") or {}
+    notes = [r for rs in (seen.get("notes") or {}).values() for r in rs]  # per-verse notes (step 2)
+    for ref in (seen.get("references") or []) + notes:
         try:
             sl, c, vv = parse_ref(ref)
         except Exception:

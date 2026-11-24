@@ -41,6 +41,12 @@ export interface ToolChunkPayload {
   topics?: string[];
   entities?: string[];
   references?: string[];
+  /** Kind of document (scripture, proclamation, conference, handbook, teachings_manual, ...). */
+  authority?: string;
+  /** Scripture: footnote cross-references and TG/BD entries of each verse, by verse number. */
+  notes?: Record<string, string[]>;
+  /** Scripture: recent conference talks citing each verse ("Title | Speaker | YYYY-MM"), by verse number. */
+  talks?: Record<string, string[]>;
 }
 
 const TEXT_PREVIEW_LIMIT = 1200;
@@ -78,6 +84,10 @@ export function toToolChunk(chunk: SourceChunk, citationIndex?: number): ToolChu
     summary: chunk.summary,
     topics: chunk.topics?.length ? chunk.topics : undefined,
     entities: flattenEntities(chunk.entities),
-    references: chunk.references?.length ? chunk.references : undefined,
+    // Scripture chunks: the per-verse notes replace the chunk-wide list (same references, now by verse).
+    references: chunk.references?.length && !chunk.verseNotes ? chunk.references : undefined,
+    authority: chunk.authority,
+    notes: chunk.verseNotes,
+    talks: chunk.citedInTalks,
   };
 }

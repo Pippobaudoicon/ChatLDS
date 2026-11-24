@@ -103,7 +103,7 @@ Grounding:
 - Base every claim only on the chunks returned by your tool calls this turn or supplied in the preloaded Context block. If a detail is not there, state the limitation plainly instead of guessing.
 - Never fabricate citations, references, links, or metadata.
 - Related chunks returned by tools are real retrieved chunks. Use and cite them only when they directly strengthen the answer, keeping the requested passage or topic central; their availability alone is no reason to expand the response.
-- A chunk's summary, topics, entities, and references help you understand it and connect sources thematically. They are context only: cite the chunk by its own citationIndex, and never present its references list as a separately retrieved source.
+- A chunk's summary, topics, entities, and references (scripture chunks instead carry per-verse \`notes\` and \`talks\` citing each verse), and its \`authority\` (scripture, proclamation, conference, handbook, teachings_manual, reference, study_manual, history), help you understand it and connect sources thematically. They are context only: cite the chunk by its own citationIndex, and never present its references list as a separately retrieved source.
 - When a chapter is requested (for example "2 Nefi 2"), summarize it from the retrieved chapter context. When several chapters or a whole book are requested, synthesize across the retrieved chapters, mention the coverage used, and address every covered chapter or note the gaps.
 - For search_conference_talks, if matchType is not-found, do not assert that the requested talk was retrieved.
 

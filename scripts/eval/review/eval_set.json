@@ -478,7 +478,7 @@
    ]
   },
   "expect": "answer",
-  "facts": "Topical Guide 'Grace' lists e.g. John 1:14,17; Rom 3:24; Eph 2:8; 2 Ne 25:23; Ether 12:27; Moro 10:32-33; D&C 93:12-20. TG is not ingested: correct behavior is to say the TG entry was not retrieved rather than invent its list."
+  "facts": "Topical Guide 'Grace' lists e.g. Gen. 6:8; Prov. 3:34; John 1:14,17; Acts 15:11; Rom. 3:24; Eph. 2:8; 2 Ne. 2:6; 2 Ne. 25:23; Mosiah 18:16; Ether 12:27; Moro. 10:32-33; D&C 93:12-20. A correct answer lists verses from the Topical Guide entry itself and does not present a Guide to the Scriptures or Bible Dictionary entry as the Topical Guide."
  },
  {
   "id": "xref-bd-atonement",
@@ -1716,5 +1716,76 @@
   },
   "expect": "answer",
   "facts": "Teachings of Presidents of the Church: Gordon B. Hinckley (edizione italiana): ha insegnato ai giovani a ottenere tutta l'istruzione possibile, perché il Signore vuole che alleniamo la mente e le mani."
+ },
+ {
+  "id": "conf-monson-temple",
+  "cat": "leader",
+  "lang": "eng",
+  "q": "What did President Thomas S. Monson teach about the blessings of the temple in general conference?",
+  "gold": {
+   "source": [
+    "conference"
+   ],
+   "speaker": [
+    "Monson"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Thomas S. Monson, 'Blessings of the Temple' (April 2015): he announced new temples (Abidjan, Port-au-Prince, Bangkok); the temple brings peace to troubled or grieving hearts; story of a discouraged young missionary praying in the celestial room and Landon, who followed a prompting to speak with him; invitation to have the spirit of temple worship."
+ },
+ {
+  "id": "conf-monson-kindness-ita",
+  "cat": "leader",
+  "lang": "ita",
+  "q": "Cosa ha insegnato il presidente Monson alla conferenza generale su gentilezza, carità e amore?",
+  "gold": {
+   "source": [
+    "conference"
+   ],
+   "speaker": [
+    "Monson"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Thomas S. Monson, 'Kindness, Charity, and Love' (sessione del sacerdozio, aprile 2017): cita Moroni 7 sulla carità e DeA 121 (nessun potere può essere mantenuto in virtù del sacerdozio se non per persuasione, gentilezza, mitezza, amore non finto); invita a esaminare la propria vita e seguire l'esempio del Salvatore essendo gentili, amorevoli e caritatevoli."
+ },
+ {
+  "id": "xref-talks-alma-7-11-ita",
+  "cat": "crossref",
+  "lang": "ita",
+  "q": "Quali discorsi della conferenza generale citano Alma 7:11?",
+  "gold": {
+   "talkcites": "Alma 7:11"
+  },
+  "expect": "answer",
+  "facts": "Alma 7:11 (Cristo prenderà su di sé le pene, le afflizioni e le tentazioni di ogni specie) è citato da 68 discorsi indicizzati; ogni discorso nominato nella risposta deve citarlo davvero."
+ },
+ {
+  "id": "xref-notes-2-ne-2-25",
+  "cat": "crossref",
+  "lang": "eng",
+  "q": "What are the footnote cross-references of 2 Nephi 2:25?",
+  "gold": {
+   "refs": [
+    "Moses 6:48",
+    "Moses 5:10"
+   ],
+   "anchor_ref": "2 Nephi 2:25"
+  },
+  "expect": "answer",
+  "facts": "Footnotes of 2 Nephi 2:25 ('Adam fell that men might be; and men are, that they might have joy'): Moses 6:48, Moses 5:10; TG Adam, TG Fall of Man, TG Mortality, TG Joy; TG Man, Potential to Become like Heavenly Father. Footnotes of other verses of 2 Nephi 2 must not be presented as those of verse 25."
+ },
+ {
+  "id": "xref-tg-charity",
+  "cat": "crossref",
+  "lang": "eng",
+  "q": "Which scriptures does the Topical Guide list under 'Charity'?",
+  "gold": {
+   "idprefix": [
+    "study_helps:eng:scriptures:tg:charity"
+   ]
+  },
+  "expect": "answer",
+  "facts": "Topical Guide 'Charity' lists e.g. 1 Cor. 13:1-13 (charity suffereth long, never faileth); 2 Ne. 26:30; Ether 12:34; Moro. 7:44-48 (charity is the pure love of Christ); D&C 121:45. A correct answer lists verses from the Topical Guide entry itself, not a Guide to the Scriptures or Bible Dictionary entry."
  }
 ]

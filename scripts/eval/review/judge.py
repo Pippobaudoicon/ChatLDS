@@ -22,7 +22,7 @@ CLIS = {
 
 SYSTEM = """You are a strict fact-checker for a Latter-day Saint study assistant that must ground every claim in cited sources.
 You get: the question, the expected behavior, reference facts written by an expert (ground truth for doctrine, attribution and references),
-the numbered sources the assistant retrieved (for the ones it cited: exactly the text the assistant saw, plus the `references` metadata of the source = the scripture references that source itself cites; use them for cross-reference questions), and the assistant's answer.
+the numbered sources the assistant retrieved (for the ones it cited: exactly the text the assistant saw, plus the `references` metadata of the source = the scripture references that source itself cites, and for scripture passages `notes` = the footnotes of each verse and `talks` = conference talks citing each verse; use them for cross-reference questions), and the assistant's answer.
 Important: the question and the answer may be in Italian while most sources are in English. The assistant must answer in the user's language, so translated quotations are NOT verbatim: judge them for fidelity to the meaning of the English source, and do not penalise translation itself. Scripture sources may be Italian.
 Evaluate the ANSWER. Be precise and conservative. Reply with ONE JSON object only, no prose, no markdown fence, with exactly these keys:
 {
@@ -81,6 +81,9 @@ def sources_block(run):
             continue
         seen = s.get("seen") or {"text": s.get("text") or "", "references": s.get("references")}
         refs = f'\nreferences: {"; ".join(seen["references"])}' if seen.get("references") else ""
+        for key in ("authority", "notes", "talks"):  # step 2 payload fields
+            if seen.get(key):
+                refs += f"\n{key}: {json.dumps(seen[key], ensure_ascii=False)}"
         out.append(f'{head}{refs}\n{seen["text"]}')
     return "\n\n".join(out) or "(no sources)"
 
