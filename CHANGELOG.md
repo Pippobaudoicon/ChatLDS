@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.108
+
+- **Study Helps are a default source.** `DEFAULT_SOURCES` is now scriptures, conference,
+  handbook, study_helps, gospel_teachings, on web and in the native apps. Used for new
+  searches and for API requests that omit `sources`; saved source choices are unchanged.
+
 ## 0.12.107
 
 - **Italian turns now receive `study_helps`.** The namespace is English-only in
