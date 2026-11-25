@@ -54,8 +54,7 @@ export const DEFAULT_SOURCES: SourceType[] = [
   "scriptures",
   "conference",
   "handbook",
-  // "study_helps",
-  // "gospel_topics"
+  "gospel_teachings",
 ];
 
 /** Every Pinecone namespace — used by the "Super" toggle.
