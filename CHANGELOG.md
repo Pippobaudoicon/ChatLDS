@@ -29,6 +29,19 @@
   - Eval: 5 new questions (Monson, Alma 7:11 talks, 2 Nephi 2:25 notes, TG Charity),
     `probe_step2.ts` retrieval probe, `run.ts` filter takes a comma-separated id list,
     judge/score see `notes`/`talks`.
+- **Release merge with main (0.12.104).** The system prompt is main's 0.12.104 text; step 2's
+  `notes`/`talks`/`authority` sentence is folded into its "A chunk's summary, topics…" line.
+
+## 0.12.104
+
+- **Release: development merged with main.** Brings main's 0.12.85 (#23, the system prompt
+  rewritten for Claude Haiku 5.5: shorter rules with reasons, scripture references and
+  titles written as markdown links next to the inline `[N]` markers, no closing list of
+  sources, plus `test:system-prompt`) into the development line. The prompt is #23's text
+  with one rule from development added to its semantic_search line (#32: "what did
+  President X teach about Y" goes to `semantic_search`, which alone reaches the Teachings
+  manuals). #29's "no closing sources list" rule is covered by #23's stricter wording.
+  (main's 0.12.85 and development's 0.12.85, AI SDK 7, are different changes.)
 
 ## 0.12.103
 
