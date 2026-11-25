@@ -8,6 +8,10 @@ import type { RagToolContext } from "../shared/tool-context";
 
 const SOURCE_VALUES: SourceType[] = SUPER_SOURCES;
 
+function namesTopicalGuide(query: string): boolean {
+  return /\btopical guide\b|\bguida topica\b/i.test(query);
+}
+
 const inputSchema = z.object({
   query: z
     .string()
@@ -88,7 +92,10 @@ export function createSemanticSearchTool({
       const effectiveTopK = topK ?? defaultTopK;
       const requestedSources = sources && sources.length > 0 ? sources : defaultSources;
       const filteredSources = requestedSources.filter((source) => allowedSources.has(source));
-      const effectiveSources = filteredSources.length > 0 ? filteredSources : defaultSources;
+      const effectiveSources = [...(filteredSources.length > 0 ? filteredSources : defaultSources)];
+      if (namesTopicalGuide(query) && !effectiveSources.includes("study_helps")) {
+        effectiveSources.push("study_helps");
+      }
 
       onProgress?.({
         phase: "sources",
