@@ -1,10 +1,10 @@
-// Suggested next questions shown under the composer after an answer. Generated
+// Suggested next messages (questions, requests, additions) shown under the composer after an answer. Generated
 // by a small separate model call once the answer is saved, so they never delay
 // the answer itself; see POST /api/conversations/[id]/follow-ups.
 
 import { generateText, gateway } from "ai";
 
-// A small, fast multilingual model: three short questions need no more.
+// A small, fast multilingual model: three short suggestions need no more.
 // Pinned here rather than read from CHAT_MODEL, so a pricier chat model
 // doesn't raise this cost. The deployed alias (nvidia/nemotron-3.5 via
 // `vmc/chatlds-followup-model`) is a reasoning model, so reasoning is
@@ -17,12 +17,12 @@ const FOLLOW_UP_TIMEOUT_MS = 10_000;
 
 export const MAX_FOLLOW_UPS = 3;
 export const MAX_FOLLOW_UP_LENGTH = 120;
-// Only the answer's opening matters for picking next questions; keeps the call cheap.
+// Only the answer's opening matters for picking next messages; keeps the call cheap.
 const MAX_ANSWER_CHARS = 2500;
 
 /**
  * Clean model output into at most {@link MAX_FOLLOW_UPS} short, distinct
- * questions: trims list markers and quotes, drops empty, over-long, or repeated
+ * suggestions: trims list markers and quotes, drops empty, over-long, or repeated
  * entries and any that just repeat the user's question.
  */
 export function normalizeFollowUps(raw: unknown, question = ""): string[] {
@@ -46,17 +46,20 @@ export function normalizeFollowUps(raw: unknown, question = ""): string[] {
 }
 
 /**
- * Parse the model's plain-text reply: one question per line. (The gateway
- * model doesn't enforce structured output, so no JSON schema is requested.)
+ * Parse the model's plain-text reply: one "- " suggestion per line. (The
+ * gateway model doesn't enforce structured output, so no JSON schema is
+ * requested.)
  */
 export function parseFollowUpText(text: string, question = ""): string[] {
-  // Only lines that actually end as a question count — this drops stray
-  // echoes of the prompt's role labels or framing the model may repeat.
-  const lines = text.split(/\r?\n/).filter((line) => line.trim().endsWith("?"));
+  // Only list items (or bare questions, if the model drops the marker) count —
+  // this drops stray echoes of the prompt's role labels or framing.
+  const lines = text
+    .split(/\r?\n/)
+    .filter((line) => /^\s*(?:[-*•]|\d+[.)])\s/.test(line) || line.trim().endsWith("?"));
   return normalizeFollowUps(lines, question);
 }
 
-/** Suggest next questions for a finished turn. Returns `[]` on any error. */
+/** Suggest next messages for a finished turn. Returns `[]` on any error. */
 export async function generateFollowUps(
   question: string,
   answer: string
@@ -83,11 +86,13 @@ async function generateOnce(
       reasoning: "none",
       instructions: [
         "You suggest what a user might ask next in a chat about the teachings of The Church of Jesus Christ of Latter-day Saints.",
-        `Write ${MAX_FOLLOW_UPS} short follow-up questions (under 80 characters each) the USER could send next, in the user's voice.`,
+        `Write ${MAX_FOLLOW_UPS} short messages (under 80 characters each) the USER could send next, in the user's voice.`,
+        "They need not be questions: mix questions with requests and additions, e.g. \"Give me a practical example\", \"Tell me more about the second point\", \"I'd like a talk on this\".",
+        "End with a question mark only real questions; requests and statements end without one.",
         "Write them in the same language as the user's question.",
         "Make them distinct: e.g. go deeper on one point, ask for a scripture or talk, ask how to apply it.",
         "Do not repeat the user's question and do not answer anything.",
-        "Write exactly one question per line, with no numbering, bullets, quotes, or extra text.",
+        "Write exactly one per line, each starting with \"- \", with no quotes or extra text.",
       ].join("\n"),
       prompt: `User question:\n${question.trim()}\n\nAssistant answer:\n${answer.trim().slice(0, MAX_ANSWER_CHARS)}`,
       maxOutputTokens: 300,

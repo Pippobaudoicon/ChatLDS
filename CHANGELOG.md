@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.109
+
+- **Follow-up suggestions are no longer only questions.** The follow-up model now writes a mix
+  of questions, requests and additions ("Give me a practical example"), with a question mark
+  only on real questions. The parser keeps "- " list items instead of only lines ending in "?".
+  Suggestion labels read "Suggestions" / "Suggerimenti" / "Sugerencias".
+
 ## 0.12.108
 
 - **Study Helps are a default source.** `DEFAULT_SOURCES` is now scriptures, conference,

@@ -192,7 +192,7 @@ export const eng = {
     errorQuota: "You've reached your message limit for now. Upgrade to Pro or try again later.",
     errorRetry: "Try again",
     followUps: {
-      label: "Suggested questions",
+      label: "Suggestions",
       tabUse: "to use the suggestion",
       tabNext: "next suggestion",
     },
