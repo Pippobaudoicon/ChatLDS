@@ -36,6 +36,9 @@ Architecture and plan: `docs/MOBILE_APP_PLAN.md` (written for the old Expo app) 
   `{ "standard": [...ALL_SOURCES], "super": [...SUPER_SOURCES] }` (ids only, display
   order, straight from `types.ts`). Apps read the source lists from here instead of
   hardcoding them; Standard now includes `gospel_teachings`.
+- **Default sources** (0.12.108): `DEFAULT_SOURCES` = scriptures, conference, handbook,
+  study_helps, gospel_teachings. The apps keep a hand-copied list; saved choices on
+  existing installs are not migrated.
 - **SourceChunk** (0.12.105) gains three optional fields: `authority` (string),
   `verseNotes` and `citedInTalks` (`Record<verse, string[]>`, scripture chunks only).
   They travel in message sources and `sourcesJson`; the apps' models ignore unknown keys
