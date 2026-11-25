@@ -458,6 +458,9 @@ Notes:
   (`TRANSLATED_SOURCES` in `retriever.ts`): for a non-English turn they are queried
   in both languages and the English twin of a document is dropped when its
   Italian version was retrieved (`preferTranslation`).
+  `study_helps` is English-only in Qdrant, so the retriever always queries its
+  English data and Italian turns receive it too (Bible Dictionary, Guide to the
+  Scriptures, Topical Guide).
   The system prompt routes "what did President X teach about Y" to `semantic_search`
   (`search_conference_talks` only covers conference talks, not the Teachings manuals).
   Scripture-reference aliases for Official Declarations are the long forms only (the

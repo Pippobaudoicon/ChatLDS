@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.107
+
+- **Italian turns now receive `study_helps`.** The namespace is English-only in
+  Qdrant (0 Italian points, 6,336 English), so before this fix no Italian turn
+  ever retrieved it. The retriever always queries its English data (Bible
+  Dictionary, Guide to the Scriptures, Topical Guide).
+
 ## 0.12.106
 
 - **Web default sources match the native apps.** `DEFAULT_SOURCES` is now scriptures,
