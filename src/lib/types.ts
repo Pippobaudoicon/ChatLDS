@@ -54,6 +54,7 @@ export const DEFAULT_SOURCES: SourceType[] = [
   "scriptures",
   "conference",
   "handbook",
+  "study_helps",
   "gospel_teachings",
 ];
 
