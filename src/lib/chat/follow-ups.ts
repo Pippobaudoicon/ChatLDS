@@ -10,7 +10,7 @@ import { generateText, gateway } from "ai";
 // `vmc/chatlds-followup-model`) is a reasoning model, so reasoning is
 // disabled below — at the default it spent the whole token budget thinking
 // and returned no text.
-const DEFAULT_FOLLOW_UP_MODEL = "google/gemini-2.5-flash-lite";
+const DEFAULT_FOLLOW_UP_MODEL = "nvidia/nemotron-3.5-lightning-free";
 const FOLLOW_UP_MODEL = process.env.FOLLOW_UP_MODEL?.trim() || DEFAULT_FOLLOW_UP_MODEL;
 // Suggestions arriving later than this are no longer useful; give up instead.
 const FOLLOW_UP_TIMEOUT_MS = 10_000;
