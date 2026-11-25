@@ -1,6 +1,6 @@
 # ChatLDS Project Knowledge Base
 
-Last updated: 2026-10-03
+Last updated: 2026-11-25
 
 This document is the single source of truth for project context.
 Read this first before deep code exploration.
@@ -463,6 +463,7 @@ Notes:
   Scripture-reference aliases for Official Declarations are the long forms only (the
   slug `od` stays internal; its `book` metadata is "Official Declaration" / "Dichiarazione Ufficiale").
   `GET /api/sources` (public, 5 min cache) exposes `{ standard, super }` for the native apps.
+  Default sources (`DEFAULT_SOURCES`, used when a request omits `sources`) = scriptures, conference, handbook, gospel_teachings, the same as the apps (0.12.106).
   Vectors carry a `related_ids` cross-reference projection from the graph.
   Both `lookup_scripture_passage` and `semantic_search` consume it via the shared
   `expandRelatedContext` helper: after retrieval they fetch the results'
