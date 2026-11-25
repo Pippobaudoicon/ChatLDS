@@ -437,16 +437,19 @@ export async function retrieve(
 
   // Query all variants × selected namespaces in parallel. Scriptures are bilingual
   // (the turn's locked scripture language); TRANSLATED_SOURCES also in that language
-  // when it differs from the index language; every other namespace is English-only.
+  // when it differs from the index language. Study Helps is English-only, regardless
+  // of the index language used for the query.
   const results = await Promise.all(
     vectors.flatMap((vector) =>
       sources.flatMap((source) => {
         const languages =
           source === "scriptures"
             ? [scriptureLanguage]
-            : TRANSLATED_SOURCES.has(source)
-              ? [...new Set([scriptureLanguage, language])]
-              : [language];
+            : source === "study_helps"
+              ? ["eng" as const]
+              : TRANSLATED_SOURCES.has(source)
+                ? [...new Set([scriptureLanguage, language])]
+                : [language];
         return languages.map((sourceLanguage) =>
           queryVectors(source, vector, topK, { language: { $eq: sourceLanguage } }).then(
             (matches) => matches.map((match): SourceChunk => toChunk(source, sourceLanguage, match))
