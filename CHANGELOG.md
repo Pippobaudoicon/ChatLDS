@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.106
+
+- **Web default sources match the native apps.** `DEFAULT_SOURCES` is now scriptures,
+  conference, handbook, gospel_teachings (was without gospel_teachings), the same set and
+  order as the apps. Used for new searches and for API requests that omit `sources`.
+
 ## 0.12.105
 
 - **Step 2 of the RAG review: metadata and links, no re-embedding.** Reads the fields that
