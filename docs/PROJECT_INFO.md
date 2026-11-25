@@ -153,9 +153,9 @@ Read this first before deep code exploration.
   that page's real layout (chat: `ChatLoadingSkeleton`, with an `empty` variant
   for `/chat`); keep them in sync when a page layout changes.
 - Free-plan warning banner in chat when the user approaches the chat request limit.
-- Suggested next questions: after an answer finishes, the client calls
+- Suggested next messages: after an answer finishes, the client calls
   `POST /api/conversations/[id]/follow-ups` (it never delays the answer) and
-  shows up to 3 questions for the latest answer (`src/lib/chat/follow-ups.ts`,
+  shows up to 3 suggestions (a mix of questions, requests and additions) for the latest answer (`src/lib/chat/follow-ups.ts`,
   `src/components/chat/interface/useFollowUps.ts` + `FollowUpSuggestions.tsx`).
   Touch screens (`pointer: coarse`): a thin scrollable row of chips above the
   composer; a tap sends the question immediately through the normal submit handler.
@@ -322,7 +322,7 @@ Read this first before deep code exploration.
   - Auth or guest cookie required, conversation ownership checked.
   - Returns `{ messageId, followUps }` for the latest assistant message; `409`
     while the conversation is still generating. Generated once per answer
-    (small `FOLLOW_UP_MODEL` call, `google/gemini-2.5-flash-lite` by default, reasoning disabled, one question per line, written in the question's language) and
+    (small `FOLLOW_UP_MODEL` call, `nvidia/nemotron-3.5-lightning-free` by default, reasoning disabled, one "- " suggestion per line (questions or requests), written in the question's language) and
     merged into that message's `details_json.followUps`; later calls return the
     stored list, so model cost is bounded by the chat quota. Not written if the
     answer was regenerated during the call.
@@ -653,7 +653,7 @@ Notes:
 - `RAG_ROUTING_MODEL` (optional; defaults to `openai/gpt-oss-120b`) — dedicated `/api/search` query routing/translation model (used only when `RAG_LANGUAGE_ROUTING=true`), independent from `CHAT_MODEL` (`reasoningEffort: low`, 600-token ceiling)
 - `RAG_ROUTING_FALLBACK_MODEL` (optional; defaults to `openai/gpt-5.4-mini`) — one-shot fallback used once if the primary routing model returns no structured output
 - `RAG_LANGUAGE_ROUTING` (optional; defaults to `false`) — `GET /api/search` only: set to `true` to translate search queries with the routing model. Chat never routes
-- `FOLLOW_UP_MODEL` (optional; defaults to `google/gemini-2.5-flash-lite`, pinned independently from `CHAT_MODEL`; deployed as `vmc/chatlds-followup-model`) — small model for the suggested next questions: one call per answer with reasoning disabled (`reasoning: "none"` — the deployed reasoning model otherwise spends the whole budget thinking and returns nothing), plain-text reply of one question per line (no structured output: the gateway model doesn't enforce it), 300-token ceiling, answer trimmed to 2500 characters, 10 s timeout (no suggestions on timeout)
+- `FOLLOW_UP_MODEL` (optional; defaults to `nvidia/nemotron-3.5-lightning-free`, pinned independently from `CHAT_MODEL`; deployed as `vmc/chatlds-followup-model`) — small model for the suggested next messages: one call per answer with reasoning disabled (`reasoning: "none"` — the deployed reasoning model otherwise spends the whole budget thinking and returns nothing), plain-text reply of one "- " suggestion per line, questions or requests (no structured output: the gateway model doesn't enforce it), 300-token ceiling, answer trimmed to 2500 characters, 10 s timeout (no suggestions on timeout)
 - `RAG_GRAPH_RERANK` (optional; defaults to `true`) — graph-aware rerank kill-switch
 - `RAG_RERANK` (optional; defaults to `false`) — Voyage cross-encoder rerank
 - `RAG_MULTI_QUERY` (optional; defaults to `false`) — multi-query expansion

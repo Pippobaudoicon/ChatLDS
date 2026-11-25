@@ -47,6 +47,14 @@ check(
     "Come applicarlo?",
   ])
 );
+check(
+  "requests and statements in list items are kept",
+  same(parseFollowUpText("Here you go:\n- Fammi un esempio pratico\n- Parlami del secondo punto\n- Come lo applico?"), [
+    "Fammi un esempio pratico",
+    "Parlami del secondo punto",
+    "Come lo applico?",
+  ])
+);
 check("empty reply gives no suggestions", same(parseFollowUpText("  \n\n"), []));
 check(
   "non-question lines (prompt echoes, framing) are dropped",

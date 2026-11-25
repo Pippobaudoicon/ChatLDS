@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.109
+
+- **Follow-up suggestions are no longer only questions.** The follow-up model now writes a mix
+  of questions, requests and additions ("Give me a practical example"), with a question mark
+  only on real questions. The parser keeps "- " list items instead of only lines ending in "?".
+  Suggestion labels read "Suggestions" / "Suggerimenti" / "Sugerencias".
+
 ## 0.12.108
 
 - **Study Helps are a default source.** `DEFAULT_SOURCES` is now scriptures, conference,
@@ -382,7 +389,7 @@
 
 ## 0.12.67
 
-- **Suggested questions use a small model of their own.** `FOLLOW_UP_MODEL` now defaults to `google/gemini-2.5-flash-lite` (small, fast, no reasoning step, multilingual, structured output), pinned in `src/lib/chat/follow-ups.ts` instead of following `CHAT_MODEL`, so switching the chat to a pricier model doesn't make suggestions pricier. Output ceiling 300 tokens (was 600). The model reads at most the first 2500 characters of the answer (was 4000) and the call gives up after 10 seconds, in which case no suggestions are shown. `FOLLOW_UP_MODEL` still overrides it.
+- **Suggested questions use a small model of their own.** `FOLLOW_UP_MODEL` now defaults to `nvidia/nemotron-3.5-lightning-free` (small, fast, no reasoning step, multilingual, structured output), pinned in `src/lib/chat/follow-ups.ts` instead of following `CHAT_MODEL`, so switching the chat to a pricier model doesn't make suggestions pricier. Output ceiling 300 tokens (was 600). The model reads at most the first 2500 characters of the answer (was 4000) and the call gives up after 10 seconds, in which case no suggestions are shown. `FOLLOW_UP_MODEL` still overrides it.
 
 ## 0.12.66
 

@@ -192,7 +192,7 @@ export const ita = {
     errorQuota: "Hai raggiunto il limite di messaggi per ora. Passa a Pro o riprova più tardi.",
     errorRetry: "Riprova",
     followUps: {
-      label: "Domande suggerite",
+      label: "Suggerimenti",
       tabUse: "per usare il suggerimento",
       tabNext: "suggerimento successivo",
     },

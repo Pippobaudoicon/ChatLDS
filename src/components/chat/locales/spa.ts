@@ -191,7 +191,7 @@ export const spa = {
     errorQuota: "Has alcanzado tu límite de mensajes por ahora. Pásate a Pro o inténtalo más tarde.",
     errorRetry: "Reintentar",
     followUps: {
-      label: "Preguntas sugeridas",
+      label: "Sugerencias",
       tabUse: "para usar la sugerencia",
       tabNext: "siguiente sugerencia",
     },
