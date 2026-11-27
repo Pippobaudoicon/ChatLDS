@@ -1,6 +1,6 @@
 {
   "name": "rag-chat",
-  "version": "0.12.111",
+  "version": "0.12.112",
   "license": "Apache-2.0",
   "private": true,
   "packageManager": "pnpm@10.34.5",
@@ -10,7 +10,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "pnpm run test:routing && pnpm run test:language-policy && pnpm run test:onboarding && pnpm run test:cross-language && pnpm run test:chat-lifecycle && pnpm run test:chat-turn && pnpm run test:guest && pnpm run test:follow-ups && pnpm run test:delete-account && pnpm run test:billing-handoff && pnpm run test:resumable-stream && pnpm run test:scripture-reference && pnpm run test:sources",
+    "test": "pnpm run test:routing && pnpm run test:language-policy && pnpm run test:onboarding && pnpm run test:cross-language && pnpm run test:chat-lifecycle && pnpm run test:chat-turn && pnpm run test:guest && pnpm run test:follow-ups && pnpm run test:delete-account && pnpm run test:billing-handoff && pnpm run test:resumable-stream && pnpm run test:scripture-reference && pnpm run test:sources && pnpm run test:system-prompt",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run test",
     "prepare": "git config core.hooksPath .githooks || true",
     "db:generate": "dotenv -o -e .env -e .env.local -- drizzle-kit generate",
@@ -33,6 +33,7 @@
     "test:billing-handoff": "tsx scripts/test/billing-handoff.test.ts",
     "test:resumable-stream": "tsx scripts/test/resumable-stream.test.ts",
     "test:sources": "tsx scripts/test/sources-route.test.ts",
+    "test:system-prompt": "tsx scripts/test/system-prompt.test.ts",
     "realtime:smoke": "dotenv -o -e .env -e .env.local -- tsx scripts/realtime-smoke.ts"
   },
   "dependencies": {

@@ -202,7 +202,7 @@ async function main() {
   // ── Answer shape: no progress preamble, chip-only citations, no translation note
   const systemPrompt = buildSystemPrompt();
   check("prompt asks for no text before tool calls", systemPrompt.includes("without writing any text before them") && !systemPrompt.includes("Emit that sentence before the first tool call"));
-  check("prompt keeps markdown reference links in every language", systemPrompt.includes("In every answer language, when a URL is provided in a chunk, embed it naturally as a markdown link"));
+  check("prompt keeps markdown reference links in every language", systemPrompt.includes("In every answer language, whenever you name a scripture reference"));
   check("prompt forbids parenthesized citation markers", systemPrompt.includes("never wrap markers or linked references in parentheses"));
   check("prompt forbids source-language/translation notes", systemPrompt.includes("Do not add notes about the language of the sources"));
   check("route sends sources after each tool step", routeSrc.includes('part.type === "finish-step"'));
