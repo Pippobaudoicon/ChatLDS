@@ -342,6 +342,14 @@ Read this first before deep code exploration.
     a billing failure leaves nothing deleted. `204` on success, `502 { error }`
     if a step fails; retry-safe (Clerk 404/403 on lookup, 404 on delete count
     as done). Required by App Store / Play for the native apps.
+  - Web UI: public `/delete-account` page (`src/app/delete-account/page.tsx`,
+    `src/components/legal/DeleteAccountAction.tsx`; copy in the locales'
+    `deleteAccount` section, language from `Accept-Language`). It is the
+    Google Play "delete account URL": explains what is deleted/kept, links
+    signed-out visitors to `/sign-in?redirect_url=/delete-account`, and for
+    signed-in users confirms, calls this endpoint, then signs out to
+    `/delete-account?deleted=1&signed_out=1` (confirmation; `signed_out` burns
+    the remember-me cookie). Linked from the privacy policy and legal footer.
 - `POST /api/billing/handoff`
   - Real Clerk user only (cookie or bearer; `401 { error }` otherwise). Mints a
     60s single-use Clerk sign-in token and returns `{ url }` =

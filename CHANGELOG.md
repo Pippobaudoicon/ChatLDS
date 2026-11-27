@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.110
+
+- **Public account-deletion page at `/delete-account`** (Google Play "delete account URL").
+  Works signed out: explains which app it covers, how to delete, what is erased and what
+  payment providers keep, with a sign-in link back to the page. Signed in, it confirms,
+  calls the existing `DELETE /api/account`, signs out and shows a confirmation. English,
+  Italian and Spanish (device language). Linked from the privacy policy and legal footer.
+  No API change; the native apps are unaffected.
+
 ## 0.12.109
 
 - **Follow-up suggestions are no longer only questions.** The follow-up model now writes a mix
