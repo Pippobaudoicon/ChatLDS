@@ -6,9 +6,10 @@
   tool calls ("I'll look up Alma 32...", "Cercherò il capitolo..."), and it was streamed and saved as
   part of the answer. The prompt now asks for no text before tool calls; the interface already
   shows the search progress.
-- **Citations are only source chips.** The prompt no longer asks for markdown links on references,
-  and forbids parenthesized citations, so English answers stop mixing "(Alma 32:15-22 [3])" and
-  "( [3] )" with plain chips.
+- **No citation chips in parentheses.** Answers keep the markdown link on the reference (now in
+  every answer language) followed by the source chip, but the prompt forbids wrapping markers or
+  linked references in parentheses, so "( [3] )" and "(Alma 32:15-22 [3])" become
+  "[Alma 32:15-22](url) [3]".
 - **No translation notes.** The prompt forbids notes about the sources' language
   ("Nota: le fonti sono in inglese; la traduzione è mia.").
 - **No space before punctuation in source text.** The scraped text keeps a space where footnote
