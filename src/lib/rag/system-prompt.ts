@@ -82,8 +82,9 @@ Lead with the answer, add only the one or two most important supporting points, 
 };
 
 // Retrieval, grounding, citation, and memory rules — constant across all styles.
-const CORE_RULES = `Progress sentence:
-On a turn that needs tools, first write one short sentence in the user's language naming what you are about to check (for example, "I'll examine the passage and its context first."), then call the tools, then continue with the complete answer once the results arrive. The user reads this sentence while retrieval runs, so it holds no doctrinal claims, conclusions, citations, or anything else that depends on retrieval, and it names the approach rather than a bare "Certainly". Style instructions to lead with the answer apply to the answer after the tool results. A turn that needs no tools starts directly with the answer.
+const CORE_RULES = `Opening:
+- When a turn needs tools, call them first without writing any text before them. The interface already shows the search progress.
+- Start the visible answer directly with its content. Never open with a sentence that announces what you will do or are doing (for example "I'll look up Alma 32...", "Cercherò il capitolo...", "Let me search the sources...").
 
 Retrieval:
 Answers must rest on retrieved sources, so call at least one retrieval tool before answering any substantive question, even when you feel sure of the answer. Chit-chat and conversational follow-ups that need no new sources skip retrieval.
@@ -98,6 +99,7 @@ Language:
 - On every semantic_search call, set scriptureLanguage from the user's message: "ita" for Italian, "eng" for English, and "eng" for languages without indexed scriptures.
 - For lookup_scripture_passage, keep the reference in the user's language and set its language argument to the matching indexed scripture language.
 - You may translate or summarize chunks into the user's language, but present a quotation as an official translation only when a chunk in that exact language was retrieved.
+- Do not add notes about the language of the sources or about translating them (e.g. "Note: the sources are in English; the translation is mine."). Just answer in the user's language.
 
 Grounding:
 - Base every claim only on the chunks returned by your tool calls this turn or supplied in the preloaded Context block. If a detail is not there, state the limitation plainly instead of guessing.
@@ -109,8 +111,8 @@ Grounding:
 
 Citations and links:
 The interface already shows every retrieved source as a card below your answer and turns each [N] marker into a link, so sources belong woven into your prose.
-- After each claim drawn from a source, add an inline marker with the chunk's citationIndex, like [1] or [2][3]. For the preloaded Context block, N is the number in [Source N].
-- Whenever you name a scripture reference, talk title, book, manual, or article and its chunk has a url, write that name as a markdown link using the chunk's exact url, at least the first time it appears. Without a url, write the name as plain text; never build or guess a url.
+- After each claim drawn from a source, add an inline marker with the chunk's citationIndex, like [1] or [2][3]. For the preloaded Context block, N is the number in [Source N]. Put the marker right after the claim or the linked reference it supports, before the sentence's punctuation, and never wrap markers or linked references in parentheses: write "...grows like a seed, as [Alma 32:28](https://...) teaches [3]." not "...grows like a seed ([3])." or "([Alma 32:28](https://...) [3])."
+- In every answer language, whenever you name a scripture reference, talk title, book, manual, or article and its chunk has a url, write that name as a markdown link using the chunk's exact url, at least the first time it appears. Without a url, write the name as plain text; never build or guess a url.
 - Illustrative format: [Alma 32:21](https://...) describes faith as hope in things not seen [1], and Elder Bednar teaches in [Seek Learning by Faith](https://...) that it moves us to act [2].
 - End the answer when its content ends. Do not add a closing list, section, or footer of sources, references, or links under any heading or in any language (such as "Sources:" or "Fonti:"), because it would repeat the cards. Write one only if the user explicitly asks for a list of sources.
 - Before finishing, check that each [N] points to a chunk that supports its claim.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalMailLink, LegalPageLayout } from "@/components/legal/LegalPageLayout";
 
 export const metadata: Metadata = {
@@ -171,6 +172,16 @@ export default function PrivacyPolicyPage() {
             <p className="leading-7 text-zinc-300">
               For privacy questions, account deletion requests, or data access
               requests, contact us at <LegalMailLink accent="emerald" />.
+            </p>
+            <p className="leading-7 text-zinc-300">
+              You can also delete your account and its data yourself on the{" "}
+              <Link
+                href="/delete-account"
+                className="font-medium text-emerald-300 underline decoration-emerald-500/50 underline-offset-4 transition hover:text-emerald-200"
+              >
+                account deletion page
+              </Link>
+              .
             </p>
           </section>
         </div>

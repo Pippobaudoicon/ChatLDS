@@ -2,7 +2,7 @@ import Link from "next/link";
 
 type LegalPageLayoutProps = {
   accent: "emerald" | "sky";
-  activePage: "privacy";
+  activePage: "privacy" | "delete-account";
   eyebrow: string;
   title: string;
   description: string;
@@ -60,6 +60,9 @@ function LegalFooter() {
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           <Link href="/privacy-policy" className="transition hover:text-white">
             Privacy Policy
+          </Link>
+          <Link href="/delete-account" className="transition hover:text-white">
+            Delete account
           </Link>
           <a
             href="mailto:support@tommasolopiparo.com"

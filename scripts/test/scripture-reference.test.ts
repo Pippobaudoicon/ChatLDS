@@ -3,7 +3,7 @@
  * Run: `pnpm run test:scripture-reference` — pure and deterministic, no network.
  */
 import { SCRIPTURE_BOOKS, bookMetadataName, parseScriptureSelection } from "@/lib/rag/scripture-reference";
-import { byVerse, isRequestedScriptureChunk } from "@/lib/rag/retriever";
+import { byVerse, isRequestedScriptureChunk, tidySourceText } from "@/lib/rag/retriever";
 import { cleanSpeakerName } from "@/lib/rag/tools/search-conference-talks/tool";
 import type { SourceChunk } from "@/lib/types";
 
@@ -93,6 +93,18 @@ check("cited_in_talks keeps title | speaker | date", talks?.["11"]?.[0] === "Non
 check("no metadata -> undefined", byVerse(undefined, ": ") === undefined);
 for (const [raw, want] of [["Presidente Russell M. Nelson", "Russell M. Nelson"], ["Elder  Dieter F. Uchtdorf", "Dieter F. Uchtdorf"], ["Anziano Holland", "Holland"], ["Thomas S. Monson", "Thomas S. Monson"]]) {
   check(`cleanSpeakerName(${raw})`, cleanSpeakerName(raw) === want, cleanSpeakerName(raw));
+}
+
+// Scraped text: spaces left before punctuation where footnote markers were cut out.
+for (const [raw, want] of [
+  ["la parola a un seme . Ora, nel vostro cuore , ecco ,", "la parola a un seme. Ora, nel vostro cuore, ecco,"],
+  ["la vostra incredulità ; sì: «parola» , fine .", "la vostra incredulità; sì: «parola», fine."],
+  ["wait ... and see", "wait ... and see"],
+  ["costs 3 .5, verses 3 , 4", "costs 3 .5, verses 3, 4"],
+  ["Alma 32:28 says faith ! Really ?", "Alma 32:28 says faith! Really?"],
+  ["line one\n. line two", "line one\n. line two"],
+]) {
+  check(`tidySourceText(${JSON.stringify(raw)})`, tidySourceText(raw) === want, tidySourceText(raw));
 }
 
 if (failures > 0) {

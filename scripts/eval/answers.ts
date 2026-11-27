@@ -116,7 +116,7 @@ async function runTurn(question: string, variant: Variant) {
   });
 
   // Per-step first text-delta: the final step's is the first ANSWER text (step 0's
-  // is the pre-tool progress sentence on retrieval turns).
+  // is any text written before the tool calls on retrieval turns).
   const firstTextByStep: number[] = [];
   let step = -1;
   let error: string | undefined;

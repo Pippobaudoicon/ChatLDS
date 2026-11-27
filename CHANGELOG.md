@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.12.112
+
+- **Release merge of `main` into development (`release/0.12.x`).** Production runs the
+  0.12.85 system prompt written for Claude Haiku 5.5, which development never received.
+  That prompt is kept whole, and the 0.12.110 answer rules are ported onto it: the
+  "Progress sentence" block becomes "Opening" (no text before tool calls, the answer starts
+  with its content), the citation rules forbid markers or linked references in parentheses
+  and ask for reference links in every answer language, and the language rules forbid
+  notes about the sources' language or translation. `test:language-policy` checks the new
+  link wording; `test:system-prompt` is unchanged.
+
+## 0.12.111
+
+- **Public account-deletion page at `/delete-account`** (Google Play "delete account URL").
+  Works signed out: explains which app it covers, how to delete, what is erased and what
+  payment providers keep, with a sign-in link back to the page. Signed in, it confirms,
+  calls the existing `DELETE /api/account`, signs out and shows a confirmation. English,
+  Italian and Spanish (device language). Linked from the privacy policy and legal footer.
+  No API change; the native apps are unaffected.
+
+## 0.12.110
+
+- **Answers start with the answer.** The prompt asked the model for a progress sentence before the
+  tool calls ("I'll look up Alma 32...", "Cercherò il capitolo..."), and it was streamed and saved as
+  part of the answer. The prompt now asks for no text before tool calls; the interface already
+  shows the search progress.
+- **No citation chips in parentheses.** Answers keep the markdown link on the reference (now in
+  every answer language) followed by the source chip, but the prompt forbids wrapping markers or
+  linked references in parentheses, so "( [3] )" and "(Alma 32:15-22 [3])" become
+  "[Alma 32:15-22](url) [3]".
+- **No translation notes.** The prompt forbids notes about the sources' language
+  ("Nota: le fonti sono in inglese; la traduzione è mia.").
+- **No space before punctuation in source text.** The scraped text keeps a space where footnote
+  markers were removed ("un seme .", "nel vostro cuore ,"). `tidySourceText` drops it when chunks
+  are read (ellipses and decimals untouched). The scraper is the real source; fix it there on the
+  next re-index.
+- **Sources stream before the text.** After each tool step `/api/chat` sends `message-metadata`
+  `{sources}`, so web and Android show citation chips while the answer streams instead of at the
+  end (`docs/MOBILE.md`).
+
 ## 0.12.109
 
 - **Follow-up suggestions are no longer only questions.** The follow-up model now writes a mix

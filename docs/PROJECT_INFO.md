@@ -1,6 +1,6 @@
 # ChatLDS Project Knowledge Base
 
-Last updated: 2026-11-25
+Last updated: 2026-11-27
 
 This document is the single source of truth for project context.
 Read this first before deep code exploration.
@@ -342,6 +342,14 @@ Read this first before deep code exploration.
     a billing failure leaves nothing deleted. `204` on success, `502 { error }`
     if a step fails; retry-safe (Clerk 404/403 on lookup, 404 on delete count
     as done). Required by App Store / Play for the native apps.
+  - Web UI: public `/delete-account` page (`src/app/delete-account/page.tsx`,
+    `src/components/legal/DeleteAccountAction.tsx`; copy in the locales'
+    `deleteAccount` section, language from `Accept-Language`). It is the
+    Google Play "delete account URL": explains what is deleted/kept, links
+    signed-out visitors to `/sign-in?redirect_url=/delete-account`, and for
+    signed-in users confirms, calls this endpoint, then signs out to
+    `/delete-account?deleted=1&signed_out=1` (confirmation; `signed_out` burns
+    the remember-me cookie). Linked from the privacy policy and legal footer.
 - `POST /api/billing/handoff`
   - Real Clerk user only (cookie or bearer; `401 { error }` otherwise). Mints a
     60s single-use Clerk sign-in token and returns `{ url }` =
@@ -386,8 +394,8 @@ Notes:
   `sources_json`; the trace captures the *how* so real conversations can be mined
   into the eval gold set.
 - The persisted assistant `content` (and its `versions_json` entry) is the text of
-  every step joined with a blank line — the pre-tool progress sentence plus the
-  answer — so a reload shows what streamed (`onEnd`'s own `text` is only the
+  every step joined with a blank line (the prompt asks for no text before
+  tool calls, so normally just the answer) — so a reload shows what streamed (`onEnd`'s own `text` is only the
   final step).
 - Assistant `details_json` (written in `onEnd`) also stores cost/citation
   telemetry: `cachedInputTokens` (`usage.inputTokenDetails.cacheReadTokens`),
@@ -588,10 +596,14 @@ Notes:
   - no fabricated citations,
   - citation mapping to tool-returned chunks only,
   - inline `[N]` markers plus markdown links on named scripture references, talk
-    titles, books, manuals, and articles, only with the url in chunk metadata,
+    titles, books, manuals, and articles in every answer language, only with the url
+    in chunk metadata; markers and linked references are never wrapped in parentheses,
   - no closing list of sources unless the user explicitly asks, because the source
     cards already show them (0.12.85; the rules are written for the literal
     instruction following of Claude Haiku 5.5, set through `CHAT_MODEL`),
+  - no text before tool calls (the answer starts with its content) and no
+    notes about the sources' language or translation (0.12.110, ported onto the
+    0.12.85 prompt in 0.12.112),
   - careful source-grounded explanations, with length and depth matched to the
     requested style and user instructions.
 - The system prompt is composed from a constant CORE (identity + the retrieval,

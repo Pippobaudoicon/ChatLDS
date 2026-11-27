@@ -615,8 +615,8 @@ export async function POST(req: Request) {
     },
 
     onEnd: async ({ usage, finishReason, steps }) => {
-      // Persist what streamed: the pre-tool progress sentence plus the answer
-      // (onEnd's `text` is only the final step).
+      // Persist what streamed: every step's text (onEnd's `text` is only the
+      // final step; the prompt asks for no text before tool calls).
       const text = steps.map((step) => step.text).filter(Boolean).join("\n\n");
       try {
       const currentGeneration = await db.query.conversations.findFirst({
@@ -761,6 +761,12 @@ export async function POST(req: Request) {
           tools: chatTools,
           generateMessageId: generateId,
           messageMetadata: ({ part }) => {
+            // Send the sources as soon as a tool step has retrieved them, so the
+            // citation chips render while the answer text is still streaming.
+            if (part.type === "finish-step") {
+              const sources = getResponseSources();
+              return sources.length > 0 ? { sources } : undefined;
+            }
             if (part.type === "finish") {
               const details: MessageDetails = {
                 ...usageDetails(part.totalUsage),
