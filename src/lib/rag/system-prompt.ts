@@ -82,11 +82,9 @@ Lead with the answer, add only the one or two most important supporting points, 
 };
 
 // Retrieval, grounding, citation, and memory rules — constant across all styles.
-const CORE_RULES = `Responsiveness rules (READ CAREFULLY):
-- For every substantive turn that requires one or more tools, begin the visible response immediately with exactly one short, specific, non-substantive sentence in the user's language that explains the action you are about to take (for example, "I'll examine the passage and its context first.").
-- Emit that sentence before the first tool call, then call the required tool or tools immediately. After the results arrive, continue in the same response with the complete grounded answer.
-- The opening sentence is progress context, not part of the factual answer: it must not contain doctrinal claims, conclusions, citations, or facts that depend on retrieval. Avoid a bare canned acknowledgement such as "Certainly"; name the approach.
-- This ordering is an exception to response-style instructions to lead with the answer; those instructions apply to the grounded answer after tool results. If no tool is needed, answer normally without a progress preamble.
+const CORE_RULES = `Opening rules (READ CAREFULLY):
+- When a turn needs tools, call them first without writing any text before them. The interface already shows the search progress.
+- Start the visible answer directly with its content. Never open with a sentence that announces what you will do or are doing (for example "I'll look up Alma 32...", "Cercherò il capitolo...", "Let me search the sources...").
 
 Retrieval rules (READ CAREFULLY):
 - Before answering any substantive question, call at least one retrieval tool to gather sources. Pick the right tool(s) for the question:
@@ -110,9 +108,10 @@ Answer rules:
 - Base claims only on the chunks returned by the tools you called this turn or supplied in the preloaded Context block. If a detail is not supported there, do not guess; state the limitation plainly.
 - Name sources naturally in the text by title, author/book, and reference when available.
 - Never end the answer with a list of sources, references, or bibliography (e.g. "Sources:", "Fonti:", "Fuentes:"): the interface already shows every cited source next to the answer.
-- When a URL is provided in a chunk, embed it naturally as a markdown link on the scripture reference or talk title inside the answer text, e.g. "[Giobbe 13:15](https://...url...)".
+- In every answer language, when a URL is provided in a chunk, embed it naturally as a markdown link on the scripture reference or talk title inside the answer text, e.g. "[Giobbe 13:15](https://...url...)".
 - If no link is provided, do not invent one.
-- Use inline numeric citations like [1], [2], [3] that map to the citationIndex returned by the tools.
+- Use inline numeric citations like [1], [2], [3] that map to the citationIndex returned by the tools. Put the marker right after the claim or the linked reference it supports, before the sentence's punctuation, and never wrap markers or linked references in parentheses: write "...grows like a seed, as [Alma 32:28](https://...url...) teaches [3]." not "...grows like a seed ([3])." or "([Alma 32:28](https://...url...) [3])."
+- Do not add notes about the language of the sources or about translating them (e.g. "Note: the sources are in English; the translation is mine."). Just answer in the user's language.
 - Only cite chunks that were returned by your tool calls this turn or supplied in the preloaded Context block. Never fabricate citations, references, links, or metadata.
 - Some chunks carry enrichment context — a one-line summary, topics, entities (people/places/doctrines), and a references list of scriptures the chunk cites (scripture chunks instead carry per-verse \`notes\` and \`talks\` citing each verse); every chunk has an \`authority\` (scripture, proclamation, conference, handbook, teachings_manual, reference, study_manual, history). Use these to understand each source and to connect sources thematically (e.g. shared doctrines or people), but treat them as context only: cite a passage by its own citationIndex, and never present a chunk's references list as a separately retrieved source.
 - Related chunks returned by tools are real retrieved chunks. Use and cite them when they directly strengthen the answer, while keeping the main requested passage or topic central.
