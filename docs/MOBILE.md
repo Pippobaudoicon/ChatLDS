@@ -25,6 +25,9 @@ Architecture and plan: `docs/MOBILE_APP_PLAN.md` (written for the old Expo app) 
   Only `trigger: "regenerate-message"` regenerates an answer; a retry that
   resends the history as a submit becomes a new turn, even when it carries a
   `messageId` (0.12.75).
+  Sources arrive before the answer text: after each tool step the stream sends
+  `message-metadata` `{sources}` (same list as the final `finish` metadata), so
+  clients that merge it show citation chips while the text streams (0.12.110).
 - **GET `/api/conversations`**, **GET `/api/conversations/[id]`** — list / history (M2).
   The list takes optional `?q=` (case-insensitive title search, 0.12.80).
 - **GET `/api/chat/[id]/stream`** — resume in-flight answer (M2).

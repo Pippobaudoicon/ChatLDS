@@ -27,6 +27,13 @@ function enrichScriptureUrl(
   return withVerseHighlight(url, bounds.start, bounds.end);
 }
 
+// The scraped text keeps a space where a footnote marker was cut out before
+// punctuation ("un seme .", "nel vostro cuore ,"). Drop spaces before a single
+// , . ; : ! ? that ends a word; ellipses ("...") and decimals are left alone.
+export function tidySourceText(text: string): string {
+  return text.replace(/(?<=[\p{L}\p{N}»"”’)\]])[  ]+(?=[,.;:!?](?!\.)(?:[\s"”’»)]|$))/gu, "");
+}
+
 function toChunk(
   source: SourceType,
   language: Language,
@@ -40,7 +47,7 @@ function toChunk(
   const verse = match.metadata?.verse as string | undefined;
   return {
     id: match.id,
-    text: (match.metadata?.text ?? "") as string,
+    text: tidySourceText((match.metadata?.text ?? "") as string),
     source,
     score: match.score ?? 0,
     language,

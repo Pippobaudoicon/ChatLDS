@@ -394,8 +394,8 @@ Notes:
   `sources_json`; the trace captures the *how* so real conversations can be mined
   into the eval gold set.
 - The persisted assistant `content` (and its `versions_json` entry) is the text of
-  every step joined with a blank line — the pre-tool progress sentence plus the
-  answer — so a reload shows what streamed (`onEnd`'s own `text` is only the
+  every step joined with a blank line (the prompt asks for no text before
+  tool calls, so normally just the answer) — so a reload shows what streamed (`onEnd`'s own `text` is only the
   final step).
 - Assistant `details_json` (written in `onEnd`) also stores cost/citation
   telemetry: `cachedInputTokens` (`usage.inputTokenDetails.cacheReadTokens`),
@@ -595,7 +595,11 @@ Notes:
   - no unsupported claims,
   - no fabricated citations,
   - citation mapping to tool-returned chunks only,
-  - include canonical links only when present in chunk metadata.
+  - include canonical links only when present in chunk metadata, as a markdown
+    link on the reference in every answer language, followed by its `[N]`
+    marker; markers and linked references are never wrapped in parentheses,
+  - no text before tool calls (the answer starts with its content) and no
+    notes about the sources' language or translation (0.12.110).
   - careful source-grounded explanations, with length and depth matched to the
     requested style and user instructions.
 - The system prompt is composed from a constant CORE (identity + the retrieval,
