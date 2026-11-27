@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.12.110
+
+- **Answers start with the answer.** The prompt asked the model for a progress sentence before the
+  tool calls ("I'll look up Alma 32...", "Cercherò il capitolo..."), and it was streamed and saved as
+  part of the answer. The prompt now asks for no text before tool calls; the interface already
+  shows the search progress.
+- **Citations are only source chips.** The prompt no longer asks for markdown links on references,
+  and forbids parenthesized citations, so English answers stop mixing "(Alma 32:15-22 [3])" and
+  "( [3] )" with plain chips.
+- **No translation notes.** The prompt forbids notes about the sources' language
+  ("Nota: le fonti sono in inglese; la traduzione è mia.").
+- **No space before punctuation in source text.** The scraped text keeps a space where footnote
+  markers were removed ("un seme .", "nel vostro cuore ,"). `tidySourceText` drops it when chunks
+  are read (ellipses and decimals untouched). The scraper is the real source; fix it there on the
+  next re-index.
+- **Sources stream before the text.** After each tool step `/api/chat` sends `message-metadata`
+  `{sources}`, so web and Android show citation chips while the answer streams instead of at the
+  end (`docs/MOBILE.md`).
+
 ## 0.12.109
 
 - **Follow-up suggestions are no longer only questions.** The follow-up model now writes a mix

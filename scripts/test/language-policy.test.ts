@@ -18,7 +18,7 @@ import {
   getRoutingFallbackModel,
   type RoutingModelRequest,
 } from "@/lib/rag/language-routing";
-import { buildUserMessage } from "@/lib/rag/system-prompt";
+import { buildSystemPrompt, buildUserMessage } from "@/lib/rag/system-prompt";
 
 let failures = 0;
 function check(label: string, cond: boolean, detail = "") {
@@ -198,6 +198,13 @@ async function main() {
   check("search_conference_talks asks the main model for corpus-language query + title", conferenceSrc.includes("translate them yourself"));
   check("chat retrieval tools perform NO translation", [semanticSrc, conferenceSrc, scriptureSrc].every((src) => !src.includes("routeQueryLanguage") && !src.includes("resolver")));
   check("lookup_scripture_passage requires main-model language selection", scriptureSrc.includes('.enum(["eng", "ita"])') && scriptureSrc.includes('retrieve(reference, ["scriptures"], language'));
+
+  // ── Answer shape: no progress preamble, chip-only citations, no translation note
+  const systemPrompt = buildSystemPrompt();
+  check("prompt asks for no text before tool calls", systemPrompt.includes("without writing any text before them") && !systemPrompt.includes("Emit that sentence before the first tool call"));
+  check("prompt forbids markdown source links and parenthesized citations", !systemPrompt.includes("embed it naturally as a markdown link") && systemPrompt.includes("never inside parentheses"));
+  check("prompt forbids source-language/translation notes", systemPrompt.includes("Do not add notes about the language of the sources"));
+  check("route sends sources after each tool step", routeSrc.includes('part.type === "finish-step"'));
 
   check("route no longer overwrites the retrieval cache with the final answer", !routeSrc.includes("setInCache("));
 
